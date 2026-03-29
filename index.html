@@ -149,18 +149,18 @@
             background: rgba(240,237,224,0.92); backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--beige-dark);
         }
-        .nav-brand { font-family: var(--font-mono); font-size: 1.5rem; text-decoration: none; color: var(--ink-black); }
+        .nav-brand { font-family: var(--font-mono); font-size: 1.7rem; text-decoration: none; color: var(--ink-black); }
         .nav-brand::before { content: '> '; color: var(--accent-orange); }
         .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-        .nav-links a { font-family: var(--font-mono); font-size: 1.2rem; color: var(--ink-black); text-decoration: none; letter-spacing: 2px; opacity: 0.6; transition: opacity 0.2s, color 0.2s; }
+        .nav-links a { font-family: var(--font-mono); font-size: 1.35rem; color: var(--ink-black); text-decoration: none; letter-spacing: 2px; opacity: 0.6; transition: opacity 0.2s, color 0.2s; }
         .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent-orange); }
 
         /* SHARED */
-        .section-inner { max-width: 1300px; margin: 0 auto; padding: 5rem 5rem 4.5rem; }
+        .section-inner { max-width: 1300px; margin: 0 auto; padding: 4rem 5rem 2.5rem; }
         .section-label { font-family: var(--font-mono); font-size: 1rem; color: var(--accent-orange); letter-spacing: 4px; display: block; margin-bottom: 0.6rem; }
-        .section-title { font-size: 3.5rem; font-weight: 400; font-style: italic; line-height: 1; letter-spacing: -1px; margin-bottom: 3rem; }
+        .section-title { font-size: 4rem; font-weight: 400; font-style: italic; line-height: 1; letter-spacing: -1px; margin-bottom: 3rem; }
         .section-title em { font-style: italic; font-weight: 300; }
-        .btn { display: inline-block; padding: 0.8rem 2rem; font-family: var(--font-serif); font-size: 1.1rem; text-decoration: none; border-radius: 0; border: 1px solid rgba(255,255,255,0.8); box-shadow: 4px 4px 0 rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
+        .btn { display: inline-block; padding: 0.9rem 2.2rem; font-family: var(--font-serif); font-size: 1.2rem; text-decoration: none; border-radius: 0; border: 1px solid rgba(255,255,255,0.8); box-shadow: 4px 4px 0 rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; }
         .btn:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 rgba(0,0,0,0.15); }
         .btn-dark { background: var(--ink-black); color: var(--beige-light); border-color: var(--ink-black); }
         .btn-dark:hover { background: #222; box-shadow: 7px 7px 0 rgba(0,0,0,0.3); }
@@ -177,10 +177,10 @@
             transform: translateY(20px);
         }
         .hero-eyebrow { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent-orange); letter-spacing: 3px; margin-bottom: 1.5rem; display: block; }
-        .hero-title { font-size: 5.5rem; line-height: 0.88; margin: 0 0 2rem; letter-spacing: -2px; font-weight: 400; font-style: italic; }
+        .hero-title { font-size: 6.5rem; line-height: 0.88; margin: 0 0 2rem; letter-spacing: -2px; font-weight: 400; font-style: italic; }
         .hero-title .name { display: block; }
-        .hero-title .role { display: block; font-weight: 300; font-size: 4.5rem; }
-        .hero-tagline { font-size: 1.35rem; line-height: 1.5; margin-bottom: 2.5rem; max-width: 460px; color: #555; }
+        .hero-title .role { display: block; font-weight: 300; font-size: 5.5rem; }
+        .hero-tagline { font-size: 1.5rem; line-height: 1.5; margin-bottom: 2.5rem; max-width: 500px; color: #555; }
         .hero-cta { display: flex; gap: 1rem; align-items: center; }
         .hero-meta { margin-top: 4rem; display: flex; gap: 3rem; }
         .hero-stat { display: flex; flex-direction: column; gap: 0.2rem; }
@@ -261,7 +261,7 @@
         /* ===== ABOUT ===== */
         #about { border-top: 1px dashed rgba(255,255,255,0.6); position: relative; z-index: 1; }
         .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 6rem; align-items: center; }
-        .about-story { font-size: 1.3rem; line-height: 1.75; color: #333; margin-bottom: 2.5rem; }
+        .about-story { font-size: 1.45rem; line-height: 1.75; color: #333; margin-bottom: 2.5rem; }
         .about-story strong { color: var(--ink-black); font-weight: 600; }
         .tags-group { display: flex; flex-wrap: wrap; gap: 0.6rem; }
         .tag { font-family: var(--font-mono); font-size: 1rem; padding: 0.3rem 0.8rem; border: 1px solid rgba(255,255,255,0.8); border-radius: 0; color: #555; letter-spacing: 1px; background: rgba(255,255,255,0.4); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 2px 2px 0 rgba(0,0,0,0.05); }
@@ -340,7 +340,7 @@
         .timeline-item::before { content: ''; position: absolute; left: -3.4rem; top: 2.4rem; width: 10px; height: 10px; background: var(--ink-black); border-radius: 0; border: 2px solid #f7f4e8; box-shadow: 0 0 0 1px var(--ink-black); transition: transform 0.3s; }
         .timeline-item:hover::before { transform: scale(1.5) rotate(45deg); background: var(--accent-orange); box-shadow: 0 0 0 1px var(--accent-orange); }
         .timeline-date { font-family: var(--font-mono); font-size: 1rem; color: var(--accent-orange); letter-spacing: 2px; margin-bottom: 0.4rem; }
-        .timeline-company { font-size: 1.7rem; font-weight: 400; font-style: italic; margin-bottom: 0.2rem; }
+        .timeline-company { font-size: 1.9rem; font-weight: 400; font-style: italic; margin-bottom: 0.2rem; }
         .timeline-role { font-size: 1.05rem; color: #666; font-style: italic; margin-bottom: 1.5rem; }
         .timeline-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
         .timeline-bullets li { font-size: 1.1rem; color: #444; padding-left: 1.2rem; position: relative; line-height: 1.5; }
@@ -419,7 +419,7 @@
         .pd-red { background: #ff5f57; } .pd-yellow { background: #ffbd2e; } .pd-green { background: #28ca41; }
         .project-hdate { font-family: var(--font-mono); font-size: 0.9rem; color: #888; }
         .project-body { padding: 2rem; }
-        .project-title { font-size: 1.6rem; font-weight: 400; font-style: italic; margin-bottom: 0.8rem; line-height: 1.2; }
+        .project-title { font-size: 1.8rem; font-weight: 400; font-style: italic; margin-bottom: 0.8rem; line-height: 1.2; }
         .project-tags { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .ptag { font-family: var(--font-mono); font-size: 0.85rem; padding: 0.2rem 0.6rem; background: rgba(43,108,176,0.1); border: 1px solid rgba(43,108,176,0.2); border-radius: 3px; color: var(--accent-blue); }
         .ps { margin-bottom: 1.2rem; }
@@ -429,6 +429,68 @@
         .ri { display: flex; flex-direction: column; gap: 0.2rem; }
         .ri-num { font-family: var(--font-mono); font-size: 1.6rem; line-height: 1; color: var(--ink-black); }
         .ri-label { font-size: 0.85rem; color: #666; }
+
+        /* ===== PRODUCTS ===== */
+        .products-list { display: flex; flex-direction: column; gap: 1rem; }
+        .product-card {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            padding: 1.5rem 2rem;
+            background: rgba(255,255,255,0.45);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-left: 4px solid var(--accent-orange);
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+        }
+        .product-card:hover {
+            background: rgba(255,255,255,0.7);
+            transform: translateX(8px);
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.08);
+            border-left-color: var(--ink-black);
+        }
+        .product-icon {
+            font-size: 2.2rem;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--beige-main);
+            border: 2px solid rgba(0,0,0,0.1);
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+        .product-card:hover .product-icon { transform: scale(1.1) rotate(-5deg); }
+        .product-info { flex: 1; min-width: 0; }
+        .product-name-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+        .product-name { font-size: 1.5rem; font-weight: 500; font-style: italic; font-family: var(--font-serif); }
+        .product-tags { display: flex; gap: 0.4rem; }
+        .product-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            padding: 0.15rem 0.6rem;
+            border: 1px solid rgba(0,0,0,0.15);
+            color: #666;
+            background: rgba(255,255,255,0.5);
+        }
+        .product-tag.tag-wip { border-color: var(--accent-orange); color: var(--accent-orange); }
+        .product-desc { font-size: 1.05rem; color: #555; line-height: 1.5; }
+        .product-btn {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--accent-orange);
+            white-space: nowrap;
+            flex-shrink: 0;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .product-card:hover .product-btn { opacity: 1; }
 
         /* ===== AGENTS ===== */
         #agents { border-top: 1px dashed rgba(255,255,255,0.6); position: relative; z-index: 1; }
@@ -548,11 +610,11 @@
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
-            nav { padding: 0.8rem 1.5rem; flex-direction: row; gap: 0; }
-            .nav-brand { font-size: 1.2rem; flex-shrink: 0; }
+            nav { padding: 1.2rem 1.5rem; flex-direction: row; gap: 0; }
+            .nav-brand { font-size: 1.3rem; flex-shrink: 0; }
             .nav-links { flex-wrap: nowrap; overflow-x: auto; gap: 1.2rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-left: 1rem; }
             .nav-links::-webkit-scrollbar { display: none; }
-            .nav-links a { font-size: 0.95rem; white-space: nowrap; }
+            .nav-links a { font-size: 1.1rem; white-space: nowrap; }
             .hero-inner { grid-template-columns: 1fr; text-align: center; }
             .hero-content { transform: translateY(0); padding-top: 5rem; }
             .hero-cta { justify-content: center; flex-wrap: wrap; }
@@ -569,12 +631,12 @@
             .section-title { font-size: 2.5rem; }
         }
         @media (max-width: 768px) {
-            nav { padding: 0.6rem 1rem; }
-            .nav-brand { font-size: 1.1rem; }
+            nav { padding: 1.2rem 1rem; }
+            .nav-brand { font-size: 1.2rem; }
             .nav-links { gap: 1rem; padding-left: 0.8rem; }
-            .nav-links a { font-size: 0.85rem; letter-spacing: 1px; }
+            .nav-links a { font-size: 1.05rem; letter-spacing: 1px; }
             .hero-inner { padding: 0 1.2rem; min-height: auto; }
-            .hero-content { padding-top: 4.5rem; }
+            .hero-content { padding-top: 5.5rem; }
             .hero-eyebrow { font-size: 0.9rem; margin-bottom: 1rem; }
             .hero-title { font-size: 2.8rem; }
             .hero-title .role { font-size: 2rem; }
@@ -606,6 +668,11 @@
             .project-title { font-size: 1.3rem; }
             .project-results { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
             .ri-num { font-size: 1.3rem; }
+            .product-card { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.2rem; }
+            .product-icon { width: 44px; height: 44px; font-size: 1.8rem; }
+            .product-name { font-size: 1.25rem; }
+            .product-desc { font-size: 0.95rem; }
+            .product-btn { align-self: flex-end; }
             .agents-grid { gap: 1.5rem; }
             .agent-header { padding: 1rem 1.2rem 0.8rem; }
             .agent-body { padding: 1rem 1.2rem 1.2rem; }
@@ -636,6 +703,7 @@
         <li><a href="#about">关于</a></li>
         <li><a href="#work">经历</a></li>
         <li><a href="#projects">项目</a></li>
+        <li><a href="#products">产品</a></li>
         <li><a href="#agents">智能体</a></li>
         <li><a href="#knowledge">知识库</a></li>
         <li><a href="#skills">技能</a></li>
@@ -658,7 +726,7 @@
             <div class="hero-cta">
                 <a href="#projects" class="btn btn-dark">查看项目案例</a>
                 <a href="#contact" class="btn btn-outline">联系我</a>
-                <a href="姚欢夏- AI产品经理-18278396586.pdf" download class="btn btn-outline" style="border-color: var(--accent-orange); color: var(--accent-orange);">下载简历</a>
+                <a href="assets/docs/姚欢夏- AI产品经理-18278396586.pdf" download class="btn btn-outline" style="border-color: var(--accent-orange); color: var(--accent-orange);">下载简历</a>
             </div>
             <div class="hero-meta">
                 <div class="hero-stat">
@@ -878,10 +946,34 @@
     </div>
 </section>
 
+<!-- PRODUCTS -->
+<section id="products">
+    <div class="section-inner">
+        <span class="section-label reveal">// 04 · PRODUCTS</span>
+        <h2 class="section-title reveal reveal-delay-1">个人<em>产品</em></h2>
+        <div class="products-list">
+            <a href="/projects/zhandoubao/" class="product-card reveal reveal-delay-2">
+                <div class="product-icon">🫘</div>
+                <div class="product-info">
+                    <div class="product-name-row">
+                        <span class="product-name">粘豆包</span>
+                        <div class="product-tags">
+                            <span class="product-tag">个人项目</span>
+                            <span class="product-tag tag-wip">开发中</span>
+                        </div>
+                    </div>
+                    <p class="product-desc">项目正在搭建中，敬请期待。</p>
+                </div>
+                <span class="product-btn">查看详情 &rarr;</span>
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- AGENTS -->
 <section id="agents">
     <div class="section-inner">
-        <span class="section-label reveal">// 04 · AI AGENTS</span>
+        <span class="section-label reveal">// 05 · AI AGENTS</span>
         <h2 class="section-title reveal reveal-delay-1">智能<em>体</em></h2>
         <div class="agents-grid">
             <a href="https://www.coze.cn/store/agent/7519114557320216602?bot_id=true" target="_blank" rel="noopener noreferrer" class="agent-card reveal reveal-delay-2">
@@ -962,7 +1054,7 @@
 <!-- KNOWLEDGE -->
 <section id="knowledge">
     <div class="section-inner">
-        <span class="section-label reveal">// 05 · KNOWLEDGE BASE</span>
+        <span class="section-label reveal">// 06 · KNOWLEDGE BASE</span>
         <h2 class="section-title reveal reveal-delay-1">知识<em>库</em></h2>
         <div class="reveal reveal-delay-2">
             <div class="knowledge-container">
@@ -996,7 +1088,7 @@
 <!-- SKILLS -->
 <section id="skills">
     <div class="section-inner">
-        <span class="section-label">// 04 · SKILLS</span>
+        <span class="section-label">// 07 · SKILLS</span>
         <h2 class="section-title">技能<em>工具箱</em></h2>
         <div class="skills-grid">
             <div class="reveal reveal-delay-1">
@@ -1040,7 +1132,7 @@
 <section id="contact">
     <div class="contact-inner">
         <div class="reveal reveal-delay-1">
-            <span class="section-label">// 05 · CONTACT</span>
+            <span class="section-label">// 08 · CONTACT</span>
             <h2 class="section-title">联系<em>我</em></h2>
             <p class="contact-tagline">
                 欢迎聊 AI 产品、设计，<br>或者任何有意思的想法。

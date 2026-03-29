@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粘豆包</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --beige-light: #F0EDE0;
+            --ink-black: #0f0f0f;
+            --accent-orange: #C05621;
+        }
+        body {
+            background: linear-gradient(135deg, var(--beige-light) 0%, #E6E2D1 100%);
+            background-attachment: fixed;
+            font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+            color: var(--ink-black);
+            min-height: 100vh;
+        }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(240,237,224,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #C4C0B3;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        nav a { text-decoration: none; color: var(--ink-black); }
+        .nav-title { font-size: 1.4rem; font-weight: 600; }
+        .nav-back { font-size: 0.95rem; opacity: 0.6; transition: opacity 0.2s; }
+        .nav-back:hover { opacity: 1; color: var(--accent-orange); }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem 3rem;
+        }
+        .hero {
+            text-align: center;
+            padding: 4rem 0 3rem;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--accent-orange);
+            color: #fff;
+            font-size: 0.85rem;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .content-section {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid #C4C0B3;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .content-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-orange);
+        }
+        .content-section p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #444;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .container { padding: 5rem 1.2rem 2rem; }
+            .content-section { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="nav-title">粘豆包</span>
+        <a href="/" class="nav-back">← 返回主页</a>
+    </nav>
+    <div class="container">
+        <div class="hero">
+            <span class="status-badge">开发中</span>
+            <h1>粘豆包</h1>
+            <p>项目正在搭建中，敬请期待。</p>
+        </div>
+        <div class="content-section">
+            <h2>关于项目</h2>
+            <p>项目详情待补充。</p>
+        </div>
+    </div>
+    <script>
+        const API_BASE = '/api/zhandoubao';
+    </script>
+</body>
+</html>
