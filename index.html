@@ -532,6 +532,32 @@
         .bar-wrap { width: 80px; height: 4px; background: rgba(255,255,255,0.6); border: 1px solid #ccc; border-radius: 0; overflow: hidden; }
         .bar { height: 100%; background: var(--ink-black); border-radius: 0; transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
+        /* ===== CLAUDE USAGE ===== */
+        #claude-usage { background: var(--screen-black); border-top: 1px solid #333; position: relative; z-index: 1; }
+        .usage-inner { max-width: 1300px; margin: 0 auto; padding: 5rem 5rem 4rem; }
+        #claude-usage .section-label { color: var(--accent-orange); }
+        #claude-usage .section-title { color: var(--beige-light); }
+        .usage-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .usage-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); padding: 1.5rem; position: relative; overflow: hidden; transition: all 0.3s; box-shadow: 4px 4px 0 rgba(0,0,0,0.3); }
+        .usage-card:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 rgba(0,0,0,0.5); border-color: var(--accent-orange); }
+        .usage-card-label { font-family: var(--font-mono); font-size: 0.8rem; color: #666; letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .usage-card-value { font-family: var(--font-mono); font-size: 2.2rem; color: var(--accent-orange); line-height: 1; }
+        .usage-card-sub { font-family: var(--font-mono); font-size: 0.75rem; color: #555; margin-top: 0.4rem; }
+        .usage-chart-section { margin-top: 2.5rem; }
+        .usage-chart-title { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-orange); letter-spacing: 2px; margin-bottom: 1rem; }
+        .usage-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding: 0 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .usage-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .usage-bar { width: 100%; background: var(--accent-orange); min-height: 2px; border-radius: 1px 1px 0 0; transition: height 1s cubic-bezier(0.2, 0.8, 0.2, 1); opacity: 0.8; }
+        .usage-bar:hover { opacity: 1; }
+        .usage-bar-label { font-family: var(--font-mono); font-size: 0.6rem; color: #555; margin-top: 4px; }
+        .usage-model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+        .usage-model-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 1.2rem; }
+        .usage-model-name { font-family: var(--font-mono); font-size: 0.9rem; color: var(--beige-light); margin-bottom: 0.8rem; }
+        .usage-model-stat { display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .usage-model-stat-label { font-size: 0.8rem; color: #666; }
+        .usage-model-stat-val { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-orange); }
+        .usage-update-time { font-family: var(--font-mono); font-size: 0.7rem; color: #444; text-align: right; margin-top: 1.5rem; }
+
         /* ===== CONTACT ===== */
         #contact { background: var(--screen-black); border-top: 1px solid #333; color: var(--beige-light); position: relative; z-index: 1; }
         .contact-inner { max-width: 1300px; margin: 0 auto; padding: 7rem 5rem 6rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
@@ -557,6 +583,8 @@
             .hero-visual { height: 60vh; }
             .scene { transform: scale(0.6) rotateY(-15deg) rotateX(5deg) !important; }
             .about-grid, .projects-grid, .skills-grid, .agents-grid { grid-template-columns: 1fr; }
+            .usage-stats { grid-template-columns: repeat(2, 1fr); }
+            .usage-inner { padding: 5rem 2rem 4rem; }
             .knowledge-grid { grid-template-columns: 1fr; }
             .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
             .section-inner { padding: 5rem 2rem 4rem; }
@@ -601,6 +629,7 @@
         <li><a href="#agents">智能体</a></li>
         <li><a href="#knowledge">知识库</a></li>
         <li><a href="#skills">技能</a></li>
+        <li><a href="#claude-usage">用量</a></li>
         <li><a href="#contact">联系</a></li>
     </ul>
 </nav>
@@ -998,6 +1027,42 @@
     </div>
 </section>
 
+<!-- CLAUDE USAGE -->
+<section id="claude-usage">
+    <div class="usage-inner">
+        <span class="section-label reveal">// 06 · CLAUDE USAGE</span>
+        <h2 class="section-title reveal reveal-delay-1" style="color: var(--beige-light);">Claude <em>用量</em></h2>
+        <div class="usage-stats reveal reveal-delay-2" id="usage-stats">
+            <div class="usage-card">
+                <div class="usage-card-label">TODAY MESSAGES</div>
+                <div class="usage-card-value" id="today-msgs">--</div>
+                <div class="usage-card-sub">今日消息数</div>
+            </div>
+            <div class="usage-card">
+                <div class="usage-card-label">TOTAL MESSAGES</div>
+                <div class="usage-card-value" id="total-msgs">--</div>
+                <div class="usage-card-sub">累计消息数</div>
+            </div>
+            <div class="usage-card">
+                <div class="usage-card-label">TOTAL SESSIONS</div>
+                <div class="usage-card-value" id="total-sessions">--</div>
+                <div class="usage-card-sub">累计会话数</div>
+            </div>
+            <div class="usage-card">
+                <div class="usage-card-label">TOTAL TOKENS</div>
+                <div class="usage-card-value" id="total-tokens">--</div>
+                <div class="usage-card-sub">累计 Token 用量</div>
+            </div>
+        </div>
+        <div class="usage-chart-section reveal reveal-delay-3">
+            <div class="usage-chart-title">// DAILY MESSAGE ACTIVITY</div>
+            <div class="usage-bar-chart" id="usage-bar-chart"></div>
+        </div>
+        <div class="usage-model-grid reveal reveal-delay-3" id="usage-model-grid"></div>
+        <div class="usage-update-time" id="usage-update-time"></div>
+    </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
     <div class="contact-inner">
@@ -1142,6 +1207,75 @@
             }, 150);
         });
     }
+
+    // ===== CLAUDE USAGE DASHBOARD =====
+    fetch('assets/stats.json')
+        .then(r => r.json())
+        .then(data => {
+            const fmt = n => n >= 1000000 ? (n / 1000000).toFixed(1) + 'M' : n >= 1000 ? (n / 1000).toFixed(1) + 'K' : n;
+
+            // Today's messages
+            const today = new Date().toISOString().split('T')[0];
+            const todayData = data.dailyActivity?.find(d => d.date === today);
+            document.getElementById('today-msgs').textContent = todayData ? fmt(todayData.messageCount) : '0';
+
+            // Total messages
+            document.getElementById('total-msgs').textContent = fmt(data.totalMessages || 0);
+
+            // Total sessions
+            document.getElementById('total-sessions').textContent = data.totalSessions || 0;
+
+            // Total tokens
+            let totalTokens = 0;
+            if (data.modelUsage) {
+                Object.values(data.modelUsage).forEach(m => {
+                    totalTokens += (m.inputTokens || 0) + (m.outputTokens || 0) + (m.cacheReadInputTokens || 0) + (m.cacheCreationInputTokens || 0);
+                });
+            }
+            document.getElementById('total-tokens').textContent = fmt(totalTokens);
+
+            // Bar chart
+            const chart = document.getElementById('usage-bar-chart');
+            const activity = data.dailyActivity || [];
+            const maxMsg = Math.max(...activity.map(d => d.messageCount), 1);
+            activity.forEach(d => {
+                const col = document.createElement('div');
+                col.className = 'usage-bar-col';
+                const bar = document.createElement('div');
+                bar.className = 'usage-bar';
+                const h = Math.max((d.messageCount / maxMsg) * 110, 2);
+                bar.style.height = h + 'px';
+                bar.title = d.date + ': ' + d.messageCount + ' msgs';
+                const label = document.createElement('div');
+                label.className = 'usage-bar-label';
+                label.textContent = d.date.slice(5);
+                col.appendChild(bar);
+                col.appendChild(label);
+                chart.appendChild(col);
+            });
+
+            // Model usage cards
+            const grid = document.getElementById('usage-model-grid');
+            if (data.modelUsage) {
+                Object.entries(data.modelUsage).forEach(([name, m]) => {
+                    const card = document.createElement('div');
+                    card.className = 'usage-model-card';
+                    const total = (m.inputTokens || 0) + (m.outputTokens || 0);
+                    card.innerHTML = `
+                        <div class="usage-model-name">${name}</div>
+                        <div class="usage-model-stat"><span class="usage-model-stat-label">Input Tokens</span><span class="usage-model-stat-val">${fmt(m.inputTokens || 0)}</span></div>
+                        <div class="usage-model-stat"><span class="usage-model-stat-label">Output Tokens</span><span class="usage-model-stat-val">${fmt(m.outputTokens || 0)}</span></div>
+                        <div class="usage-model-stat"><span class="usage-model-stat-label">Cache Read</span><span class="usage-model-stat-val">${fmt(m.cacheReadInputTokens || 0)}</span></div>
+                        <div class="usage-model-stat"><span class="usage-model-stat-label">Cache Create</span><span class="usage-model-stat-val">${fmt(m.cacheCreationInputTokens || 0)}</span></div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // Update time
+            document.getElementById('usage-update-time').textContent = 'Last updated: ' + (data.lastComputedDate || '--');
+        })
+        .catch(e => console.log('Usage data not available:', e));
 </script>
 </body>
 </html>
