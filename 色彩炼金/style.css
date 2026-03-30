@@ -1,0 +1,747 @@
+/* ========================================
+   色彩炼金 - 全局样式
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    overflow: hidden;
+}
+
+/* ========================================
+   首页
+   ======================================== */
+
+.home-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 8vh;
+    padding-bottom: 10vh;
+    align-items: center;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.title-image {
+    width: 600px;
+    max-width: 90vw;
+    height: auto;
+    margin-top: 90px;
+}
+
+.start-button {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.start-button:hover {
+    transform: scale(1.05);
+}
+
+.start-button:active {
+    transform: scale(0.95);
+}
+
+.start-button img {
+    width: 200px;
+    height: auto;
+}
+
+/* ========================================
+   游戏页 - 容器与背景
+   ======================================== */
+
+.game-container {
+    width: 100vw;
+    height: 100vh;
+    background: url('bg.gif') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    animation: backgroundFadeIn 1.5s ease-in-out;
+}
+
+.game-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    z-index: 0;
+    animation: overlayFadeIn 2s ease-in-out;
+}
+
+@keyframes backgroundFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ========================================
+   游戏页 - 主内容区
+   ======================================== */
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    height: 80%;
+    margin: 0 auto;
+    padding-top: 2%;
+    display: flex;
+    gap: 2%;
+    align-items: stretch;
+}
+
+/* ========================================
+   游戏页 - 色卡区
+   ======================================== */
+
+.color-palette {
+    width: 25%;
+    display: flex;
+    gap: 10%;
+    height: 100%;
+}
+
+.color-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.color-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    flex: 1;
+    min-height: 40px;
+}
+
+.color-card:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+}
+
+.color-card.selected {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.color-block {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.color-name {
+    font-size: 11px;
+    font-weight: 300;
+    color: #333;
+    flex: 1;
+}
+
+.delete-button {
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+    padding: 1px 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+    background: rgba(255, 0, 0, 0.1);
+    color: #FF0000;
+}
+
+.placeholder-card {
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    flex: 1;
+    min-height: 40px;
+}
+
+.saved-colors {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+}
+
+/* ========================================
+   游戏页 - 试管区
+   ======================================== */
+
+.test-tubes {
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 100%;
+}
+
+.test-tube {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.test-tube:hover {
+    transform: translateY(-5px);
+}
+
+.tube-container {
+    width: 100px;
+    height: 450px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0 0 50px 50px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tube-container::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -20px;
+    right: -20px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.tube-container::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 15px;
+    height: 80%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+    border-radius: 8px;
+    opacity: 0.7;
+}
+
+.liquid-level {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    transition: height 0.3s ease;
+    border-radius: 0 0 28px 28px;
+}
+
+.tube-label {
+    font-size: 12px;
+    font-weight: 300;
+    color: #333;
+}
+
+/* ========================================
+   游戏页 - 底部操作栏
+   ======================================== */
+
+.action-bar {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    margin: 40px auto 8px;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.step-counter {
+    font-size: 14px;
+    color: #333;
+    font-weight: 300;
+}
+
+.step-number {
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.action-button {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 300;
+}
+
+.action-button:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+/* ========================================
+   游戏页 - 命名弹窗
+   ======================================== */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 25px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.modal-content input:focus {
+    border-color: rgba(100, 149, 237, 0.5);
+    box-shadow: 0 0 0 2px rgba(100, 149, 237, 0.2);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#confirmSave {
+    background: rgba(100, 149, 237, 0.8);
+    color: white;
+}
+
+#confirmSave:hover {
+    background: rgba(100, 149, 237, 1);
+    transform: translateY(-2px);
+}
+
+#cancelSave {
+    background: rgba(200, 200, 200, 0.8);
+    color: #333;
+}
+
+#cancelSave:hover {
+    background: rgba(200, 200, 200, 1);
+    transform: translateY(-2px);
+}
+
+/* ========================================
+   响应式 - 平板端 (≤1200px)
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .main-content {
+        width: 95%;
+        height: 75%;
+    }
+
+    .color-palette {
+        width: 30%;
+    }
+
+    .test-tubes {
+        width: 70%;
+    }
+
+    .tube-container {
+        width: 80px;
+        height: 350px;
+    }
+
+    .action-buttons {
+        gap: 15px;
+    }
+
+    .action-button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ========================================
+   响应式 - 手机端 (≤768px)
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* --- 首页 --- */
+    .home-container {
+        padding-top: 5vh;
+        padding-bottom: 12vh;
+    }
+
+    .title-image {
+        width: 70vw;
+        margin-top: 15vw;
+    }
+
+    .start-button img {
+        width: 160px;
+    }
+
+    /* --- 游戏容器 --- */
+    body {
+        overflow: hidden;
+    }
+
+    .game-container {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        background-attachment: scroll;
+        display: flex;
+        flex-direction: column;
+        padding: 60px 20px 40px;
+    }
+
+    .game-container::before {
+        position: fixed;
+    }
+
+    /* --- 主内容：左右分栏 --- */
+    .main-content {
+        flex-direction: row;
+        width: 100%;
+        padding-top: 0;
+        gap: 16px;
+        flex: 1;
+        height: 0;
+        margin: 0;
+    }
+
+    /* --- 色卡区：单列，可滚动 --- */
+    .color-palette {
+        width: auto;
+        min-width: 120px;
+        height: 100%;
+        flex-direction: column;
+        gap: 6px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 6px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+    }
+
+    .color-palette::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .color-palette::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .color-palette::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 4px;
+    }
+
+    .color-palette::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    /* 收藏色列排在基础色上方 */
+    #saved-column {
+        order: -1;
+        flex: 0 0 auto;
+    }
+
+    .color-column {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* 基础色列：8卡均分高度 */
+    #base-colors {
+        flex: 1;
+        min-height: 0;
+    }
+
+    #base-colors .color-card {
+        flex: 1;
+        min-height: 0;
+    }
+
+    /* 收藏色卡样式 */
+    .saved-colors {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        height: auto;
+    }
+
+    .saved-colors .color-card {
+        flex: 0 0 auto;
+    }
+
+    /* 占位卡隐藏 */
+    .placeholder-card {
+        display: none;
+    }
+
+    /* 色卡通用手机端样式 */
+    .color-card {
+        padding: 6px 12px;
+        gap: 8px;
+        border-radius: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .color-block {
+        width: 18px;
+        height: 18px;
+    }
+
+    .color-name {
+        font-size: 14px;
+        font-weight: 300;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .delete-button {
+        font-size: 14px;
+        padding: 2px 6px;
+    }
+
+    /* --- 试管区：只显示2个 --- */
+    .test-tubes {
+        flex: 1;
+        width: auto;
+        padding: 0;
+        gap: 16px;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .test-tube:nth-child(n+3) {
+        display: none;
+    }
+
+    .test-tube {
+        height: 100%;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .tube-container {
+        width: 70px;
+        flex: 1;
+        border-radius: 0 0 36px 36px;
+    }
+
+    .tube-container::before {
+        top: -10px;
+        left: -16px;
+        right: -16px;
+        height: 12px;
+    }
+
+    .tube-container::after {
+        left: 14px;
+        width: 12px;
+    }
+
+    .liquid-level {
+        border-radius: 0 0 30px 30px;
+    }
+
+    .tube-label {
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    /* --- 操作栏 --- */
+    .action-bar {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        width: 100%;
+        margin: 12px 0 0;
+        padding: 14px 16px;
+        border-radius: 12px;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .action-button {
+        flex: 1;
+        padding: 7px 0;
+        font-size: 14px;
+        border-radius: 8px;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .step-counter {
+        font-size: 14px;
+    }
+
+    .step-number {
+        font-size: 16px;
+    }
+
+    /* --- 弹窗 --- */
+    .modal-content {
+        width: 88%;
+        padding: 28px;
+        border-radius: 16px;
+    }
+
+    .modal-content h3 {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .modal-content input {
+        font-size: 16px;
+        padding: 12px 16px;
+        border-radius: 10px;
+    }
+
+    .modal-buttons button {
+        font-size: 14px;
+        padding: 10px 24px;
+        border-radius: 10px;
+    }
+}
+
+/* ========================================
+   响应式 - 小屏手机 (≤480px)
+   ======================================== */
+
+@media (max-width: 480px) {
+    .home-container {
+        padding-top: 3vh;
+        padding-bottom: 10vh;
+    }
+
+    .title-image {
+        width: 75vw;
+        margin-top: 18vw;
+    }
+
+    .start-button img {
+        width: 140px;
+    }
+
+    .start-button {
+        margin-bottom: 10px;
+    }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>色彩炼金 - 游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 命名弹窗 -->
+        <div class="modal" id="saveModal">
+            <div class="modal-content">
+                <h3>为新颜色命名</h3>
+                <input type="text" id="colorNameInput" placeholder="最多4个字" value="新颜色" maxlength="4">
+                <div class="modal-buttons">
+                    <button id="confirmSave">确认</button>
+                    <button id="cancelSave">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 左侧色卡区 -->
+            <div class="color-palette">
+                <!-- 基础色 -->
+                <div class="color-column" id="base-colors">
+                    <div class="color-card" data-color="#FF0000" data-name="红">
+                        <div class="color-block" style="background-color: #FF0000;"></div>
+                        <span class="color-name">红 (#FF0000)</span>
+                    </div>
+                    <div class="color-card" data-color="#FFFF00" data-name="黄">
+                        <div class="color-block" style="background-color: #FFFF00;"></div>
+                        <span class="color-name">黄 (#FFFF00)</span>
+                    </div>
+                    <div class="color-card" data-color="#0000FF" data-name="蓝">
+                        <div class="color-block" style="background-color: #0000FF;"></div>
+                        <span class="color-name">蓝 (#0000FF)</span>
+                    </div>
+                    <div class="color-card" data-color="#00FF00" data-name="绿">
+                        <div class="color-block" style="background-color: #00FF00;"></div>
+                        <span class="color-name">绿 (#00FF00)</span>
+                    </div>
+                    <div class="color-card" data-color="#FFA500" data-name="橙">
+                        <div class="color-block" style="background-color: #FFA500;"></div>
+                        <span class="color-name">橙 (#FFA500)</span>
+                    </div>
+                    <div class="color-card" data-color="#800080" data-name="紫">
+                        <div class="color-block" style="background-color: #800080;"></div>
+                        <span class="color-name">紫 (#800080)</span>
+                    </div>
+                    <div class="color-card" data-color="#FFFFFF" data-name="白">
+                        <div class="color-block" style="background-color: #FFFFFF;"></div>
+                        <span class="color-name">白 (#FFFFFF)</span>
+                    </div>
+                    <div class="color-card" data-color="#000000" data-name="黑">
+                        <div class="color-block" style="background-color: #000000;"></div>
+                        <span class="color-name">黑 (#000000)</span>
+                    </div>
+                </div>
+                <!-- 收藏色 -->
+                <div class="color-column" id="saved-column">
+                    <div class="saved-colors">
+                        <!-- 占位卡（JS 动态管理） -->
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                        <div class="placeholder-card"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧试管区 -->
+            <div class="test-tubes">
+                <div class="test-tube" data-tube="1">
+                    <div class="tube-container">
+                        <div class="liquid-level"></div>
+                    </div>
+                    <span class="tube-label">试管1</span>
+                </div>
+                <div class="test-tube" data-tube="2">
+                    <div class="tube-container">
+                        <div class="liquid-level"></div>
+                    </div>
+                    <span class="tube-label">试管2</span>
+                </div>
+                <div class="test-tube" data-tube="3">
+                    <div class="tube-container">
+                        <div class="liquid-level"></div>
+                    </div>
+                    <span class="tube-label">试管3</span>
+                </div>
+                <div class="test-tube" data-tube="4">
+                    <div class="tube-container">
+                        <div class="liquid-level"></div>
+                    </div>
+                    <span class="tube-label">试管4</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部操作栏 -->
+        <div class="action-bar">
+            <div class="step-counter">
+                <span>当前步数：</span>
+                <span class="step-number">0</span>
+            </div>
+            <div class="action-buttons">
+                <button class="action-button" id="undo-button">撤回</button>
+                <button class="action-button" id="reset-button">重置</button>
+                <button class="action-button" id="save-button">色卡收藏</button>
+                <button class="action-button" id="home-button">返回首页</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
