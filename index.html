@@ -531,6 +531,14 @@
             align-self: flex-end;
         }
         .product-card:hover .product-btn { opacity: 1; }
+        .product-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+        .product-btn-doc { color: #666; }
+        .product-card:hover .product-btn-doc { color: var(--accent-orange); }
 
         /* ===== AGENTS ===== */
         #agents { border-top: 1px dashed rgba(255,255,255,0.6); position: relative; z-index: 1; }
@@ -719,6 +727,7 @@
             .product-highlight { font-size: 0.75rem; }
             .product-meta { font-size: 0.7rem; }
             .product-btn { align-self: flex-end; }
+            .product-actions { align-self: flex-end; gap: 1.2rem; }
             .agents-grid { gap: 1.5rem; }
             .agent-header { padding: 1rem 1.2rem 0.8rem; }
             .agent-body { padding: 1rem 1.2rem 1.2rem; }
@@ -1028,7 +1037,7 @@
                 </div>
                 <span class="product-btn">查看详情 &rarr;</span>
             </a>
-            <a href="/色彩炼金/" class="product-card reveal reveal-delay-3">
+            <div class="product-card reveal reveal-delay-3">
                 <div class="product-icon product-icon-desktop">🎨</div>
                 <div class="product-header">
                     <div class="product-icon">🎨</div>
@@ -1056,8 +1065,11 @@
                         <span>纯前端 · HTML/CSS/JS</span>
                     </div>
                 </div>
-                <span class="product-btn">开始游戏 &rarr;</span>
-            </a>
+                <div class="product-actions">
+                    <a href="/色彩炼金/" class="product-btn">开始游戏 &rarr;</a>
+                    <a href="/色彩炼金/项目文档/" class="product-btn product-btn-doc">项目文档 &rarr;</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>

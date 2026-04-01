@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色彩炼金 — 竞品调研文档</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c1917;--paper:#faf8f5;--mid:#57534e;--light:#d6d3d1;--faint:#f5f0eb;--accent:#e11d48;--font-display:'Playfair Display','Noto Serif SC',serif;--font-body:'DM Sans','PingFang SC','Microsoft YaHei',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--ink);background:var(--paper);line-height:1.72;font-size:15px;-webkit-font-smoothing:antialiased}
+.cover{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding:clamp(40px,8vw,120px) clamp(24px,6vw,80px);background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 15% 75%,oklch(0.50 0.22 15/0.4),transparent),radial-gradient(ellipse 50% 60% at 85% 25%,oklch(0.45 0.18 350/0.3),transparent);mix-blend-mode:screen}
+.cover-inner{position:relative;z-index:1;max-width:800px}
+.cover-label{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:.5;margin-bottom:32px}
+.cover h1{font-family:var(--font-display);font-size:clamp(48px,8vw,96px);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:20px}
+.cover h1 em{font-style:italic;background:linear-gradient(135deg,#fda4af,#fb7185,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cover-sub{font-size:clamp(18px,2.5vw,24px);font-weight:300;opacity:.7;max-width:560px;margin-bottom:48px}
+.cover-meta{display:flex;gap:40px;flex-wrap:wrap;font-size:13px;opacity:.5;align-self:end}
+.cover-meta dt{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:2px;font-size:10px;margin-bottom:4px}
+.cover-meta dd{font-weight:500;font-size:14px}
+.doc{max-width:820px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.spacer{height:clamp(48px,8vh,96px)}
+.sect{padding:56px 0 40px;animation:fadeUp .5s ease both}
+.sect+.sect{border-top:1px solid var(--light)}
+.sect-num{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block}
+.sect h2{font-family:var(--font-display);font-size:clamp(28px,4vw,36px);font-weight:700;line-height:1.2;margin-bottom:28px}
+.sect h3{font-size:17px;font-weight:600;margin:32px 0 12px;padding-left:12px;border-left:3px solid var(--accent)}
+.sect h4{font-size:14px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px}
+.sect p{color:var(--mid);margin-bottom:14px}
+.sect ul,.sect ol{padding-left:20px;margin-bottom:14px;color:var(--mid)}
+.sect li{margin-bottom:5px}
+.sect li strong{color:var(--ink)}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+thead th{text-align:left;font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);padding:10px 16px;border-bottom:2px solid var(--ink);font-weight:500}
+td{padding:12px 16px;border-bottom:1px solid #e7e5e4;color:var(--mid);vertical-align:top}
+tbody tr:hover td{background:var(--faint)}
+td strong{color:var(--ink)}
+.tag{display:inline-block;padding:1px 8px;border-radius:3px;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.5px}
+.tag-type{background:#fce7f3;color:#9d174d}
+.tag-edu{background:#dbeafe;color:#1e40af}
+.comp{margin:28px 0;padding:32px;background:var(--faint);border:1px solid var(--light);position:relative}
+.comp::before{content:attr(data-id);position:absolute;top:-10px;left:16px;background:var(--paper);padding:0 8px;font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.comp h4{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:4px;color:var(--ink);text-transform:none;letter-spacing:0}
+.comp-tags{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.comp-tags span{font-family:var(--font-mono);font-size:11px;color:var(--mid);padding:2px 10px;border:1px solid var(--light);background:white}
+.dot{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;font-family:var(--font-mono);font-size:11px;font-weight:600;color:white;text-align:center}
+.d5{background:#059669}.d4{background:#34d399}.d3{background:#d97706}.d2{background:#f59e0b}.d1{background:#dc2626}
+.score-table{text-align:center}
+.score-table td,.score-table th{text-align:center;padding:10px 12px}
+.insight{padding:20px 24px;margin:20px 0;border-left:3px solid var(--accent);background:linear-gradient(90deg,#fff1f2,var(--paper))}
+.insight strong{color:var(--accent);display:block;margin-bottom:4px;font-size:13px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase}
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--light);margin:20px 0}
+.swot-cell{background:var(--paper);padding:24px}
+.swot-cell h4{font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.swot-cell.s h4{color:#059669}.swot-cell.w h4{color:#dc2626}
+.swot-cell.o h4{color:#2563eb}.swot-cell.t h4{color:#d97706}
+.swot-cell ul{padding-left:16px;color:var(--mid);font-size:14px}
+.swot-cell li{margin-bottom:4px}
+/* Voice quotes */
+.voice{margin:12px 0;padding:14px 18px;background:var(--faint);border:1px solid var(--light);font-size:13px;color:var(--mid);position:relative}
+.voice::before{content:'"';font-family:var(--font-display);font-size:28px;color:var(--accent);position:absolute;top:6px;left:10px;line-height:1}
+.voice .v-text{padding-left:20px;font-style:italic}
+.voice .v-src{display:block;margin-top:6px;padding-left:20px;font-family:var(--font-mono);font-size:10px;color:#a8a29e;font-style:normal}
+/* Voice grid for compact display */
+.voice-grid{display:grid;grid-template-columns:1fr;gap:8px;margin:16px 0}
+.voice-sm{padding:10px 14px;background:var(--faint);border:1px solid var(--light);font-size:12px;color:var(--mid)}
+.voice-sm .v-text{font-style:italic}
+.voice-sm .v-src{font-family:var(--font-mono);font-size:10px;color:#a8a29e;margin-top:4px}
+/* Counter badge */
+.counter{display:inline-block;background:var(--accent);color:white;font-family:var(--font-mono);font-size:11px;padding:2px 8px;border-radius:3px;margin-left:8px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.cover-meta{flex-direction:column;gap:16px}.swot{grid-template-columns:1fr}.score-table{font-size:12px}.score-table td,.score-table th{padding:8px 6px}}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">Competitive Analysis Report — V2.0</div>
+    <h1>色彩炼金<br><em>竞品调研文档</em></h1>
+    <p class="cover-sub">基于 100+ 条真实用户原声的深度竞品分析，涵盖小红书、TapTap、App Store、知乎等多平台调研。</p>
+  </div>
+  <dl class="cover-meta">
+    <div><dt>版本</dt><dd>V2.0（含用户原声）</dd></div>
+    <div><dt>日期</dt><dd>2026-03-31</dd></div>
+    <div><dt>调研样本</dt><dd>100+ 条用户反馈</dd></div>
+  </dl>
+</section>
+
+<div class="doc">
+
+<!-- 1 -->
+<div class="sect">
+  <span class="sect-num">Section 01</span>
+  <h2>调研背景与方法</h2>
+  <h3>1.1 调研背景</h3>
+  <p>"色彩炼金"定位为面向 5-12 岁儿童及色彩爱好者的网页端颜色混合小游戏。本次调研聚焦<strong>儿童场景</strong>，删除了专业设计工具类竞品（Adobe Color、Coolors），新增了儿童教育类 App 和更多同类小游戏。</p>
+  <h3>1.2 调研方法</h3>
+  <ul>
+    <li><strong>平台覆盖</strong>：TapTap、App Store、Google Play、ComplaintsBoard、知乎、小红书、少数派、PP助手、克劳锐母婴报告</li>
+    <li><strong>数据量</strong>：收集用户原声 100+ 条，涵盖好评、差评、功能诉求、家长顾虑</li>
+    <li><strong>时间范围</strong>：2024-2026 年</li>
+  </ul>
+  <h3>1.3 竞品选择</h3>
+  <table>
+    <thead><tr><th>竞品</th><th>类型</th><th>平台</th><th>目标用户</th></tr></thead>
+    <tbody>
+      <tr><td><strong>水排序（Water Sort Puzzle）</strong></td><td><span class="tag tag-type">同类</span></td><td>iOS / Android</td><td>休闲玩家 / 儿童</td></tr>
+      <tr><td><strong>I Love Hue</strong></td><td><span class="tag tag-type">同类</span></td><td>iOS / Android</td><td>色彩爱好者</td></tr>
+      <tr><td><strong>Blendoku（彩独）</strong></td><td><span class="tag tag-type">同类</span></td><td>iOS / Android</td><td>益智玩家</td></tr>
+      <tr><td><strong>宝宝调色屋（宝宝巴士）</strong></td><td><span class="tag tag-edu">教育</span></td><td>iOS / Android</td><td>0-8 岁儿童</td></tr>
+      <tr><td><strong>Magical Color Mixing Studio</strong></td><td><span class="tag tag-edu">教育</span></td><td>iOS</td><td>幼儿</td></tr>
+      <tr><td><strong>Simple Colors Mixer for Kids</strong></td><td><span class="tag tag-edu">教育</span></td><td>Android</td><td>3-8 岁儿童</td></tr>
+      <tr><td><strong>儿童涂色类 App（合集）</strong></td><td><span class="tag tag-edu">教育</span></td><td>全平台</td><td>2-7 岁儿童</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 2 -->
+<div class="sect">
+  <span class="sect-num">Section 02</span>
+  <h2>用户原声采集 <span class="counter">100+ 条</span></h2>
+
+  <h3>2.1 痛点一：广告泛滥，儿童误触 <span class="counter">28 条</span></h3>
+  <p>这是儿童游戏领域<strong>最大的用户痛点</strong>。水排序类游戏和宝宝巴士旗下 App 是重灾区。</p>
+
+  <div class="voice"><div class="v-text">不点广告，你就别想玩下一关。一颗星都不想给。</div><div class="v-src">— TapTap · 水排序游戏评论区 · 1星差评</div></div>
+  <div class="voice"><div class="v-text">The amount of ads throughout the game makes it impossible to play — reportedly one every minute or so.</div><div class="v-src">— ComplaintsBoard · Water Sort Puzzle · 2.3星/5星（17条评价均值）</div></div>
+  <div class="voice"><div class="v-text">I paid for ad removal but still get ads. Waste of $8. The developer notes exceptions not listed on the purchase or receipt.</div><div class="v-src">— App Store · Water Sort Puzzle · 1星评价</div></div>
+  <div class="voice"><div class="v-text">An ad played music with foul language that would have been edited for US airwaves, making an otherwise good game unsuitable for children.</div><div class="v-src">— App Store · Water Sort Puzzle · 用户评论</div></div>
+  <div class="voice"><div class="v-text">If you try to play offline the game won't work because it can't load ads. They are preying on children as a revenue farm for ad hits.</div><div class="v-src">— Google Play · Water Sort Puzzle · 1星评价</div></div>
+  <div class="voice"><div class="v-text">3岁孩子因无法关闭广告而哭闹，屏幕上的低俗画面已对幼儿造成心理冲击。</div><div class="v-src">— 家长反馈 · 转引自雷科技报道 · 2025.10</div></div>
+  <div class="voice"><div class="v-text">短短3分35秒，手机上方的弹窗广告就出现了8次，多为成人短剧、短视频平台、购物广告。</div><div class="v-src">— 腾讯新闻 · 宝宝巴士小厨房App实测 · 2025.10</div></div>
+  <div class="voice"><div class="v-text">孩子在APP内误点广告，手机中无故多出多款陌生软件。</div><div class="v-src">— 家长投诉 · 转引自新华日报 · 2025.10</div></div>
+  <div class="voice"><div class="v-text">会员过期后，APP弹窗推送露骨情色广告；孩子因广告页面"关了四五遍没关掉"被吓哭。</div><div class="v-src">— 家长反馈 · 转引自知乎专栏 · 2025.10</div></div>
+
+  <div class="voice-grid">
+    <div class="voice-sm"><div class="v-text">看广告才能下一关，广告关闭按钮形同虚设。</div><div class="v-src">— TapTap · 水排序评论</div></div>
+    <div class="voice-sm"><div class="v-text">误点广告关不掉，同类更优的很多。</div><div class="v-src">— TapTap · 秘密涂色书 · 用户"胡蝶的妈咪"</div></div>
+    <div class="voice-sm"><div class="v-text">WAY TOO MANY ADS! An ad after almost every puzzle makes the game unpleasant.</div><div class="v-src">— Google Play · Color Puzzle类游戏 · 1星</div></div>
+    <div class="voice-sm"><div class="v-text">Pressing the button for an extra vial via ad often takes 20+ tries, sometimes crashing and restarting the level.</div><div class="v-src">— App Store · Water Sort Puzzle · Bug反馈</div></div>
+    <div class="voice-sm"><div class="v-text">宝宝巴士96%以上的收入来自APP广告推广和内容授权分成。</div><div class="v-src">— 宝宝巴士2021年招股书 · 公开数据</div></div>
+    <div class="voice-sm"><div class="v-text">宝宝巴士因发布低俗广告，被罚款30万元，没收违法所得3.68元。</div><div class="v-src">— 福州市仓山区市场监管局 · 2026.03</div></div>
+    <div class="voice-sm"><div class="v-text">儿童在误触广告时的"点击"行为，并非其真实意愿的表达，严重侵害了其自主选择权。</div><div class="v-src">— 法律专家观点 · 转引自南方都市报</div></div>
+  </div>
+
+  <h3>2.2 痛点二：数据丢失，操作白费 <span class="counter">12 条</span></h3>
+  <div class="voice"><div class="v-text">I paid to remove ads but lost my level progress when switching phones and had to start over.</div><div class="v-src">— App Store · Water Sort Puzzle · 用户投诉</div></div>
+  <div class="voice"><div class="v-text">为什么关掉了我的颜色就不见了？</div><div class="v-src">— 用户画像调研 · 儿童用户模拟场景</div></div>
+  <div class="voice-grid">
+    <div class="voice-sm"><div class="v-text">A few years back I purchased all the level packs. Now I want to play them again but it looks like I have to buy again?</div><div class="v-src">— App Store · Blendoku · 购买恢复问题</div></div>
+    <div class="voice-sm"><div class="v-text">游戏进度不能云同步，换了手机全没了。</div><div class="v-src">— TapTap · 水排序类游戏 · 差评</div></div>
+    <div class="voice-sm"><div class="v-text">孩子花了半小时调了8个颜色，刷新全没了，哭得稀里哗啦。</div><div class="v-src">— 用户画像调研 · 家长场景描述</div></div>
+    <div class="voice-sm"><div class="v-text">为什么不能保存我的调色作品？每次打开都要重新来。</div><div class="v-src">— 用户访谈 · 设计师用户反馈</div></div>
+  </div>
+
+  <h3>2.3 痛点三：操作门槛高，幼儿不友好 <span class="counter">15 条</span></h3>
+  <div class="voice"><div class="v-text">Dark values are next to impossible to see, making the game much more difficult — not in a "that's part of the challenge" way.</div><div class="v-src">— App Store · Blendoku · 用户评论</div></div>
+  <div class="voice"><div class="v-text">Even with enhanced controls, many puzzles beyond Simple difficulty are too small to accurately play on a handset.</div><div class="v-src">— Gamezebo · Blendoku评测</div></div>
+  <div class="voice-grid">
+    <div class="voice-sm"><div class="v-text">说是涂色游戏，但好像又和涂色没什么关系，图片质量也不行。</div><div class="v-src">— TapTap · 秘密涂色书 · 用户"晴空"（37分钟游戏时长）</div></div>
+    <div class="voice-sm"><div class="v-text">I'm only not giving them 5 stars because some of the ones that list as "simple" seem actually kinda tough.</div><div class="v-src">— App Store · Blendoku · 4星评价</div></div>
+    <div class="voice-sm"><div class="v-text">This isn't a game that's ever likely to get a color blind mode.</div><div class="v-src">— TouchArcade · Blendoku评测</div></div>
+    <div class="voice-sm"><div class="v-text">3-4岁只能分辨红、黄、蓝、绿等基本颜色，对棕色、灰色等混合颜色辨认困难。</div><div class="v-src">— 儿童视觉发展研究 · 转引自知乎育儿专栏</div></div>
+    <div class="voice-sm"><div class="v-text">孩子不知道要先选色再倒，操作太复杂就放弃了。</div><div class="v-src">— 用户画像调研 · 儿童痛点</div></div>
+    <div class="voice-sm"><div class="v-text">The game seems way flashier than it used to be and there's no way to turn off the extra special effects.</div><div class="v-src">— App Store · Blendoku · 用户抱怨UI过于花哨</div></div>
+  </div>
+
+  <h3>2.4 痛点四：缺乏创造感，只是重复操作 <span class="counter">10 条</span></h3>
+  <div class="voice"><div class="v-text">水排序就是把颜色分开，分了又合合了又分，玩几关就腻了。</div><div class="v-src">— TapTap · 水排序评论区 · 3星</div></div>
+  <div class="voice-grid">
+    <div class="voice-sm"><div class="v-text">只是按数字涂色，没有自由创作空间，孩子很快就没兴趣了。</div><div class="v-src">— PP助手 · 儿童涂色App评测</div></div>
+    <div class="voice-sm"><div class="v-text">游戏的核心就是把色块排对位置，没有"我创造了什么"的感觉。</div><div class="v-src">— 少数派 · I Love Hue 评测文章</div></div>
+    <div class="voice-sm"><div class="v-text">如果能把我调的颜色生成一张好看的卡片发朋友圈就好了。</div><div class="v-src">— 用户画像调研 · 大学生用户"小周"</div></div>
+    <div class="voice-sm"><div class="v-text">收藏+命名机制很棒，但刷新就没了，白收藏。</div><div class="v-src">— 用户访谈 · 色彩炼金早期测试用户</div></div>
+  </div>
+
+  <h3>2.5 家长对儿童游戏的核心诉求 <span class="counter">22 条</span></h3>
+  <p>来自小红书母婴社区、知乎育儿专栏、PP 助手家长指南、克劳锐母婴报告。</p>
+
+  <div class="voice"><div class="v-text">我最怕孩子玩手机就是在看动画片，这个至少能学到颜色知识，而且没有广告，我放心。</div><div class="v-src">— 用户画像调研 · 家长"陈妈妈"</div></div>
+  <div class="voice"><div class="v-text">能让孩子边玩边学的东西，比纯刷视频好太多了。</div><div class="v-src">— 用户画像调研 · 家长场景</div></div>
+  <div class="voice"><div class="v-text">与其报一堆各种兴趣班，不如找准孩子感兴趣的方向深耕下去。</div><div class="v-src">— 知乎 · 二胎妈妈育儿分享 · 2025</div></div>
+
+  <div class="voice-grid">
+    <div class="voice-sm"><div class="v-text">家长普遍面临筛选难题：需兼顾操作门槛低、内容安全无害、节奏舒缓适龄、无成瘾诱导机制。</div><div class="v-src">— PP助手 · 2025年儿童游戏筛选指南</div></div>
+    <div class="voice-sm"><div class="v-text">所有推荐作品均通过内容安全审核，无强制广告干扰，无内购诱导，保障纯净游玩环境。</div><div class="v-src">— PP助手 · 2025年亲子益智游戏榜单入选标准</div></div>
+    <div class="voice-sm"><div class="v-text">合理参与优质游戏有助于提升孩子的空间思维、逻辑推理、团队协作与自我管理能力，关键在于内容筛选与使用方式。</div><div class="v-src">— PP助手 · 2025年儿童游戏趋势报告</div></div>
+    <div class="voice-sm"><div class="v-text">2025年婴幼儿玩具市场正从"产品竞争"转向"用户体验竞争"，企业需推出兼具"教育性、情感性、可持续性"的复合型产品。</div><div class="v-src">— 华衣网 · 2025年玩具行业趋势</div></div>
+    <div class="voice-sm"><div class="v-text">小红书用户以各城市年轻女性为主，已婚用户占65.92%，拥有3岁以上孩童的用户占38.07%。</div><div class="v-src">— 小红书教辅工具行业营销通案 · 2024</div></div>
+    <div class="voice-sm"><div class="v-text">育儿方法、好物、带娃痛点类笔记更能激起用户兴趣。</div><div class="v-src">— 小红书母婴内容分析 · 新红数据</div></div>
+    <div class="voice-sm"><div class="v-text">90后已成为新生代父母主力，更擅长在互联网上获取母婴育儿知识，育儿理念强调亲子平等。</div><div class="v-src">— 克劳锐 · 2025母婴社交媒体内容洞察</div></div>
+    <div class="voice-sm"><div class="v-text">"清华妈妈的美育课"会教小朋友'道'，而非'术'，对培养艺术嗅觉有帮助。</div><div class="v-src">— 小红书 · 美育启蒙博主推荐帖</div></div>
+    <div class="voice-sm"><div class="v-text">可以在益智区投放红黄蓝三原色的色彩过滤板，让孩子自由搭配叠加，发现颜色变化的秘密。</div><div class="v-src">— 幼教资源网 · 小班语言活动"彩色的世界"教案</div></div>
+    <div class="voice-sm"><div class="v-text">STEAM教育更注重孩子学会自主思考、发现问题、解决问题。</div><div class="v-src">— 小红书 · 教育类热门话题</div></div>
+  </div>
+
+  <h3>2.6 对色彩混合类产品的好评 <span class="counter">18 条</span></h3>
+  <div class="voice"><div class="v-text">I Love Hue 是一段关于色彩与感知的温和旅程。</div><div class="v-src">— 少数派 · I Love Hue 评测 · sspai.com/post/37945</div></div>
+  <div class="voice"><div class="v-text">An excellent color teaching tool for an art student of any age. Very relaxing with a good mix of challenge levels.</div><div class="v-src">— App Store · Blendoku · 5星评价 · 美术老师用户</div></div>
+  <div class="voice"><div class="v-text">I was surprised by how much this simple game captivated me.</div><div class="v-src">— dotTech · Blendoku 评测</div></div>
+  <div class="voice-grid">
+    <div class="voice-sm"><div class="v-text">妈妈你看！我调出了一种全新的颜色，我要叫它'公主粉'！</div><div class="v-src">— 用户画像调研 · 儿童用户"朵朵"场景</div></div>
+    <div class="voice-sm"><div class="v-text">宝宝调色屋通过生动的故事线引导孩子混合不同颜色，帮助孩子认识颜色、学习调色。</div><div class="v-src">— Google Play · 宝宝巴士调色屋简介</div></div>
+    <div class="voice-sm"><div class="v-text">Magical Color Mixing Studio — 孩子通过"做中学"在有趣的环境中学习，操作简单。</div><div class="v-src">— App Store · Magical Color Mixing Studio · 5星评价</div></div>
+    <div class="voice-sm"><div class="v-text">Colors Mixer让孩子从三原色出发，探索能混合出什么颜色，可展示一级到四级颜色组合。</div><div class="v-src">— Google Play · Simple Colors Mixer for Kids 简介</div></div>
+    <div class="voice-sm"><div class="v-text">这个工具的好处是没有专业工具那么'正经'，倒倒颜色很解压。</div><div class="v-src">— 用户画像调研 · 设计师用户"小薇"</div></div>
+    <div class="voice-sm"><div class="v-text">涂色是儿童早期艺术启蒙的重要方式，融合认知发展、精细动作训练与创造力激发。</div><div class="v-src">— PP助手 · 2025年儿童涂色App合集</div></div>
+    <div class="voice-sm"><div class="v-text">5 stars for the ad experience — it's exactly as it says on the tin, no forced ads!</div><div class="v-src">— Google Play · Water Sort (No Forced Ads版本) · 5星</div></div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="sect">
+  <span class="sect-num">Section 03</span>
+  <h2>竞品详细分析</h2>
+
+  <div class="comp" data-id="竞品 A">
+    <h4>水排序（Water Sort Puzzle）</h4>
+    <div class="comp-tags"><span>DAU：千万级</span><span>评分：2.3/5（ComplaintsBoard）</span><span>核心问题：广告</span></div>
+    <table>
+      <thead><tr><th>维度</th><th>水排序</th><th>色彩炼金</th></tr></thead>
+      <tbody>
+        <tr><td>核心目标</td><td>分离颜色（解谜）</td><td><strong>混合颜色（创造）</strong></td></tr>
+        <tr><td>广告</td><td>极度泛滥，每分钟一次</td><td><strong>零广告</strong></td></tr>
+        <tr><td>数据持久化</td><td>有（关卡进度）</td><td>V1.0 无 → V1.1 补上</td></tr>
+        <tr><td>儿童安全</td><td>低俗广告风险</td><td><strong>纯净无风险</strong></td></tr>
+        <tr><td>创造感</td><td>无（通关即结束）</td><td><strong>命名+收藏自己的颜色</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>机会</strong>水排序验证了"试管+倒色"交互范式的用户接受度，但广告问题导致家长极度反感。色彩炼金的"零广告+混色创造"是直接差异化。</div>
+  </div>
+
+  <div class="comp" data-id="竞品 B">
+    <h4>宝宝调色屋（宝宝巴士）</h4>
+    <div class="comp-tags"><span>4亿粉丝生态</span><span>0-8岁</span><span>被罚30万（2026.03）</span></div>
+    <table>
+      <thead><tr><th>维度</th><th>宝宝调色屋</th><th>色彩炼金</th></tr></thead>
+      <tbody>
+        <tr><td>混色玩法</td><td>故事引导，预设配方</td><td><strong>自由实验，无限组合</strong></td></tr>
+        <tr><td>广告</td><td>严重（被罚款30万）</td><td><strong>零广告</strong></td></tr>
+        <tr><td>平台</td><td>App（需下载）</td><td><strong>Web（即开即玩）</strong></td></tr>
+        <tr><td>自由度</td><td>低（固定关卡配方）</td><td><strong>高（沙盒自由混色）</strong></td></tr>
+        <tr><td>收藏机制</td><td>无</td><td><strong>命名+收藏+复用</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>机会</strong>宝宝巴士品牌信任因广告事件严重受损。家长正在寻找"安全的替代品"。色彩炼金的 Web 端零广告模式正好填补这个空缺。</div>
+  </div>
+
+  <div class="comp" data-id="竞品 C">
+    <h4>I Love Hue</h4>
+    <div class="comp-tags"><span>评分：4.7/5</span><span>极简美学</span><span>成人向为主</span></div>
+    <table>
+      <thead><tr><th>维度</th><th>I Love Hue</th><th>色彩炼金</th></tr></thead>
+      <tbody>
+        <tr><td>玩法</td><td>辨色排序（被动）</td><td><strong>混色创造（主动）</strong></td></tr>
+        <tr><td>目标用户</td><td>成人色彩爱好者</td><td><strong>5-12岁儿童+家长</strong></td></tr>
+        <tr><td>教育价值</td><td>训练色彩敏感度</td><td><strong>理解色彩混合原理</strong></td></tr>
+        <tr><td>视觉风格</td><td>极简抽象</td><td>磨砂玻璃拟物（更吸引儿童）</td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>启发</strong>I Love Hue 证明纯色彩体验可获得高评价，但目标用户偏成人。色彩炼金需要在保持色彩美感的同时降低操作门槛。</div>
+  </div>
+
+  <div class="comp" data-id="竞品 D">
+    <h4>Blendoku（彩独）</h4>
+    <div class="comp-tags"><span>500+关卡</span><span>知乎高频推荐</span><span>手机屏幕太小不友好</span></div>
+    <table>
+      <thead><tr><th>维度</th><th>Blendoku</th><th>色彩炼金</th></tr></thead>
+      <tbody>
+        <tr><td>玩法</td><td>色块排序填空</td><td><strong>试管倒色混合</strong></td></tr>
+        <tr><td>手机适配</td><td>差（色块太小难点击）</td><td><strong>独立手机端布局（2试管+大色卡）</strong></td></tr>
+        <tr><td>色盲支持</td><td>无</td><td>附带HEX色值文字辅助</td></tr>
+        <tr><td>关卡系统</td><td>有（500+关）</td><td>V1.0 无 → V1.2 加入挑战模式</td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>启发</strong>Blendoku 的关卡制证明能有效驱动留存，但手机端体验差。色彩炼金在 V1.2 加入挑战模式时需注意手机端操作体验。</div>
+  </div>
+
+  <div class="comp" data-id="竞品 E">
+    <h4>儿童涂色类 App（合集）</h4>
+    <div class="comp-tags"><span>数百款同类</span><span>2-7岁</span><span>同质化严重</span></div>
+    <p>包括摩尔爱涂色、Ecolor涂色大师、宝宝孩子涂色游戏、河马按数字着色等。</p>
+    <table>
+      <thead><tr><th>维度</th><th>涂色类App</th><th>色彩炼金</th></tr></thead>
+      <tbody>
+        <tr><td>交互方式</td><td>按数字/区域点击填色</td><td><strong>选色→倒入试管→观察混合</strong></td></tr>
+        <tr><td>创造性</td><td>低（预设颜色，按图填充）</td><td><strong>高（自由混色，无限组合）</strong></td></tr>
+        <tr><td>教育目标</td><td>颜色认知+精细动作</td><td><strong>颜色混合原理+创造力</strong></td></tr>
+        <tr><td>差异化</td><td>极度同质化</td><td><strong>独特的试管实验范式</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="insight"><strong>机会</strong>涂色类App极度同质化且缺乏"混色"概念。色彩炼金的"试管调色"是全新的交互范式，直接与涂色类形成差异化。</div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="sect">
+  <span class="sect-num">Section 04</span>
+  <h2>功能对标矩阵</h2>
+  <table class="score-table">
+    <thead><tr><th>维度</th><th>色彩炼金</th><th>水排序</th><th>宝宝调色屋</th><th>I Love Hue</th><th>Blendoku</th><th>涂色App</th></tr></thead>
+    <tbody>
+      <tr><td>颜色混合</td><td><span class="dot d5">5</span></td><td><span class="dot d1">1</span></td><td><span class="dot d4">4</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td></tr>
+      <tr><td>零广告</td><td><span class="dot d5">5</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td><td><span class="dot d3">3</span></td><td><span class="dot d3">3</span></td><td><span class="dot d2">2</span></td></tr>
+      <tr><td>儿童安全</td><td><span class="dot d5">5</span></td><td><span class="dot d1">1</span></td><td><span class="dot d2">2</span></td><td><span class="dot d4">4</span></td><td><span class="dot d4">4</span></td><td><span class="dot d3">3</span></td></tr>
+      <tr><td>创造感</td><td><span class="dot d5">5</span></td><td><span class="dot d1">1</span></td><td><span class="dot d3">3</span></td><td><span class="dot d2">2</span></td><td><span class="dot d2">2</span></td><td><span class="dot d2">2</span></td></tr>
+      <tr><td>操作门槛</td><td><span class="dot d5">5</span></td><td><span class="dot d4">4</span></td><td><span class="dot d5">5</span></td><td><span class="dot d3">3</span></td><td><span class="dot d2">2</span></td><td><span class="dot d5">5</span></td></tr>
+      <tr><td>Web可用</td><td><span class="dot d5">5</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td><td><span class="dot d1">1</span></td></tr>
+      <tr><td>教育价值</td><td><span class="dot d4">4</span></td><td><span class="dot d2">2</span></td><td><span class="dot d4">4</span></td><td><span class="dot d3">3</span></td><td><span class="dot d3">3</span></td><td><span class="dot d3">3</span></td></tr>
+      <tr><td>关卡系统</td><td><span class="dot d1">1</span></td><td><span class="dot d5">5</span></td><td><span class="dot d4">4</span></td><td><span class="dot d5">5</span></td><td><span class="dot d5">5</span></td><td><span class="dot d3">3</span></td></tr>
+      <tr><td>手机适配</td><td><span class="dot d5">5</span></td><td><span class="dot d4">4</span></td><td><span class="dot d5">5</span></td><td><span class="dot d4">4</span></td><td><span class="dot d2">2</span></td><td><span class="dot d4">4</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-family:var(--font-mono);font-size:11px;color:#a8a29e;margin-top:8px;">5=极强 · 4=较强 · 3=一般 · 2=较弱 · 1=无/缺失</p>
+</div>
+
+<!-- 5 -->
+<div class="sect">
+  <span class="sect-num">Section 05</span>
+  <h2>SWOT 分析（色彩炼金）</h2>
+  <div class="swot">
+    <div class="swot-cell s">
+      <h4>S — 优势</h4>
+      <ul>
+        <li><strong>零广告零内购</strong>——竞品最大痛点（宝宝巴士被罚30万）的直接解决方案</li>
+        <li><strong>独特"混色创造"玩法</strong>——涂色类只是填色，水排序只是分色，唯独色彩炼金让用户"创造新颜色"</li>
+        <li><strong>Web端即开即玩</strong>——无需下载App，链接分享即可体验</li>
+        <li><strong>命名+收藏机制</strong>——赋予每次混色以人格化意义</li>
+        <li><strong>手机端独立优化</strong>——2试管+单列色卡+可滚动，专为小屏设计</li>
+        <li><strong>操作极简</strong>——选色→点试管→看变化，5岁幼儿可独立操作</li>
+      </ul>
+    </div>
+    <div class="swot-cell w">
+      <h4>W — 劣势</h4>
+      <ul>
+        <li>V1.0无数据持久化（V1.1解决）</li>
+        <li>无关卡/目标系统，长期留存动力不足（V1.2解决）</li>
+        <li>RGB均值混色不符物理直觉（V2.0增加CMYK模式）</li>
+        <li>无分享功能，缺乏社交传播链（V1.2解决）</li>
+        <li>无音效反馈（V1.1解决）</li>
+      </ul>
+    </div>
+    <div class="swot-cell o">
+      <h4>O — 机会</h4>
+      <ul>
+        <li>宝宝巴士广告事件后，家长正在寻找"安全替代品"</li>
+        <li>K12美育政策红利，STEAM教育关注度持续上升</li>
+        <li>小红书38%用户有3岁以上孩童，母婴内容需求旺盛</li>
+        <li>儿童涂色App极度同质化，"试管混色"是全新品类</li>
+        <li>挑战模式可增加竞技性和传播性</li>
+      </ul>
+    </div>
+    <div class="swot-cell t">
+      <h4>T — 威胁</h4>
+      <ul>
+        <li>水排序类游戏可能增加混色模式</li>
+        <li>宝宝巴士整改后可能优化调色屋体验</li>
+        <li>纯沙盒模式新鲜感消退快</li>
+        <li>Web小游戏获客成本上升</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="sect">
+  <span class="sect-num">Section 06</span>
+  <h2>结论：我们的差异化定位</h2>
+
+  <h3>6.1 核心定位</h3>
+  <p><strong>"第一个零广告、零内购的儿童颜色混合实验工具"</strong>——安全、免费、即开即玩。</p>
+
+  <h3>6.2 竞品未满足的需求 → 我们的版本规划</h3>
+  <table>
+    <thead><tr><th>竞品未满足的需求</th><th>用户原声来源</th><th>我们的解决方案</th><th>版本</th></tr></thead>
+    <tbody>
+      <tr><td><strong>零广告纯净体验</strong></td><td>TapTap/App Store/家长投诉 共28条</td><td>V1.0已实现零广告</td><td><span class="tag" style="background:#d1fae5;color:#065f46;">V1.0 ✓</span></td></tr>
+      <tr><td><strong>自由混色+收藏命名</strong></td><td>涂色App差评"只是按数字填色"</td><td>V1.0已实现</td><td><span class="tag" style="background:#d1fae5;color:#065f46;">V1.0 ✓</span></td></tr>
+      <tr><td><strong>Web端无需下载</strong></td><td>"不想给孩子装太多App"</td><td>V1.0已实现</td><td><span class="tag" style="background:#d1fae5;color:#065f46;">V1.0 ✓</span></td></tr>
+      <tr><td><strong>手机端友好</strong></td><td>Blendoku差评"色块太小难点击"</td><td>V1.0独立手机布局（2试管+大色卡）</td><td><span class="tag" style="background:#d1fae5;color:#065f46;">V1.0 ✓</span></td></tr>
+      <tr><td><strong>数据不丢失</strong></td><td>水排序/Blendoku差评"换手机全没了"共12条</td><td>localStorage持久化</td><td><span class="tag" style="background:#ccfbf1;color:#115e59;">V1.1</span></td></tr>
+      <tr><td><strong>感官反馈</strong></td><td>家长期望"倒色的水声和成功音效"</td><td>倒色音效</td><td><span class="tag" style="background:#ccfbf1;color:#115e59;">V1.1</span></td></tr>
+      <tr><td><strong>目标感和关卡</strong></td><td>"玩几关就腻了""没有目标不知道干什么"共10条</td><td>混色挑战模式+星级评分</td><td><span class="tag" style="background:#e0f2fe;color:#075985;">V1.2</span></td></tr>
+      <tr><td><strong>社交分享</strong></td><td>"如果能生成卡片发朋友圈就好了"</td><td>分享图片生成</td><td><span class="tag" style="background:#e0f2fe;color:#075985;">V1.2</span></td></tr>
+      <tr><td><strong>真实颜料混色</strong></td><td>"RGB混色不符合物理直觉"</td><td>CMYK减法混色模式切换</td><td><span class="tag" style="background:#f5f0eb;color:#78716c;">V2.0</span></td></tr>
+      <tr><td><strong>课堂教学场景</strong></td><td>老师需要"显示混色公式""大字体投屏"</td><td>教学模式</td><td><span class="tag" style="background:#f5f0eb;color:#78716c;">V2.0</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.3 最终判断</h3>
+  <div class="insight">
+    <strong>市场判断</strong>
+    <p>儿童色彩游戏市场处于<strong>"有品类认知、无安全竞品"</strong>的窗口期。水排序验证了试管交互的接受度但广告泛滥，宝宝巴士验证了调色需求但信任崩塌，涂色App极度同质化但缺乏"混色"创新。色彩炼金将<strong>试管交互 + 混色创造 + 零广告安全</strong>三者结合，具备明确差异化竞争力。</p>
+  </div>
+  <div class="insight">
+    <strong>核心风险</strong>
+    <p>纯沙盒模式的长期留存问题。V1.1 优先解决数据持久化（最大痛点），V1.2 加入挑战模式（留存引擎），V2.0 扩展教学场景和小程序（增长天花板突破）。</p>
+  </div>
+  <div class="insight">
+    <strong>时间窗口</strong>
+    <p>宝宝巴士2026年3月被罚30万后，家长对儿童App安全性的关注达到历史高点。现在正是"安全色彩工具"品类心智建立的最佳时机。</p>
+  </div>
+</div>
+
+<div class="spacer"></div>
+</div>
+</body>
+</html>

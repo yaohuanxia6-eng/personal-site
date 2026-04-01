@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色彩炼金 — 用户画像文档</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c1917;--paper:#faf8f5;--mid:#57534e;--light:#d6d3d1;--faint:#f5f0eb;--accent:#7c3aed;--font-display:'Playfair Display','Noto Serif SC',serif;--font-body:'DM Sans','PingFang SC','Microsoft YaHei',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--ink);background:var(--paper);line-height:1.72;font-size:15px;-webkit-font-smoothing:antialiased}
+.cover{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding:clamp(40px,8vw,120px) clamp(24px,6vw,80px);background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 25% 70%,oklch(0.48 0.22 285/0.4),transparent),radial-gradient(ellipse 45% 50% at 75% 30%,oklch(0.42 0.18 250/0.3),transparent);mix-blend-mode:screen}
+.cover-inner{position:relative;z-index:1;max-width:800px}
+.cover-label{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:.5;margin-bottom:32px}
+.cover h1{font-family:var(--font-display);font-size:clamp(48px,8vw,96px);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:20px}
+.cover h1 em{font-style:italic;background:linear-gradient(135deg,#c4b5fd,#a78bfa,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cover-sub{font-size:clamp(18px,2.5vw,24px);font-weight:300;opacity:.7;max-width:560px;margin-bottom:48px}
+.cover-meta{display:flex;gap:40px;flex-wrap:wrap;font-size:13px;opacity:.5;align-self:end}
+.cover-meta dt{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:2px;font-size:10px;margin-bottom:4px}
+.cover-meta dd{font-weight:500;font-size:14px}
+.doc{max-width:860px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.spacer{height:clamp(48px,8vh,96px)}
+.sect{padding:56px 0 40px;animation:fadeUp .5s ease both}
+.sect+.sect{border-top:1px solid var(--light)}
+.sect-num{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block}
+.sect h2{font-family:var(--font-display);font-size:clamp(28px,4vw,36px);font-weight:700;line-height:1.2;margin-bottom:28px}
+.sect h3{font-size:17px;font-weight:600;margin:32px 0 12px;padding-left:12px;border-left:3px solid var(--accent)}
+.sect p{color:var(--mid);margin-bottom:14px}
+.sect ul,.sect ol{padding-left:20px;margin-bottom:14px;color:var(--mid)}
+.sect li{margin-bottom:5px}
+.sect li strong{color:var(--ink)}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+thead th{text-align:left;font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);padding:10px 16px;border-bottom:2px solid var(--ink);font-weight:500}
+td{padding:12px 16px;border-bottom:1px solid #e7e5e4;color:var(--mid);vertical-align:top}
+tbody tr:hover td{background:var(--faint)}
+td strong{color:var(--ink)}
+.persona{margin:40px 0;border:1px solid var(--light);overflow:hidden}
+.persona-top{padding:32px;color:white;display:flex;align-items:center;gap:24px}
+.persona-avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;border:2px solid rgba(255,255,255,.4)}
+.persona-name{font-family:var(--font-display);font-size:22px;font-weight:700;margin-bottom:4px}
+.persona-line{font-size:14px;opacity:.85}
+.persona-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.persona-badges span{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25)}
+.persona-body{padding:32px;background:var(--paper)}
+.persona-quote{font-style:italic;color:var(--mid);padding:16px 20px;border-left:3px solid var(--accent);margin-bottom:24px;font-size:15px;background:var(--faint)}
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.persona-grid h4{font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.persona-grid ul{padding-left:16px;font-size:14px;color:var(--mid)}
+.persona-grid li{margin-bottom:4px}
+.persona-scenario{margin-top:24px;padding:20px;background:var(--faint);border:1px solid var(--light);font-size:14px;color:var(--mid)}
+.persona-scenario strong{color:var(--ink);font-family:var(--font-mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:8px}
+.bg1{background:linear-gradient(135deg,#be185d,#e11d48)}.bg2{background:linear-gradient(135deg,#c2410c,#f59e0b)}.bg3{background:linear-gradient(135deg,#0369a1,#0ea5e9)}.bg4{background:linear-gradient(135deg,#047857,#10b981)}
+.empathy{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--light);margin:20px 0}
+.empathy-cell{background:var(--paper);padding:24px}
+.empathy-cell h4{font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.empathy-cell ul{padding-left:16px;font-size:13px;color:var(--mid)}
+.empathy-cell li{margin-bottom:4px}
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--light);margin:20px 0}
+.matrix-cell{background:var(--paper);padding:24px}
+.matrix-cell h4{font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.matrix-cell ul{padding-left:16px;font-size:14px;color:var(--mid)}
+.matrix-cell li{margin-bottom:4px}
+.mc-core h4{color:#059669}.mc-key h4{color:#2563eb}.mc-enhance h4{color:#7c3aed}.mc-future h4{color:#d97706}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.cover-meta{flex-direction:column;gap:16px}.persona-grid{grid-template-columns:1fr}.empathy{grid-template-columns:1fr}.matrix{grid-template-columns:1fr}.persona-top{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">User Persona &amp; Audience Analysis — V2.0</div>
+    <h1>色彩炼金<br><em>用户画像文档</em></h1>
+    <p class="cover-sub">4 个核心用户画像，聚焦儿童教育场景——从学龄前幼儿到小学课堂。</p>
+  </div>
+  <dl class="cover-meta">
+    <div><dt>版本</dt><dd>V2.0（聚焦儿童场景）</dd></div>
+    <div><dt>日期</dt><dd>2026-03-31</dd></div>
+    <div><dt>画像数量</dt><dd>4 个核心画像</dd></div>
+  </dl>
+</section>
+
+<div class="doc">
+
+<!-- 1 -->
+<div class="sect">
+  <span class="sect-num">Section 01</span>
+  <h2>目标用户概览</h2>
+  <h3>1.1 用户群体分层</h3>
+  <p>根据竞品调研 V2.0 结论，产品聚焦<strong>儿童教育场景</strong>，删除了设计师和休闲玩家画像，细化了儿童年龄段。</p>
+  <table>
+    <thead><tr><th>层级</th><th>用户群体</th><th>占比</th><th>角色定位</th><th>核心需求</th></tr></thead>
+    <tbody>
+      <tr><td><strong>核心用户</strong></td><td>5-7 岁学龄前儿童</td><td>30%</td><td>直接使用者</td><td>好玩好看、即时反馈、有成就感</td></tr>
+      <tr><td><strong>核心用户</strong></td><td>8-12 岁小学生</td><td>25%</td><td>直接使用者</td><td>探索创造、收集成就、社交分享</td></tr>
+      <tr><td><strong>决策者</strong></td><td>家长（25-40 岁）</td><td>30%</td><td>下载/推荐决策者</td><td>安全无广告、有教育价值、时间可控</td></tr>
+      <tr><td><strong>渠道用户</strong></td><td>教师（含早教机构）</td><td>15%</td><td>课堂使用 / 推荐者</td><td>投屏演示、快速重置、教学辅助</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 用户关系链</h3>
+  <p>儿童产品的特殊之处在于<strong>"使用者"和"决策者"分离</strong>：</p>
+  <ul>
+    <li><strong>儿童</strong>是直接使用者——决定"好不好玩、玩不玩"</li>
+    <li><strong>家长</strong>是下载决策者——决定"安不安全、让不让玩"</li>
+    <li><strong>教师</strong>是场景推荐者——决定"课堂上用不用"</li>
+  </ul>
+  <p>产品必须<strong>同时满足三方需求</strong>：对孩子有趣、让家长放心、给老师好用。</p>
+</div>
+
+<!-- 2 -->
+<div class="sect">
+  <span class="sect-num">Section 02</span>
+  <h2>核心用户画像</h2>
+
+  <!-- P1: 学龄前 -->
+  <div class="persona">
+    <div class="persona-top bg1">
+      <div class="persona-avatar">👧</div>
+      <div>
+        <div class="persona-name">朵朵 | 5岁 幼儿园大班</div>
+        <div class="persona-line">"红色加黄色会变成什么颜色呀？"</div>
+        <div class="persona-badges"><span>核心用户</span><span>学龄前</span><span>家长陪伴使用</span></div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-quote">"妈妈你看！我调出了一种全新的颜色，我要叫它'公主粉'！"</div>
+      <div class="persona-grid">
+        <div><h4>基本信息</h4><ul><li>年龄：5 岁，幼儿园大班</li><li>城市：二线城市</li><li>设备：家长手机 / iPad</li><li>使用场景：周末在家、餐厅等位、课后休息</li><li>使用时长：5-15 分钟/次（注意力上限）</li></ul></div>
+        <div><h4>认知发展特点</h4><ul><li>可分辨红黄蓝绿橙紫等基本颜色</li><li>对棕色、灰色等混合色辨认困难</li><li>好奇心强，喜欢"如果…会怎样"的探索</li><li>注意力集中 10-15 分钟</li><li>精细动作发展中，需要大按钮和大色块</li></ul></div>
+        <div><h4>核心需求</h4><ul><li>点一下就有反应，即时正反馈</li><li>颜色变化直观好看，有"哇"的惊喜</li><li>操作极简，不需要文字说明</li><li>可以给颜色起好玩的名字</li></ul></div>
+        <div><h4>痛点与风险</h4><ul><li>竞品广告误触——被低俗内容吓哭（竞品调研28条反馈）</li><li>混出"脏色"（灰/褐）会觉得无趣</li><li>关掉浏览器收藏颜色没了会沮丧</li><li>手机端色块太小点不准（Blendoku差评来源）</li></ul></div>
+      </div>
+      <div class="persona-scenario">
+        <strong>典型使用场景</strong>
+        周末下午，朵朵做完手工，妈妈把手机给她。朵朵打开色彩炼金，先往试管里倒了红色和黄色，看到变成了橙色，开心地说"像橘子！"。然后她又试了红+蓝，看到变成了暗紫色说"好神奇"。调了 3 个颜色后妈妈叫她吃水果，她说"等我把这个保存下来"，输入"彩虹紫"点确认，满意地把手机还给妈妈。全程 8 分钟。
+      </div>
+    </div>
+  </div>
+
+  <!-- P2: 小学生 -->
+  <div class="persona">
+    <div class="persona-top bg2">
+      <div class="persona-avatar">🧒</div>
+      <div>
+        <div class="persona-name">小明 | 9岁 小学三年级</div>
+        <div class="persona-line">"我要把 8 个收藏格全部填满！"</div>
+        <div class="persona-badges"><span>核心用户</span><span>小学生</span><span>目标驱动</span></div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-quote">"我调出了一个跟课本上说的'靛蓝'很像的颜色，老师说很厉害！"</div>
+      <div class="persona-grid">
+        <div><h4>基本信息</h4><ul><li>年龄：9 岁，三年级</li><li>城市：一线城市</li><li>设备：自己的学习平板 / 家长手机</li><li>使用场景：课后、美术课、同学间分享</li><li>使用时长：15-30 分钟/次</li></ul></div>
+        <div><h4>认知发展特点</h4><ul><li>已具备成人视觉，能辨认光谱全部色相</li><li>开始理解"三原色混合"等基础色彩理论</li><li>有收集欲和成就感驱动</li><li>会与同学比较、分享</li><li>能独立操作复杂交互</li></ul></div>
+        <div><h4>核心需求</h4><ul><li>有目标感——"调出目标色"比自由调色更有吸引力</li><li>收集/成就系统——填满收藏格</li><li>能跟同学分享——"看我调的颜色"</li><li>HEX 值显示——美术课上能跟老师聊色值</li></ul></div>
+        <div><h4>痛点与风险</h4><ul><li>纯沙盒模式玩几次就腻了（竞品调研10条反馈）</li><li>收藏上限 8 个太少，想收集更多</li><li>没有挑战/排行/分享功能</li><li>RGB混色结果跟美术课学的减法混色不一样</li></ul></div>
+      </div>
+      <div class="persona-scenario">
+        <strong>典型使用场景</strong>
+        美术课上老师讲了三原色，小明回家打开色彩炼金验证"红+蓝到底是什么颜色"。他连续试了红+蓝、红+黄、蓝+黄，把结果截图发到班级群。同学问"你这个在哪玩的"，小明分享了链接。第二天有 5 个同学也在玩。小明最想要的功能是"挑战模式——看谁能用最少步数调出指定颜色"。
+      </div>
+    </div>
+  </div>
+
+  <!-- P3: 家长 -->
+  <div class="persona">
+    <div class="persona-top bg4">
+      <div class="persona-avatar">👩</div>
+      <div>
+        <div class="persona-name">陈妈妈 | 32岁 职场妈妈</div>
+        <div class="persona-line">"只要没有广告、没有内购，我就放心让孩子玩。"</div>
+        <div class="persona-badges"><span>决策者</span><span>安全优先</span><span>教育导向</span></div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-quote">"之前给孩子下了宝宝巴士，结果弹出低俗广告，孩子吓哭了。再也不敢用了。"</div>
+      <div class="persona-grid">
+        <div><h4>基本信息</h4><ul><li>年龄：32 岁，孩子 6 岁</li><li>城市：一线城市</li><li>设备：iPhone / iPad</li><li>使用场景：给孩子选游戏、陪伴使用、餐厅哄娃</li><li>决策触发：小红书种草、老师推荐、家长群分享</li></ul></div>
+        <div><h4>决策标准（按优先级）</h4><ul><li><strong>1. 安全</strong>：零广告、零内购、无社交功能、无低俗内容</li><li><strong>2. 教育价值</strong>：能学到颜色知识，不是纯消磨时间</li><li><strong>3. 时间可控</strong>：没有"再玩一局"的成瘾循环</li><li><strong>4. 易上手</strong>：孩子能独立玩，不用家长一直教</li><li><strong>5. 颜值</strong>：推荐到家长群不丢面子</li></ul></div>
+        <div><h4>信息获取渠道</h4><ul><li>小红书搜索"儿童益智游戏推荐"</li><li>家长群/班级群口碑传播</li><li>老师课堂推荐</li><li>知乎"给孩子推荐什么App"帖子</li></ul></div>
+        <div><h4>痛点与顾虑</h4><ul><li>宝宝巴士广告事件后对儿童App极度不信任（被罚30万）</li><li>担心孩子沉迷——希望有自然停止点</li><li>担心下载App占手机空间——Web端更好</li><li>数据安全——不想注册账号泄露信息</li></ul></div>
+      </div>
+      <div class="persona-scenario">
+        <strong>典型使用场景</strong>
+        周末在商场等位吃饭，6岁女儿坐不住开始闹。陈妈妈在小红书搜"儿童益智小游戏 无广告"，看到有宝妈推荐色彩炼金，说"网页打开就能玩，零广告"。陈妈妈点开链接，先自己试了两下确认没有广告弹窗，然后递给女儿说"你来当小小炼金术师"。女儿很快沉浸进去，陈妈妈安心看菜单。回家后陈妈妈把链接发到了家长群。
+      </div>
+    </div>
+  </div>
+
+  <!-- P4: 教师 -->
+  <div class="persona">
+    <div class="persona-top bg3">
+      <div class="persona-avatar">👨‍🏫</div>
+      <div>
+        <div class="persona-name">王老师 | 28岁 早教机构美术老师</div>
+        <div class="persona-line">"有没有一个在线工具，投屏就能演示颜色混合？"</div>
+        <div class="persona-badges"><span>渠道用户</span><span>教学场景</span><span>投屏演示</span></div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-quote">"以前讲三原色都是拿水彩颜料当场调，弄得桌子满是颜料。有了这个工具，投屏演示就行了，干净又直观。"</div>
+      <div class="persona-grid">
+        <div><h4>基本信息</h4><ul><li>年龄：28 岁，教龄 4 年</li><li>机构：连锁早教中心（3-8 岁班）</li><li>设备：教室电脑 + 投影仪</li><li>使用场景：色彩理论课、亲子活动课</li><li>使用频率：每周 2-3 次课</li></ul></div>
+        <div><h4>行为特征</h4><ul><li>课前打开网页投屏准备好</li><li>先演示基础混色（红+黄=橙），再让孩子分组尝试</li><li>需要快速重置，一节课演示 5-6 组混色</li><li>会把链接发到家长群做课后延伸</li></ul></div>
+        <div><h4>核心需求</h4><ul><li>界面元素大、清晰，投屏后排也看得清</li><li>操作直观，课堂上不用花时间教怎么用</li><li>能快速重置重新演示</li><li>最好有"教学模式"显示混色公式（V2.0）</li></ul></div>
+        <div><h4>痛点与顾虑</h4><ul><li>机构电脑浏览器版本老，担心兼容性</li><li>课堂时间有限（40分钟），不想花时间在技术问题上</li><li>希望离线也能用（机构网络不稳定）</li><li>家长如果搜到广告类替代品可能有投诉风险</li></ul></div>
+      </div>
+      <div class="persona-scenario">
+        <strong>典型使用场景</strong>
+        周三下午色彩课，主题是"三原色与混合色"。王老师提前打开色彩炼金投屏，先演示红+黄=橙，孩子们齐声"哇~"。然后重置，演示红+蓝、蓝+黄。接着让孩子们两两一组，用教室的平板自己试。最后全班分享"谁调出了最特别的颜色"。课后王老师把链接发到家长群，附上一句"回家可以继续玩，零广告放心用"。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="sect">
+  <span class="sect-num">Section 03</span>
+  <h2>核心用户同理心地图</h2>
+  <p>以学龄前儿童（朵朵）为例</p>
+  <div class="empathy">
+    <div class="empathy-cell">
+      <h4>See — 看到什么</h4>
+      <ul>
+        <li>五颜六色的色卡和透明试管</li>
+        <li>颜色倒入时液面上升的动画</li>
+        <li>混合后出现了"没见过"的颜色</li>
+        <li>收藏栏里自己命名的颜色越来越多</li>
+      </ul>
+    </div>
+    <div class="empathy-cell">
+      <h4>Hear — 听到什么</h4>
+      <ul>
+        <li>妈妈说"你看红加蓝会变紫哦"</li>
+        <li>老师说"颜色可以混合出新颜色"</li>
+        <li>（期望听到：倒色的水声和成功音效 → V1.1）</li>
+        <li>（不希望听到：广告的声音 → 我们零广告）</li>
+      </ul>
+    </div>
+    <div class="empathy-cell">
+      <h4>Think &amp; Feel — 想什么</h4>
+      <ul>
+        <li>"如果把所有颜色都混在一起会怎样？"</li>
+        <li>"这个颜色好好看，我要保存下来！"</li>
+        <li>"调出了新颜色好有成就感！"</li>
+        <li>"为什么关掉了颜色就不见了？"（→ V1.1 解决）</li>
+      </ul>
+    </div>
+    <div class="empathy-cell">
+      <h4>Say &amp; Do — 说什么做什么</h4>
+      <ul>
+        <li>嘴里念叨着给颜色起名字</li>
+        <li>叫家长过来看自己调的颜色</li>
+        <li>反复倒色尝试不同组合</li>
+        <li>把试管全部填满看最终颜色</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="sect">
+  <span class="sect-num">Section 04</span>
+  <h2>用户需求优先级矩阵</h2>
+  <p>结合 4 个画像的需求，按"使用频率"和"价值感知"分类，并标注对应版本。</p>
+  <div class="matrix">
+    <div class="matrix-cell mc-core">
+      <h4>高频高价值 — V1.0 已实现</h4>
+      <ul><li>选色 + 倒入试管</li><li>实时看到混合颜色</li><li>撤回 / 重置操作</li><li>给混合色命名并收藏</li><li>零广告零内购</li><li>手机端 2 试管独立布局</li></ul>
+    </div>
+    <div class="matrix-cell mc-key">
+      <h4>低频高价值 — V1.1 / V1.2</h4>
+      <ul><li>数据持久化 localStorage（V1.1）</li><li>混色挑战模式（V1.2）</li><li>分享生成卡片（V1.2）</li><li>HEX 值一键复制（V1.1）</li><li>倒色音效反馈（V1.1）</li></ul>
+    </div>
+    <div class="matrix-cell mc-enhance">
+      <h4>高频低价值 — 体验增强</h4>
+      <ul><li>新手引导提示（V1.1）</li><li>更丰富的动画反馈</li><li>星级评分系统（V1.2）</li><li>收藏扩至 16（V1.2）</li></ul>
+    </div>
+    <div class="matrix-cell mc-future">
+      <h4>低频低价值 — V2.0 远期</h4>
+      <ul><li>CMYK 减法混色模式</li><li>教学模式（投屏优化）</li><li>成就系统 + 颜色图鉴</li><li>微信小程序版本</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="sect">
+  <span class="sect-num">Section 05</span>
+  <h2>用户旅程地图</h2>
+  <div style="overflow-x:auto">
+  <table>
+    <thead><tr><th>阶段</th><th>触达</th><th>进入</th><th>探索</th><th>创造</th><th>收藏</th><th>离开/回访</th></tr></thead>
+    <tbody>
+      <tr><td><strong>行为</strong></td><td>家长在小红书/家长群看到推荐链接</td><td>家长点开确认无广告 → 递给孩子</td><td>孩子点色卡，试着倒入试管</td><td>尝试不同组合，观察混合结果</td><td>输入≤4字名称保存</td><td>关掉 / 老师发链接再来</td></tr>
+      <tr><td><strong>想法</strong></td><td>"无广告？试试看"</td><td>"界面干净，放心给孩子"</td><td>"原来点颜色再点试管就行"</td><td>"哇这个颜色好特别！"</td><td>"我要叫它彩虹紫！"</td><td>"下次还想玩"</td></tr>
+      <tr><td><strong>情绪</strong></td><td>谨慎好奇</td><td>信任安心</td><td>理解兴奋</td><td>惊喜</td><td>满足成就</td><td>不舍 / 期待</td></tr>
+      <tr><td><strong>触点</strong></td><td>小红书/家长群/老师推荐</td><td>首页标题图+开始按钮</td><td>色卡区+试管区</td><td>试管液面+混合色</td><td>命名弹窗+收藏列</td><td>返回首页/浏览器关闭</td></tr>
+      <tr><td><strong>机会点</strong></td><td>首页需有"零广告"信任标识</td><td>加载要快，3秒内可玩</td><td>新手引导（V1.1）</td><td>音效反馈（V1.1）</td><td>持久化保存（V1.1）</td><td>分享卡片（V1.2）</td></tr>
+      <tr><td><strong>痛点</strong></td><td>链接没预览图不敢点</td><td>背景GIF加载慢</td><td>手机端只有2试管</td><td>RGB混色结果偏"脏"</td><td>名字限4字、上限8个</td><td>V1.0数据不持久化</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="sect">
+  <span class="sect-num">Section 06</span>
+  <h2>画像驱动的设计启示</h2>
+  <table>
+    <thead><tr><th>画像</th><th>关键洞察</th><th>产品设计启示</th><th>版本</th></tr></thead>
+    <tbody>
+      <tr><td><strong>朵朵</strong>（5岁）</td><td>注意力短，需即时正反馈；怕广告</td><td>倒色动画要明显、加音效、色卡要大；零广告是底线</td><td>V1.0 ✓ / V1.1</td></tr>
+      <tr><td><strong>小明</strong>（9岁）</td><td>有收集欲和目标感；想跟同学比较</td><td>挑战模式+星级评分+分享卡片生成</td><td>V1.2</td></tr>
+      <tr><td><strong>陈妈妈</strong>（家长）</td><td>宝宝巴士事件后极度不信任广告App</td><td>零广告零内购是最大卖点；Web端无需下载更安心</td><td>V1.0 ✓</td></tr>
+      <tr><td><strong>王老师</strong>（教师）</td><td>投屏场景需大元素+快速重置</td><td>教学模式：大字体、显示混色公式、一键重置</td><td>V2.0</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="spacer"></div>
+</div>
+</body>
+</html>

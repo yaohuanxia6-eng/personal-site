@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色彩炼金 — 产品需求文档</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1c1917;
+  --paper: #faf8f5;
+  --mid: #57534e;
+  --light: #d6d3d1;
+  --faint: #f5f0eb;
+  --accent: #c026d3;
+  --accent-soft: #f5d0fe;
+  --red: #dc2626;
+  --amber: #d97706;
+  --emerald: #059669;
+  --blue: #2563eb;
+  --violet: #7c3aed;
+  --rose: #e11d48;
+  --radius: 2px;
+  --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--ink); background: var(--paper); line-height: 1.72; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+/* ---- COVER ---- */
+.cover {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: clamp(40px, 8vw, 120px) clamp(24px, 6vw, 80px);
+  background: var(--ink);
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 80%, oklch(0.55 0.25 320 / 0.35), transparent),
+    radial-gradient(ellipse 50% 60% at 80% 20%, oklch(0.50 0.20 270 / 0.3), transparent),
+    radial-gradient(ellipse 40% 40% at 50% 50%, oklch(0.45 0.15 30 / 0.15), transparent);
+  mix-blend-mode: screen;
+}
+.cover-inner { position: relative; z-index: 1; max-width: 800px; }
+.cover-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 32px;
+}
+.cover h1 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.cover h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, #f0abfc, #c084fc, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cover-sub {
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 300;
+  opacity: 0.7;
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+.cover-meta {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  opacity: 0.5;
+  position: relative;
+  z-index: 1;
+  align-self: end;
+}
+.cover-meta dt { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 2px; font-size: 10px; margin-bottom: 4px; }
+.cover-meta dd { font-weight: 500; font-size: 14px; opacity: 1; }
+
+/* ---- LAYOUT ---- */
+.doc { max-width: 820px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+.spacer { height: clamp(48px, 8vh, 96px); }
+.spacer-sm { height: clamp(24px, 4vh, 48px); }
+
+/* ---- TOC ---- */
+.toc-wrap {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--light);
+}
+.toc-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 24px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 48px;
+}
+.toc-grid a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  padding: 6px 0;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+.toc-grid a:hover { color: var(--accent); }
+.toc-grid a .num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mid);
+  min-width: 28px;
+}
+
+/* ---- SECTIONS ---- */
+.sect { padding: 56px 0 40px; }
+.sect + .sect { border-top: 1px solid var(--light); }
+.sect-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+.sect h2 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+.sect h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 32px 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+.sect h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mid);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 24px 0 10px;
+}
+.sect p { color: var(--mid); margin-bottom: 14px; }
+.sect ul, .sect ol { padding-left: 20px; margin-bottom: 14px; color: var(--mid); }
+.sect li { margin-bottom: 5px; }
+.sect li strong { color: var(--ink); }
+.sect code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--faint);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* ---- TABLES ---- */
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+thead th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mid);
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--ink);
+  background: transparent;
+  font-weight: 500;
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e7e5e4;
+  color: var(--mid);
+  vertical-align: top;
+}
+tbody tr:hover td { background: var(--faint); }
+
+/* ---- TAGS ---- */
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.tag-p0 { background: #fecdd3; color: #9f1239; }
+.tag-p1 { background: #fef3c7; color: #92400e; }
+.tag-p2 { background: #d1fae5; color: #065f46; }
+.tag-must { background: #ede9fe; color: #5b21b6; }
+.tag-should { background: #dbeafe; color: #1e40af; }
+
+/* ---- WIREFRAMES ---- */
+.wireframe {
+  background: var(--faint);
+  border: 1px solid var(--light);
+  padding: 32px;
+  margin: 20px 0;
+  position: relative;
+}
+.wireframe::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--paper);
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+.wire-layout { display: flex; gap: 16px; min-height: 280px; }
+.wire-left { width: 25%; display: flex; flex-direction: column; gap: 8px; }
+.wire-col { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.wire-col-title { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #a8a29e; text-align: center; padding-bottom: 4px; }
+.wire-cell { background: white; border: 1px solid var(--light); padding: 4px 6px; font-size: 10px; color: var(--mid); text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; }
+.wire-cell.dim { opacity: 0.4; }
+.wire-right { flex: 1; display: flex; gap: 8px; }
+.wire-tube { flex: 1; border: 1px solid var(--light); border-radius: 0 0 24px 24px; background: white; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 16px; font-family: var(--font-mono); font-size: 10px; color: #a8a29e; }
+.wire-bottom { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: white; border: 1px solid var(--light); font-size: 11px; color: var(--mid); }
+.wire-btn { padding: 3px 10px; border: 1px solid var(--light); font-size: 10px; color: var(--mid); }
+
+/* ---- COLOR SWATCHES ---- */
+.swatch-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--light);
+  background: white;
+}
+.swatch-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.swatch-info { font-family: var(--font-mono); font-size: 12px; color: var(--mid); }
+
+/* ---- FLOW ---- */
+.flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0;
+}
+.flow-step {
+  padding: 6px 14px;
+  border: 1px solid var(--light);
+  font-size: 13px;
+  color: var(--ink);
+  background: white;
+}
+.flow-arr { color: var(--light); font-size: 16px; }
+
+/* ---- CALLOUTS ---- */
+.callout {
+  padding: 20px 24px;
+  margin: 20px 0;
+  font-size: 14px;
+  border-left: 3px solid;
+}
+.callout-info { border-color: var(--blue); background: #eff6ff; color: #1e40af; }
+.callout-warn { border-color: var(--amber); background: #fffbeb; color: #92400e; }
+.callout strong { display: block; margin-bottom: 4px; }
+
+/* ---- CODE BLOCK ---- */
+.code-block {
+  background: var(--ink);
+  color: #a8a29e;
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.code-block .hl { color: #f0abfc; }
+.code-block .cm { color: #78716c; }
+
+/* ---- SITEMAP ---- */
+.sitemap {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 2;
+  color: var(--mid);
+  padding: 24px 32px;
+  background: var(--faint);
+  border: 1px solid var(--light);
+  margin: 16px 0;
+}
+.sitemap strong { color: var(--ink); font-weight: 600; }
+
+/* ---- FORMULA ---- */
+.formula {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 2;
+  padding: 24px 28px;
+  background: var(--faint);
+  border: 1px solid var(--light);
+  margin: 16px 0;
+  color: var(--ink);
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 700px) {
+  .toc-grid { grid-template-columns: 1fr; }
+  .wire-layout { flex-direction: column; }
+  .wire-left { width: 100%; flex-direction: row; }
+  .wire-right { min-height: 200px; }
+  .cover-meta { flex-direction: column; gap: 16px; }
+}
+
+/* ---- PRINT ---- */
+@media print {
+  .cover { min-height: auto; padding: 48px; }
+  .sect { break-inside: avoid; }
+}
+
+/* ---- FADE-IN ---- */
+.sect { animation: fadeUp 0.5s ease both; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- =============================== COVER =============================== -->
+<section class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">Product Requirements Document</div>
+    <h1>色彩炼金<br><em>产品需求文档</em></h1>
+    <p class="cover-sub">像炼金术师一样调配颜色——选颜色、倒试管、看变化、存收藏。一款面向儿童及色彩爱好者的网页端颜色混合实验游戏。</p>
+  </div>
+  <dl class="cover-meta">
+    <div><dt>版本</dt><dd>V1.0</dd></div>
+    <div><dt>日期</dt><dd>2026-03-30</dd></div>
+    <div><dt>负责人</dt><dd>待定</dd></div>
+    <div><dt>状态</dt><dd>已上线 V1.0</dd></div>
+  </dl>
+</section>
+
+<div class="doc">
+
+<!-- =============================== TOC =============================== -->
+<div class="toc-wrap">
+  <div class="toc-title">目录</div>
+  <div class="toc-grid">
+    <a href="#s1"><span class="num">01</span> 产品概述</a>
+    <a href="#s9"><span class="num">09</span> 颜色混合算法</a>
+    <a href="#s2"><span class="num">02</span> 产品目标与成功指标</a>
+    <a href="#s10"><span class="num">10</span> 视觉设计规范</a>
+    <a href="#s3"><span class="num">03</span> 用户场景与需求</a>
+    <a href="#s11"><span class="num">11</span> 响应式适配规则</a>
+    <a href="#s4"><span class="num">04</span> 功能需求清单</a>
+    <a href="#s12"><span class="num">12</span> 技术架构与约束</a>
+    <a href="#s5"><span class="num">05</span> 页面结构与信息架构</a>
+    <a href="#s13"><span class="num">13</span> 非功能需求</a>
+    <a href="#s6"><span class="num">06</span> P1 首页详细设计</a>
+    <a href="#s14"><span class="num">14</span> 未来迭代规划</a>
+    <a href="#s7"><span class="num">07</span> P2 游戏页详细设计</a>
+    <a href="#s15"><span class="num">15</span> 版本记录</a>
+    <a href="#s8"><span class="num">08</span> 交互逻辑与状态流转</a>
+  </div>
+</div>
+
+<!-- =============================== 01 =============================== -->
+<div class="sect" id="s1">
+  <span class="sect-num">Section 01</span>
+  <h2>产品概述</h2>
+
+  <h3>1.1 产品名称</h3>
+  <p><strong>色彩炼金</strong>（英文：Color Alchemy）</p>
+
+  <h3>1.2 产品定位</h3>
+  <p>一款面向儿童及色彩爱好者的网页端<strong>颜色混合实验小游戏</strong>。用户通过将不同颜色"倒入"虚拟试管，观察颜色混合后的变化，探索色彩搭配的乐趣，并可将自己喜欢的混合色收藏命名。</p>
+
+  <h3>1.3 产品类型</h3>
+  <p>轻量级 Web 小游戏 / 教育互动工具</p>
+
+  <h3>1.4 一句话描述</h3>
+  <p>"像炼金术师一样调配颜色——选颜色、倒试管、看变化、存收藏。"</p>
+
+  <h3>1.5 核心价值</h3>
+  <ul>
+    <li><strong>寓教于乐</strong>：让用户通过动手实验直观理解色彩混合原理（RGB 加法混色）</li>
+    <li><strong>零门槛</strong>：无需下载安装，浏览器打开即玩，操作极简</li>
+    <li><strong>创造感</strong>：用户可以创造属于自己的独特颜色，命名并收藏</li>
+  </ul>
+</div>
+
+<!-- =============================== 02 =============================== -->
+<div class="sect" id="s2">
+  <span class="sect-num">Section 02</span>
+  <h2>产品目标与成功指标</h2>
+
+  <h3>2.1 产品目标</h3>
+  <table>
+    <thead><tr><th>目标类型</th><th>具体描述</th></tr></thead>
+    <tbody>
+      <tr><td>用户体验目标</td><td>用户在 10 秒内理解核心玩法，30 秒内完成首次颜色混合</td></tr>
+      <tr><td>教育目标</td><td>用户通过游戏建立对 RGB 加法混色的直观认知</td></tr>
+      <tr><td>留存目标</td><td>单次会话平均操作步数 ≥ 15 步，说明用户持续在探索</td></tr>
+      <tr><td>传播目标</td><td>适合在社交平台以"我调出了 XX 色"为话题分享</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 成功指标（KPI）</h3>
+  <table>
+    <thead><tr><th>指标</th><th>目标值</th><th>衡量方式</th></tr></thead>
+    <tbody>
+      <tr><td>首次混色完成率</td><td>≥ 90%</td><td>进入游戏页后执行至少一次倒色操作的用户比例</td></tr>
+      <tr><td>收藏功能使用率</td><td>≥ 40%</td><td>至少保存一个自定义颜色的用户比例</td></tr>
+      <tr><td>平均会话时长</td><td>≥ 3 分钟</td><td>从进入游戏页到离开的时长</td></tr>
+      <tr><td>单次平均操作步数</td><td>≥ 15 步</td><td>步数计数器记录</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================== 03 =============================== -->
+<div class="sect" id="s3">
+  <span class="sect-num">Section 03</span>
+  <h2>用户场景与需求</h2>
+
+  <h3>3.1 典型用户场景</h3>
+  <table>
+    <thead><tr><th>场景</th><th>角色</th><th>描述</th><th>期望结果</th></tr></thead>
+    <tbody>
+      <tr><td>S1</td><td>5-10 岁儿童</td><td>小朋友在家长陪伴下打开游戏，好奇"红色+蓝色会变成什么"</td><td>直观看到混色结果，产生探索欲望</td></tr>
+      <tr><td>S2</td><td>美术老师</td><td>课堂上用投屏展示颜色混合过程，辅助讲解色彩理论</td><td>快速演示多组混色，学生一目了然</td></tr>
+      <tr><td>S3</td><td>设计师</td><td>想快速测试几种颜色混合后的效果，用于选色参考</td><td>看到混合色的 HEX 值，可复制使用</td></tr>
+      <tr><td>S4</td><td>休闲玩家</td><td>碎片时间打开玩，试试能调出多少种不同的颜色</td><td>成就感来自收藏栏被填满</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 核心用户需求</h3>
+  <ul>
+    <li><strong>N1</strong>：我想选择颜色并看到它们混合后的效果</li>
+    <li><strong>N2</strong>：我想把操作撤回，重新尝试不同搭配</li>
+    <li><strong>N3</strong>：我想保存自己调出的好看的颜色</li>
+    <li><strong>N4</strong>：我希望界面好看、操作简单，不需要学习成本</li>
+  </ul>
+</div>
+
+<!-- =============================== 04 =============================== -->
+<div class="sect" id="s4">
+  <span class="sect-num">Section 04</span>
+  <h2>功能需求清单</h2>
+  <table>
+    <thead><tr><th>编号</th><th>功能</th><th>描述</th><th>优先级</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td>F001</td><td>首页展示</td><td>全屏背景图 + "开始游戏"按钮，点击进入游戏页</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F002</td><td>基础色卡选择</td><td>展示 8 种基础色（红、黄、蓝、绿、橙、紫、白、黑），点击选中</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F003</td><td>试管倒色</td><td>选中颜色后点击试管，将颜色倒入，每管最多 6 层</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F004</td><td>颜色混合计算</td><td>试管内多种颜色自动混合，实时显示混合后的颜色</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F005</td><td>液面动画</td><td>倒色时液面高度平滑上升，带 transition 过渡动画</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F006</td><td>步数计数</td><td>记录当前操作步数，显示在底部操作栏</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F007</td><td>撤回操作</td><td>撤回上一步倒色操作，最多回退 10 步</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F008</td><td>重置游戏</td><td>清空所有试管、步数归零、取消选色</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F009</td><td>色卡收藏</td><td>将试管混合色保存为自定义色卡，支持命名</td><td><span class="tag tag-p0">P0</span> <span class="tag tag-must">Must</span></td><td>已实现</td></tr>
+      <tr><td>F010</td><td>收藏色卡复用</td><td>收藏的颜色可作为新的"原料"再次选中倒入试管</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F011</td><td>收藏色卡删除</td><td>每张收藏色卡右侧有删除按钮，点击即删</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F012</td><td>返回首页</td><td>底部操作栏提供"返回首页"按钮</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F013</td><td>命名弹窗</td><td>保存颜色时弹出自定义弹窗，输入颜色名称，支持 Enter 确认</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F014</td><td>磨砂玻璃视觉风格</td><td>全局采用 backdrop-filter 毛玻璃效果，营造高级质感</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+      <tr><td>F015</td><td>响应式布局</td><td>适配桌面端、平板、手机三种屏幕尺寸</td><td><span class="tag tag-p1">P1</span> <span class="tag tag-should">Should</span></td><td>已实现</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================== 05 =============================== -->
+<div class="sect" id="s5">
+  <span class="sect-num">Section 05</span>
+  <h2>页面结构与信息架构</h2>
+
+  <h3>5.1 站点地图</h3>
+  <div class="sitemap">
+    <strong style="font-size: 15px;">色彩炼金</strong><br>
+    ├── <strong>P1 首页</strong>（index.html）<br>
+    │&emsp;&emsp;├── 全屏背景图（bj.png）<br>
+    │&emsp;&emsp;├── 标题图（bt.png）<br>
+    │&emsp;&emsp;└── "开始游戏"按钮（ks.png）→ 跳转 P2<br>
+    └── <strong>P2 游戏页</strong>（game.html）<br>
+    &emsp;&emsp;&emsp;├── 左侧色卡区<br>
+    &emsp;&emsp;&emsp;│&emsp;&emsp;├── 基础色列（8 色）<br>
+    &emsp;&emsp;&emsp;│&emsp;&emsp;└── 收藏色列（最多 8 色）<br>
+    &emsp;&emsp;&emsp;├── 右侧试管区（4 根试管）<br>
+    &emsp;&emsp;&emsp;├── 底部操作栏<br>
+    &emsp;&emsp;&emsp;│&emsp;&emsp;├── 步数计数器<br>
+    &emsp;&emsp;&emsp;│&emsp;&emsp;└── 操作按钮组<br>
+    &emsp;&emsp;&emsp;└── 命名弹窗（模态）
+  </div>
+
+  <h3>5.2 页面跳转关系</h3>
+  <div class="flow">
+    <span class="flow-step">P1 首页</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">点击"开始游戏"</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">P2 游戏页</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">点击"返回首页"</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">P1 首页</span>
+  </div>
+</div>
+
+<!-- =============================== 06 =============================== -->
+<div class="sect" id="s6">
+  <span class="sect-num">Section 06</span>
+  <h2>P1 首页详细设计</h2>
+
+  <h3>6.1 页面功能</h3>
+  <p>品牌展示页 + 游戏入口。纯展示型页面，无复杂交互。</p>
+
+  <h3>6.2 页面布局</h3>
+  <div class="wireframe" data-label="首页线框图">
+    <div style="border: 1px solid var(--light); height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 36px; background: linear-gradient(180deg, #e7e5e4 0%, #d6d3d1 100%); position: relative;">
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-mono); font-size: 11px; color: #a8a29e;">全屏背景图（bj.png）</div>
+      <div style="border: 1px solid var(--accent); padding: 8px 28px; background: white; font-family: var(--font-mono); font-size: 12px; color: var(--accent);">开始游戏（ks.png）</div>
+    </div>
+  </div>
+
+  <h3>6.3 元素详细说明</h3>
+  <table>
+    <thead><tr><th>元素</th><th>类型</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>背景图</td><td><code>&lt;img&gt;</code></td><td>文件 <code>bj.png</code>，使用 <code>object-fit: cover</code> 铺满整个视口，absolute 定位置于最底层（z-index: -1）</td></tr>
+      <tr><td>标题图</td><td><code>&lt;img&gt;</code></td><td>文件 <code>bt.png</code>，宽度 600px（max-width 90vw），margin-top: 90px。手机端宽度 70vw-75vw，margin-top 按比例缩放（15vw-18vw）</td></tr>
+      <tr><td>开始按钮</td><td><code>&lt;a&gt;</code> 包裹 <code>&lt;img&gt;</code></td><td>图片 <code>ks.png</code>，宽度 200px（平板 160px、手机 140px）。链接指向 <code>game.html</code>。hover 时 scale(1.05)，active 时 scale(0.95)</td></tr>
+      <tr><td>容器</td><td><code>div.home-container</code></td><td>全屏 100vw × 100vh，flex column，<code>justify-content: space-between</code>（标题在上、按钮在下），顶部留白 8vh，底部留白 10vh</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.4 交互说明</h3>
+  <ul>
+    <li>点击"开始游戏"按钮 → 页面跳转至 <code>game.html</code></li>
+    <li>按钮悬停有放大效果（scale 1.05），点击有按压效果（scale 0.95），过渡时间 0.2s</li>
+    <li>无其他交互</li>
+  </ul>
+</div>
+
+<!-- =============================== 07 =============================== -->
+<div class="sect" id="s7">
+  <span class="sect-num">Section 07</span>
+  <h2>P2 游戏主页面详细设计</h2>
+
+  <h3>7.1 整体布局</h3>
+  <div class="wireframe" data-label="游戏页线框图 — 桌面端">
+    <div style="font-family: var(--font-mono); font-size: 10px; color: #a8a29e; margin-bottom: 8px;">背景：bg.gif + 磨砂叠加层</div>
+    <div class="wire-layout">
+      <div class="wire-left">
+        <div style="display: flex; gap: 6px; flex: 1;">
+          <div class="wire-col">
+            <div class="wire-col-title">基础色</div>
+            <div class="wire-cell">红 #FF0000</div>
+            <div class="wire-cell">黄 #FFFF00</div>
+            <div class="wire-cell">蓝 #0000FF</div>
+            <div class="wire-cell">绿 #00FF00</div>
+            <div class="wire-cell">橙 #FFA500</div>
+            <div class="wire-cell">紫 #800080</div>
+            <div class="wire-cell">白 #FFFFFF</div>
+            <div class="wire-cell">黑 #000000</div>
+          </div>
+          <div class="wire-col">
+            <div class="wire-col-title">收藏色</div>
+            <div class="wire-cell dim">空位 1</div>
+            <div class="wire-cell dim">空位 2</div>
+            <div class="wire-cell dim">…</div>
+            <div class="wire-cell dim">空位 8</div>
+          </div>
+        </div>
+      </div>
+      <div class="wire-right">
+        <div class="wire-tube">试管 1</div>
+        <div class="wire-tube">试管 2</div>
+        <div class="wire-tube">试管 3</div>
+        <div class="wire-tube">试管 4</div>
+      </div>
+    </div>
+    <div class="wire-bottom">
+      <span>当前步数：<strong>0</strong></span>
+      <div style="display: flex; gap: 6px;">
+        <span class="wire-btn">撤回</span>
+        <span class="wire-btn">重置</span>
+        <span class="wire-btn">色卡收藏</span>
+        <span class="wire-btn">返回首页</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>7.2 区域 A：基础色卡列</h3>
+  <p>位于页面左侧，垂直排列 8 张基础色卡。</p>
+
+  <h4>基础色定义</h4>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-dot" style="background:#FF0000;"></div><span class="swatch-info">红 #FF0000</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FFFF00;"></div><span class="swatch-info">黄 #FFFF00</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#0000FF;"></div><span class="swatch-info">蓝 #0000FF</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#00FF00;"></div><span class="swatch-info">绿 #00FF00</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FFA500;"></div><span class="swatch-info">橙 #FFA500</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#800080;"></div><span class="swatch-info">紫 #800080</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FFFFFF; border-color: #d6d3d1;"></div><span class="swatch-info">白 #FFFFFF</span></div>
+    <div class="swatch"><div class="swatch-dot" style="background:#000000;"></div><span class="swatch-info">黑 #000000</span></div>
+  </div>
+
+  <h4>色卡 UI 结构</h4>
+  <table>
+    <thead><tr><th>元素</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>色块圆点</td><td>20×20px 圆形，展示颜色，固定不缩放</td></tr>
+      <tr><td>颜色名称</td><td>格式："中文名 (#HEX值)"，11px 字号，#333 色</td></tr>
+      <tr><td>卡片容器</td><td>半透明白底（rgba 255,255,255,0.6），8px 内边距，6px 圆角</td></tr>
+    </tbody>
+  </table>
+
+  <h4>色卡交互</h4>
+  <ul>
+    <li><strong>默认态</strong>：半透明白底</li>
+    <li><strong>悬停态</strong>：背景透明度提高至 0.8，向上偏移 1px</li>
+    <li><strong>选中态</strong>：背景透明度 0.9 + 阴影（0 2px 8px rgba(0,0,0,0.1)）</li>
+    <li><strong>同时只能有一张色卡处于选中状态</strong>，再选其他卡会自动取消前一张</li>
+  </ul>
+
+  <h3>7.3 区域 B：收藏色卡列</h3>
+  <p>位于基础色卡列右侧，垂直排列，最多 8 个槽位。</p>
+  <h4>初始状态</h4>
+  <p>8 个占位空白卡片（placeholder-card），与基础色卡等高、等宽，但无内容。视觉上呈半透明白底方块。</p>
+  <h4>填充后状态</h4>
+  <p>当用户保存颜色后，占位卡依次被替换为实际色卡。结构与基础色卡一致，额外增加：</p>
+  <ul>
+    <li><strong>删除按钮"×"</strong>：12px 字号，灰色，hover 变红</li>
+    <li>点击色卡本身 → 选中该颜色（与基础色卡行为一致，可用于二次混合）</li>
+    <li>点击删除按钮 → 移除该收藏色（事件阻止冒泡）</li>
+  </ul>
+
+  <h3>7.4 区域 C：试管区</h3>
+  <p>位于页面右侧，占 75% 宽度，水平排列 4 根等距试管。</p>
+  <h4>单根试管结构</h4>
+  <table>
+    <thead><tr><th>元素</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>试管容器</td><td>100×450px（桌面端），下圆角 50px 模拟试管底部，半透明白底（0.3），2px 白色边框，内阴影模拟玻璃质感</td></tr>
+      <tr><td>卷边装饰</td><td>::before 伪元素，试管顶部溢出圆弧，模拟试管口</td></tr>
+      <tr><td>高光装饰</td><td>::after 伪元素，左侧竖条渐变高光，模拟玻璃反光</td></tr>
+      <tr><td>液面</td><td>绝对定位底部，高度按"颜色数/6 × 100%"计算，颜色为所有已倒入颜色的混合值</td></tr>
+      <tr><td>试管标签</td><td>底部文字"试管1/2/3/4"，12px 字号</td></tr>
+    </tbody>
+  </table>
+
+  <h4>试管交互</h4>
+  <ul>
+    <li>点击试管：如果已选中一种颜色且试管未满（&lt; 6 层），则将该颜色倒入</li>
+    <li>倒入后：液面高度平滑上升（transition 0.3s），液面颜色实时重新计算</li>
+    <li>试管满 6 层后，再点击无效（静默忽略）</li>
+    <li>悬停时整根试管上移 5px</li>
+  </ul>
+
+  <h3>7.5 区域 D：底部操作栏</h3>
+  <table>
+    <thead><tr><th>元素</th><th>位置</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td>步数计数器</td><td>左侧</td><td>显示"当前步数：N"，每次倒色 +1，撤回/重置时同步恢复</td></tr>
+      <tr><td>撤回按钮</td><td>右侧按钮组</td><td>恢复上一步状态（试管内容 + 步数），最多回退 10 步</td></tr>
+      <tr><td>重置按钮</td><td>右侧按钮组</td><td>清空所有试管，步数归零，取消选色状态</td></tr>
+      <tr><td>色卡收藏按钮</td><td>右侧按钮组</td><td>找到第一根有内容的试管 → 弹出命名弹窗 → 保存并清空该试管</td></tr>
+      <tr><td>返回首页按钮</td><td>右侧按钮组</td><td>跳转回 index.html</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.6 命名弹窗（Modal）</h3>
+  <table>
+    <thead><tr><th>元素</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>遮罩层</td><td>全屏黑色蒙层 rgba(0,0,0,0.3) + 5px 模糊</td></tr>
+      <tr><td>弹窗卡片</td><td>最大宽 400px，白色磨砂底，12px 圆角，30px 内边距</td></tr>
+      <tr><td>标题</td><td>"为新颜色命名"，18px 字号</td></tr>
+      <tr><td>输入框</td><td>默认值"新颜色"，全宽，16px 字号，聚焦时蓝色外发光。<code>maxlength="4"</code> 限制最多输入 4 个字符，JS 端双重校验</td></tr>
+      <tr><td>确认按钮</td><td>蓝色底白字，点击保存颜色</td></tr>
+      <tr><td>取消按钮</td><td>灰色底黑字，点击关闭弹窗</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-info">
+    <strong>交互细节</strong>弹窗打开时输入框自动获焦；按 Enter 键等同于点击确认按钮。
+  </div>
+</div>
+
+<!-- =============================== 08 =============================== -->
+<div class="sect" id="s8">
+  <span class="sect-num">Section 08</span>
+  <h2>交互逻辑与状态流转</h2>
+
+  <h3>8.1 核心操作流程</h3>
+  <div class="flow">
+    <span class="flow-step">1. 选择色卡</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">2. 点击试管倒色</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">3. 观察混合效果</span>
+    <span class="flow-arr">→</span>
+    <span class="flow-step">4. 重复 / 收藏</span>
+  </div>
+
+  <h3>8.2 游戏状态模型</h3>
+  <table>
+    <thead><tr><th>字段</th><th>类型</th><th>初始值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>selectedColor</code></td><td>{ color, name } | null</td><td>null</td><td>当前选中的颜色</td></tr>
+      <tr><td><code>steps</code></td><td>number</td><td>0</td><td>当前操作步数</td></tr>
+      <tr><td><code>testTubes</code></td><td>Array[4]</td><td>各含 { colors: [], max: 6 }</td><td>4 根试管，每根存储已倒入的颜色 HEX 数组</td></tr>
+      <tr><td><code>savedColors</code></td><td>Array</td><td>[]</td><td>收藏列表，每项 { color, name }，上限 8</td></tr>
+      <tr><td><code>history</code></td><td>Array</td><td>[]</td><td>操作历史栈，快照 { testTubes, steps }，上限 10</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.3 操作规则矩阵</h3>
+  <table>
+    <thead><tr><th>操作</th><th>前置条件</th><th>行为</th><th>失败处理</th></tr></thead>
+    <tbody>
+      <tr><td>选择色卡</td><td>无</td><td>设 selectedColor，高亮卡片</td><td>—</td></tr>
+      <tr><td>倒色到试管</td><td>已选色 &amp; 试管未满</td><td>push 颜色、步数+1、保存历史、更新液面</td><td>未选色→静默；满→静默</td></tr>
+      <tr><td>撤回</td><td>history 非空</td><td>弹出上一条历史，恢复 testTubes 和 steps</td><td>无历史→静默</td></tr>
+      <tr><td>重置</td><td>无</td><td>先存历史，再清空试管、步数归零、取消选色</td><td>—</td></tr>
+      <tr><td>色卡收藏</td><td>≥1 管有内容 &amp; 收藏&lt;8</td><td>弹窗命名→确认保存→清空该管</td><td>无内容→alert；满8→alert</td></tr>
+      <tr><td>删除收藏</td><td>无</td><td>从 savedColors 删除，重新渲染</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.4 色卡收藏流程</h3>
+  <ol>
+    <li>用户点击"色卡收藏"按钮</li>
+    <li>系统查找<strong>第一根有内容的试管</strong>（从试管 1 到试管 4 依序）</li>
+    <li>所有试管为空 → alert("请先在试管中倒入颜色")</li>
+    <li>找到 → 记录该试管索引和混合色值</li>
+    <li>弹出命名弹窗，默认值"新颜色"，光标自动聚焦</li>
+    <li>用户输入 → 点击"确认"或按 Enter</li>
+    <li>名称超过 4 个字 → alert("颜色名称最多4个字")，不关闭弹窗</li>
+    <li>名称为空 → 关闭弹窗，不保存</li>
+    <li>收藏已满 8 个 → alert("最多只能收藏8个颜色")，关闭</li>
+    <li>否则 → 添加收藏 → 清空试管 → 更新 UI → 关闭弹窗</li>
+  </ol>
+</div>
+
+<!-- =============================== 09 =============================== -->
+<div class="sect" id="s9">
+  <span class="sect-num">Section 09</span>
+  <h2>颜色混合算法说明</h2>
+
+  <h3>9.1 算法原理</h3>
+  <p>采用 <strong>RGB 通道均值混合</strong>算法。将试管内所有颜色的 R、G、B 三通道分别求和后取平均值。</p>
+
+  <h3>9.2 计算公式</h3>
+  <div class="formula">
+    <span>混合色.R = floor( (色1.R + 色2.R + … + 色N.R) / N )</span><br>
+    <span>混合色.G = floor( (色1.G + 色2.G + … + 色N.G) / N )</span><br>
+    <span>混合色.B = floor( (色1.B + 色2.B + … + 色N.B) / N )</span><br>
+    <br>
+    <span style="color: var(--mid);">其中 N = 试管内颜色的层数（1~6）</span>
+  </div>
+
+  <h3>9.3 混合示例</h3>
+  <table>
+    <thead><tr><th>输入颜色</th><th>R</th><th>G</th><th>B</th><th>混合结果</th></tr></thead>
+    <tbody>
+      <tr><td>红 + 蓝</td><td>(255+0)/2=127</td><td>(0+0)/2=0</td><td>(0+255)/2=127</td><td><span style="color:#7f007f;">#7F007F 暗紫</span></td></tr>
+      <tr><td>红 + 黄</td><td>(255+255)/2=255</td><td>(0+255)/2=127</td><td>(0+0)/2=0</td><td><span style="color:#ff7f00;">#FF7F00 偏橙</span></td></tr>
+      <tr><td>红 + 绿 + 蓝</td><td>(255+0+0)/3=85</td><td>(0+255+0)/3=85</td><td>(0+0+255)/3=85</td><td><span style="color:#555;">#555555 深灰</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>9.4 颜色格式转换</h3>
+  <ul>
+    <li><strong>HEX → RGB</strong>：正则解析 #RRGGBB 为三个十六进制值，转 parseInt</li>
+    <li><strong>RGB → HEX</strong>：位运算 <code>(1 &lt;&lt; 24) + (r &lt;&lt; 16) + (g &lt;&lt; 8) + b</code> 转 16 进制取后 6 位</li>
+  </ul>
+
+  <div class="callout callout-warn">
+    <strong>已知局限</strong>RGB 均值混合并非真实颜料混色（减法混色）。如"红+蓝"在现实中会得到紫色，但 RGB 均值得到的是暗紫。未来可考虑引入 CMYK 减法混色或更精确的色彩模型。
+  </div>
+</div>
+
+<!-- =============================== 10 =============================== -->
+<div class="sect" id="s10">
+  <span class="sect-num">Section 10</span>
+  <h2>视觉设计规范</h2>
+
+  <h3>10.1 整体风格</h3>
+  <p><strong>磨砂玻璃拟物风（Glassmorphism）</strong>，营造通透、轻盈的实验室氛围。</p>
+
+  <h3>10.2 背景</h3>
+  <table>
+    <thead><tr><th>页面</th><th>素材</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>首页</td><td>bj.png</td><td>object-fit: cover 全屏铺满</td></tr>
+      <tr><td>游戏页</td><td>bg.gif</td><td>background-size: cover + fixed + 磨砂叠加层（rgba白0.1 + blur 5px）+ 1.5s 淡入</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.3 配色方案</h3>
+  <table>
+    <thead><tr><th>用途</th><th>色值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>正文字色</td><td>#333333</td><td>深灰，适配磨砂白底</td></tr>
+      <tr><td>卡片背景</td><td>rgba(255,255,255,0.6)</td><td>半透明白，hover 至 0.8</td></tr>
+      <tr><td>操作栏背景</td><td>rgba(255,255,255,0.6) + blur(10px)</td><td>磨砂条</td></tr>
+      <tr><td>确认按钮</td><td>rgba(100,149,237,0.8)</td><td>矢车菊蓝</td></tr>
+      <tr><td>取消按钮</td><td>rgba(200,200,200,0.8)</td><td>中性灰</td></tr>
+      <tr><td>删除 hover</td><td>rgba(255,0,0,0.1) + #FF0000 字色</td><td>危险红</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.4 字体</h3>
+  <p>系统字体栈：<code>-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif</code></p>
+  <table>
+    <thead><tr><th>场景</th><th>字号</th><th>字重</th></tr></thead>
+    <tbody>
+      <tr><td>色卡名称</td><td>11px</td><td>300（Light）</td></tr>
+      <tr><td>试管标签</td><td>12px</td><td>300</td></tr>
+      <tr><td>操作按钮</td><td>14px</td><td>300</td></tr>
+      <tr><td>步数计数器</td><td>14px / 数字 500</td><td>300 / Medium</td></tr>
+      <tr><td>弹窗标题</td><td>18px</td><td>400</td></tr>
+      <tr><td>弹窗输入</td><td>16px</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.5 动画与过渡</h3>
+  <table>
+    <thead><tr><th>动画</th><th>属性</th><th>时间</th><th>缓动</th></tr></thead>
+    <tbody>
+      <tr><td>背景淡入</td><td>opacity 0→1</td><td>1.5s</td><td>ease-in-out</td></tr>
+      <tr><td>叠加层淡入</td><td>opacity 0→1</td><td>2s</td><td>ease-in-out</td></tr>
+      <tr><td>色卡 hover</td><td>background, transform</td><td>0.2s</td><td>ease</td></tr>
+      <tr><td>按钮 hover</td><td>background, transform</td><td>0.2s</td><td>ease</td></tr>
+      <tr><td>试管 hover</td><td>transform</td><td>0.2s</td><td>ease</td></tr>
+      <tr><td>液面升高</td><td>height</td><td>0.3s</td><td>ease</td></tr>
+      <tr><td>首页按钮</td><td>transform</td><td>0.2s</td><td>ease</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================== 11 =============================== -->
+<div class="sect" id="s11">
+  <span class="sect-num">Section 11</span>
+  <h2>响应式适配规则</h2>
+  <table>
+    <thead><tr><th>断点</th><th>屏幕</th><th>布局变化</th></tr></thead>
+    <tbody>
+      <tr><td>&gt; 1200px</td><td>桌面端</td><td>主内容 90% 宽，色卡双列（基础色 + 收藏色并排）25% + 试管 4 根 75%，试管 100×450px</td></tr>
+      <tr><td>769–1200px</td><td>平板端</td><td>主内容 95%，色卡 30% + 试管 70%，试管 80×350px，按钮缩小</td></tr>
+      <tr><td>≤ 768px</td><td>手机端</td><td>色卡单列（左侧，8 基础色均分高度）+ 试管 2 根（右侧，隐藏试管 3、4），试管宽 70px 高度自适应。收藏色通过 order:-1 排到基础色上方，占位卡隐藏。色卡区超出时可滚动（白色半透明滚动条）。操作栏居中，4 按钮等宽铺满。容器 padding: 60px 20px 40px</td></tr>
+      <tr><td>≤ 480px</td><td>小屏手机</td><td>首页标题 75vw，按钮 140px，游戏页与 768px 断点一致</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================== 12 =============================== -->
+<div class="sect" id="s12">
+  <span class="sect-num">Section 12</span>
+  <h2>技术架构与实现约束</h2>
+
+  <h3>12.1 技术选型</h3>
+  <table>
+    <thead><tr><th>层面</th><th>选型</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>结构</td><td>HTML5</td><td>语义化标签，lang="zh-CN"</td></tr>
+      <tr><td>样式</td><td>CSS3</td><td>Flexbox，backdrop-filter</td></tr>
+      <tr><td>逻辑</td><td>原生 JavaScript (ES6+)</td><td>无框架依赖</td></tr>
+      <tr><td>构建</td><td>无构建工具</td><td>纯静态文件，浏览器直接运行</td></tr>
+    </tbody>
+  </table>
+
+  <h3>12.2 文件结构</h3>
+  <div class="code-block">
+<span class="cm">色彩炼金/</span>
+├── index.html    <span class="cm"># 首页</span>
+├── game.html     <span class="cm"># 游戏页</span>
+├── style.css     <span class="cm"># 全局样式</span>
+├── script.js     <span class="cm"># 游戏逻辑</span>
+├── bj.png        <span class="cm"># 首页背景</span>
+├── ks.png        <span class="cm"># 开始按钮</span>
+└── bg.gif        <span class="cm"># 游戏背景</span>
+  </div>
+
+  <h3>12.3 浏览器兼容性</h3>
+  <ul>
+    <li>需支持 <code>backdrop-filter</code>（Chrome 76+, Safari 9+, Firefox 103+）</li>
+    <li>需支持 ES6（Chrome 51+, Safari 10+, Firefox 54+）</li>
+    <li><strong>不支持 IE</strong></li>
+  </ul>
+
+  <h3>12.4 数据持久化</h3>
+  <div class="callout callout-warn">
+    <strong>当前状态：无持久化</strong>页面刷新或关闭后，所有游戏状态（包括收藏的颜色）均丢失。数据仅存在于 JavaScript 运行时内存中。
+  </div>
+</div>
+
+<!-- =============================== 13 =============================== -->
+<div class="sect" id="s13">
+  <span class="sect-num">Section 13</span>
+  <h2>非功能需求</h2>
+  <table>
+    <thead><tr><th>类别</th><th>要求</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>性能</td><td>首屏 &lt; 3s</td><td>仅静态资源，瓶颈在 bg.gif</td></tr>
+      <tr><td>可用性</td><td>零学习成本</td><td>界面直觉操作</td></tr>
+      <tr><td>可访问性</td><td>基础 WCAG</td><td>色卡附 HEX 文字标注</td></tr>
+      <tr><td>安全性</td><td>低风险</td><td>纯前端，无数据传输</td></tr>
+      <tr><td>国际化</td><td>仅中文</td><td>V1.0 简体中文</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================== 14 =============================== -->
+<div class="sect" id="s14">
+  <span class="sect-num">Section 14</span>
+  <h2>未来迭代规划</h2>
+  <table>
+    <thead><tr><th>版本</th><th>功能</th><th>优先级</th></tr></thead>
+    <tbody>
+      <tr><td>V1.1</td><td>localStorage 持久化收藏颜色</td><td><span class="tag tag-p0">P0</span></td></tr>
+      <tr><td>V1.1</td><td>收藏颜色导出/分享图片</td><td><span class="tag tag-p1">P1</span></td></tr>
+      <tr><td>V1.2</td><td>引入 CMYK 减法混色模式切换</td><td><span class="tag tag-p1">P1</span></td></tr>
+      <tr><td>V1.2</td><td>混色挑战模式（给定目标色，最少步数调出）</td><td><span class="tag tag-p1">P1</span></td></tr>
+      <tr><td>V2.0</td><td>音效与粒子动画增强</td><td><span class="tag tag-p2">P2</span></td></tr>
+      <tr><td>V2.0</td><td>多人协作调色</td><td><span class="tag tag-p2">P2</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================== 15 =============================== -->
+<div class="sect" id="s15">
+  <span class="sect-num">Section 15</span>
+  <h2>版本记录</h2>
+  <table>
+    <thead><tr><th>版本</th><th>日期</th><th>变更内容</th><th>作者</th></tr></thead>
+    <tbody>
+      <tr><td>V1.0</td><td>2026-03-30</td><td>初始版本，基于已实现代码倒推补齐完整 PRD</td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="spacer"></div>
+</div><!-- /doc -->
+
+</body>
+</html>

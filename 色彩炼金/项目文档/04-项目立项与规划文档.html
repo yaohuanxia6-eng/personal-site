@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色彩炼金 — 项目立项与规划文档</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c1917;--paper:#faf8f5;--mid:#57534e;--light:#d6d3d1;--faint:#f5f0eb;--accent:#d97706;--font-display:'Playfair Display','Noto Serif SC',serif;--font-body:'DM Sans','PingFang SC','Microsoft YaHei',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--ink);background:var(--paper);line-height:1.72;font-size:15px;-webkit-font-smoothing:antialiased}
+
+.cover{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding:clamp(40px,8vw,120px) clamp(24px,6vw,80px);background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 75%,oklch(0.52 0.18 60/0.4),transparent),radial-gradient(ellipse 50% 55% at 80% 25%,oklch(0.48 0.15 30/0.3),transparent);mix-blend-mode:screen}
+.cover-inner{position:relative;z-index:1;max-width:800px}
+.cover-label{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:.5;margin-bottom:32px}
+.cover h1{font-family:var(--font-display);font-size:clamp(48px,8vw,96px);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:20px}
+.cover h1 em{font-style:italic;background:linear-gradient(135deg,#fde68a,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cover-sub{font-size:clamp(18px,2.5vw,24px);font-weight:300;opacity:.7;max-width:560px;margin-bottom:48px}
+.cover-meta{display:flex;gap:40px;flex-wrap:wrap;font-size:13px;opacity:.5;align-self:end}
+.cover-meta dt{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:2px;font-size:10px;margin-bottom:4px}
+.cover-meta dd{font-weight:500;font-size:14px}
+
+.doc{max-width:820px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.spacer{height:clamp(48px,8vh,96px)}
+
+.sect{padding:56px 0 40px;animation:fadeUp .5s ease both}
+.sect+.sect{border-top:1px solid var(--light)}
+.sect-num{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block}
+.sect h2{font-family:var(--font-display);font-size:clamp(28px,4vw,36px);font-weight:700;line-height:1.2;margin-bottom:28px}
+.sect h3{font-size:17px;font-weight:600;margin:32px 0 12px;padding-left:12px;border-left:3px solid var(--accent)}
+.sect h4{font-size:14px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px}
+.sect p{color:var(--mid);margin-bottom:14px}
+.sect ul,.sect ol{padding-left:20px;margin-bottom:14px;color:var(--mid)}
+.sect li{margin-bottom:5px}
+.sect li strong{color:var(--ink)}
+.sect li em{font-style:italic;color:#78716c}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+thead th{text-align:left;font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);padding:10px 16px;border-bottom:2px solid var(--ink);font-weight:500}
+td{padding:12px 16px;border-bottom:1px solid #e7e5e4;color:var(--mid);vertical-align:top}
+tbody tr:hover td{background:var(--faint)}
+td strong{color:var(--ink)}
+td ul{padding-left:16px;margin:0}
+
+.tag{display:inline-block;padding:1px 8px;border-radius:3px;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.5px}
+.tag-p0{background:#fecdd3;color:#9f1239}.tag-p1{background:#fef3c7;color:#92400e}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--light);margin:20px 0}
+.stat{background:var(--paper);padding:28px 24px;text-align:center}
+.stat-num{font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--accent);line-height:1}
+.stat-label{font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);margin-top:8px}
+
+/* Timeline/Gantt */
+.gantt{margin:24px 0}
+.gantt-head{display:flex;margin-bottom:6px}
+.gantt-head-label{width:130px;flex-shrink:0}
+.gantt-head-track{flex:1;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:#a8a29e;letter-spacing:1px}
+.gantt-row{display:flex;align-items:center;margin-bottom:6px}
+.gantt-label{width:130px;flex-shrink:0;font-size:13px;font-weight:500;color:var(--ink)}
+.gantt-track{flex:1;height:28px;background:var(--faint);border:1px solid var(--light);position:relative;overflow:hidden}
+.gantt-bar{position:absolute;height:100%;display:flex;align-items:center;padding-left:10px;font-family:var(--font-mono);font-size:10px;color:white;font-weight:600;letter-spacing:1px}
+
+/* Risk Matrix */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--light);margin:20px 0}
+.risk-cell{background:var(--paper);padding:24px}
+.risk-cell h4{font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.risk-cell ul{padding-left:16px;font-size:14px}
+.risk-cell li{margin-bottom:6px}
+.rc-crit h4{color:#dc2626}.rc-high h4{color:#d97706}.rc-med h4{color:#2563eb}.rc-low h4{color:#059669}
+
+/* Checklist */
+.check-list{list-style:none;padding:0;margin:16px 0}
+.check-list li{padding:10px 0 10px 36px;position:relative;border-bottom:1px solid var(--faint);font-size:14px;color:var(--mid)}
+.check-list li::before{content:'';position:absolute;left:4px;top:12px;width:18px;height:18px;border:2px solid var(--light);border-radius:3px}
+.check-list li.done::before{background:var(--accent);border-color:var(--accent)}
+.check-list li.done::after{content:'';position:absolute;left:9px;top:16px;width:8px;height:5px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg)}
+.check-list li.done{color:var(--ink)}
+
+/* Roadmap */
+.roadmap{display:flex;align-items:center;gap:8px;margin:20px 0;flex-wrap:wrap}
+.road-node{padding:10px 20px;font-size:13px;font-weight:600;border:2px solid var(--light);color:var(--ink)}
+.road-node.current{border-color:var(--accent);background:var(--faint)}
+.road-arr{color:var(--light);font-size:18px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.cover-meta{flex-direction:column;gap:16px}.stats{grid-template-columns:1fr}.risk-grid{grid-template-columns:1fr}.gantt-label{width:90px;font-size:11px}.roadmap{flex-direction:column}.road-arr{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">Project Charter &amp; Planning</div>
+    <h1>色彩炼金<br><em>项目立项与规划</em></h1>
+    <p class="cover-sub">从立项到上线——项目计划、风险评估、测试方案、上线清单与版本路线图。</p>
+  </div>
+  <dl class="cover-meta">
+    <div><dt>版本</dt><dd>V1.0</dd></div>
+    <div><dt>日期</dt><dd>2026-03-30</dd></div>
+    <div><dt>包含</dt><dd>立项书 / 项目计划 / 风险评估 / 上线清单</dd></div>
+  </dl>
+</section>
+
+<div class="doc">
+
+<!-- PART 1 -->
+<div class="sect">
+  <span class="sect-num">Part 01</span>
+  <h2>项目立项书</h2>
+
+  <h3>1.1 项目背景</h3>
+  <p>随着 K12 素质教育改革和"五育并举"政策推进，美育教育正在受到前所未有的重视。家长和教师对数字化美育工具有强烈需求，但市场上缺乏一款"<strong>低门槛、趣味性强、教育价值明确</strong>"的色彩探索工具。同时，"水排序"类游戏的成功验证了"试管+颜色"交互模式的用户接受度。基于此洞察，提出"色彩炼金"项目。</p>
+
+  <h3>1.2 项目目标</h3>
+  <table>
+    <thead><tr><th>维度</th><th>目标</th><th>衡量标准</th></tr></thead>
+    <tbody>
+      <tr><td>用户价值</td><td>让用户（尤其儿童）通过直觉化操作理解色彩混合</td><td>首次混色完成率 ≥ 90%</td></tr>
+      <tr><td>产品体验</td><td>打造美观、流畅、零门槛的 Web 交互体验</td><td>平均会话时长 ≥ 3 分钟</td></tr>
+      <tr><td>市场验证</td><td>验证"混色创造"玩法的市场可行性</td><td>UV 自然增长率 / 分享转化率</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 项目范围</h3>
+  <h4>V1.0 范围内</h4>
+  <ul>
+    <li>首页（背景图 + 标题图 + 开始按钮）+ 游戏页共 2 个页面</li>
+    <li>8 种基础色 + 4 根试管的核心混色玩法（手机端显示 2 根）</li>
+    <li>色卡收藏（命名≤4 字、删除、复用，上限 8 个，新增色卡在上方显示）</li>
+    <li>撤回（最多 10 步）、重置、返回首页</li>
+    <li>响应式布局（桌面 4 试管双列色卡 / 手机 2 试管单列色卡可滚动，padding 60/20/40）</li>
+    <li>磨砂玻璃视觉风格</li>
+  </ul>
+  <h4>V1.0 范围外</h4>
+  <ul>
+    <li>数据持久化（localStorage / 后端存储）</li>
+    <li>关卡/挑战模式</li>
+    <li>音效与高级动画</li>
+    <li>社交分享功能</li>
+    <li>用户账号体系</li>
+    <li>多语言支持</li>
+  </ul>
+
+  <h3>1.4 项目团队</h3>
+  <table>
+    <thead><tr><th>角色</th><th>职责</th><th>人数</th></tr></thead>
+    <tbody>
+      <tr><td>产品经理</td><td>需求定义、原型设计、验收</td><td>1</td></tr>
+      <tr><td>UI 设计师</td><td>视觉设计、资源输出（bj.png / ks.png / bg.gif）</td><td>1</td></tr>
+      <tr><td>前端开发</td><td>HTML/CSS/JS 全部实现</td><td>1</td></tr>
+      <tr><td>测试</td><td>功能测试、兼容性测试</td><td>1（可兼任）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.5 关键数据</h3>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">页面数量</div></div>
+    <div class="stat"><div class="stat-num">15</div><div class="stat-label">功能点数</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">图片资源</div></div>
+  </div>
+</div>
+
+<!-- PART 2 -->
+<div class="sect">
+  <span class="sect-num">Part 02</span>
+  <h2>项目开发计划</h2>
+
+  <h3>2.1 里程碑规划</h3>
+  <table>
+    <thead><tr><th>里程碑</th><th>交付物</th><th>周期</th><th>依赖</th></tr></thead>
+    <tbody>
+      <tr><td>M1 需求确认</td><td>PRD、竞品调研、用户画像</td><td>第 1 周</td><td>—</td></tr>
+      <tr><td>M2 设计完成</td><td>首页+游戏页视觉稿、切图</td><td>第 2 周</td><td>M1</td></tr>
+      <tr><td>M3 开发完成</td><td>全部前端代码，可运行 Demo</td><td>第 3 周</td><td>M2</td></tr>
+      <tr><td>M4 测试验收</td><td>Bug 修复、多端适配验证</td><td>第 4 周前半</td><td>M3</td></tr>
+      <tr><td>M5 正式上线</td><td>部署至线上，对外可访问</td><td>第 4 周后半</td><td>M4</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 甘特图</h3>
+  <div class="gantt">
+    <div class="gantt-head"><div class="gantt-head-label"></div><div class="gantt-head-track"><span>W1</span><span>W2</span><span>W3</span><span>W4</span></div></div>
+    <div class="gantt-row"><div class="gantt-label">需求 &amp; 调研</div><div class="gantt-track"><div class="gantt-bar" style="left:0;width:25%;background:#be185d;">M1</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">UI 设计</div><div class="gantt-track"><div class="gantt-bar" style="left:20%;width:28%;background:#0369a1;">M2</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">前端开发</div><div class="gantt-track"><div class="gantt-bar" style="left:40%;width:32%;background:#6d28d9;">M3</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">测试验收</div><div class="gantt-track"><div class="gantt-bar" style="left:68%;width:18%;background:#d97706;">M4</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">上线部署</div><div class="gantt-track"><div class="gantt-bar" style="left:85%;width:15%;background:#059669;">M5</div></div></div>
+  </div>
+
+  <h3>2.3 开发任务拆解</h3>
+  <table>
+    <thead><tr><th>序号</th><th>任务</th><th>工时</th><th>负责</th><th>依赖</th></tr></thead>
+    <tbody>
+      <tr><td>D1</td><td>首页 HTML + 样式</td><td>2h</td><td>前端</td><td>视觉稿</td></tr>
+      <tr><td>D2</td><td>游戏页 HTML 结构</td><td>3h</td><td>前端</td><td>视觉稿</td></tr>
+      <tr><td>D3</td><td>色卡区 CSS + 交互态</td><td>2h</td><td>前端</td><td>D2</td></tr>
+      <tr><td>D4</td><td>试管 CSS（玻璃质感+液面）</td><td>4h</td><td>前端</td><td>D2</td></tr>
+      <tr><td>D5</td><td>底部操作栏 CSS</td><td>1h</td><td>前端</td><td>D2</td></tr>
+      <tr><td>D6</td><td>游戏状态管理 JS</td><td>2h</td><td>前端</td><td>—</td></tr>
+      <tr><td>D7</td><td>选色+倒色核心逻辑</td><td>3h</td><td>前端</td><td>D6</td></tr>
+      <tr><td>D8</td><td>颜色混合算法</td><td>1h</td><td>前端</td><td>D6</td></tr>
+      <tr><td>D9</td><td>撤回+重置逻辑</td><td>2h</td><td>前端</td><td>D7</td></tr>
+      <tr><td>D10</td><td>收藏功能+命名弹窗</td><td>3h</td><td>前端</td><td>D7,D8</td></tr>
+      <tr><td>D11</td><td>收藏色卡复用+删除</td><td>2h</td><td>前端</td><td>D10</td></tr>
+      <tr><td>D12</td><td>响应式适配（3 断点）</td><td>3h</td><td>前端</td><td>D3-D5</td></tr>
+      <tr><td>D13</td><td>动画与过渡优化</td><td>2h</td><td>前端</td><td>D4,D7</td></tr>
+      <tr><td>D14</td><td>背景淡入+磨砂叠加层</td><td>1h</td><td>前端</td><td>D2</td></tr>
+      <tr><td colspan="2"><strong>合计</strong></td><td><strong>~31h</strong></td><td colspan="2">约 4 个工作日</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PART 3 -->
+<div class="sect">
+  <span class="sect-num">Part 03</span>
+  <h2>风险评估</h2>
+  <div class="risk-grid">
+    <div class="risk-cell rc-crit">
+      <h4>高概率 + 高影响</h4>
+      <ul>
+        <li><strong>数据丢失体验差</strong>：用户精心收藏的颜色在刷新后丢失，导致负面口碑<br><em>缓解：V1.1 优先实现 localStorage 持久化</em></li>
+      </ul>
+    </div>
+    <div class="risk-cell rc-high">
+      <h4>低概率 + 高影响</h4>
+      <ul>
+        <li><strong>GIF 背景加载过慢</strong>：bg.gif 过大导致首屏白屏<br><em>缓解：压缩 GIF，添加纯色 fallback</em></li>
+        <li><strong>浏览器不支持 backdrop-filter</strong>：旧版磨砂效果失效<br><em>缓解：添加 @supports 降级方案</em></li>
+      </ul>
+    </div>
+    <div class="risk-cell rc-med">
+      <h4>高概率 + 低影响</h4>
+      <ul>
+        <li><strong>RGB 混色不符合直觉</strong>：用户预期"红+蓝=紫"但得到暗紫<br><em>缓解：加入"RGB 加法混色模式"提示</em></li>
+        <li><strong>沙盒模式留存差</strong>：无目标感导致只玩一次<br><em>缓解：V1.1 增加挑战模式</em></li>
+      </ul>
+    </div>
+    <div class="risk-cell rc-low">
+      <h4>低概率 + 低影响</h4>
+      <ul>
+        <li><strong>手机端试管太小</strong>：小屏点击困难<br><em>缓解：已有响应式适配，需实机微调</em></li>
+        <li><strong>色卡 8 个上限不够</strong>：部分用户想收藏更多<br><em>缓解：后续扩展至 16 或滚动列表</em></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PART 4 -->
+<div class="sect">
+  <span class="sect-num">Part 04</span>
+  <h2>测试计划</h2>
+
+  <h3>4.1 测试范围</h3>
+  <table>
+    <thead><tr><th>测试类型</th><th>内容</th><th>优先级</th></tr></thead>
+    <tbody>
+      <tr><td>功能测试</td><td>15 个功能点正向+异常流程</td><td><span class="tag tag-p0">P0</span></td></tr>
+      <tr><td>兼容性测试</td><td>Chrome / Safari / Firefox / Edge，桌面+移动</td><td><span class="tag tag-p0">P0</span></td></tr>
+      <tr><td>响应式测试</td><td>1440 / 1024 / 768 / 375px 四断点</td><td><span class="tag tag-p0">P0</span></td></tr>
+      <tr><td>边界值测试</td><td>试管满6层、收藏满8个、历史满10条</td><td><span class="tag tag-p1">P1</span></td></tr>
+      <tr><td>性能测试</td><td>首屏加载时间、GIF 性能</td><td><span class="tag tag-p1">P1</span></td></tr>
+      <tr><td>可用性测试</td><td>3-5 名目标用户（含儿童）试玩</td><td><span class="tag tag-p1">P1</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 核心测试用例</h3>
+  <table>
+    <thead><tr><th>编号</th><th>场景</th><th>操作步骤</th><th>预期结果</th></tr></thead>
+    <tbody>
+      <tr><td>TC01</td><td>基础混色</td><td>选红→点试管1→选蓝→点试管1</td><td>液面33%，#7F007F，步数2</td></tr>
+      <tr><td>TC02</td><td>满溢保护</td><td>同一试管倒7次</td><td>第7次无反应，100%，步数6</td></tr>
+      <tr><td>TC03</td><td>撤回</td><td>倒3次→撤回</td><td>回到2层，步数减1</td></tr>
+      <tr><td>TC04</td><td>重置</td><td>倒若干→重置</td><td>全清空，步数0，无选中</td></tr>
+      <tr><td>TC05</td><td>收藏</td><td>有混合色→收藏→输入"落日橙"→确认</td><td>收藏列出现色卡，试管清空</td></tr>
+      <tr><td>TC06</td><td>收藏满</td><td>已8个→再收藏</td><td>alert"最多只能收藏8个颜色"</td></tr>
+      <tr><td>TC07</td><td>空管收藏</td><td>全空→收藏</td><td>alert"请先在试管中倒入颜色"</td></tr>
+      <tr><td>TC08</td><td>收藏复用</td><td>点收藏色卡→点空试管</td><td>颜色倒入，可继续混合</td></tr>
+      <tr><td>TC09</td><td>删除收藏</td><td>点"×"</td><td>色卡移除，占位补位</td></tr>
+      <tr><td>TC10</td><td>弹窗交互</td><td>弹窗→不输入→确认</td><td>关闭，不保存</td></tr>
+      <tr><td>TC11</td><td>撤回上限</td><td>倒12次→撤回11次</td><td>第11次无效（上限10）</td></tr>
+      <tr><td>TC12</td><td>页面跳转</td><td>返回首页→开始游戏</td><td>正常跳转，状态重置</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PART 5 -->
+<div class="sect">
+  <span class="sect-num">Part 05</span>
+  <h2>上线前检查清单</h2>
+
+  <h3>5.1 产品验收</h3>
+  <ul class="check-list">
+    <li class="done">首页背景图 + 开始按钮正常显示</li>
+    <li class="done">首页→游戏页跳转正常</li>
+    <li class="done">8 种基础色卡全部可点击选中</li>
+    <li class="done">4 根试管可正常倒入颜色</li>
+    <li class="done">颜色混合计算结果正确</li>
+    <li class="done">液面高度动画流畅</li>
+    <li class="done">步数计数器准确</li>
+    <li class="done">撤回功能正常工作</li>
+    <li class="done">重置功能清空所有状态</li>
+    <li class="done">色卡收藏全流程正常</li>
+    <li class="done">收藏色可复用（选中+倒入）</li>
+    <li class="done">收藏色可删除</li>
+    <li class="done">命名弹窗交互正确（确认/取消/Enter）</li>
+    <li class="done">返回首页功能正常</li>
+    <li class="done">响应式布局正常（PC 4 试管双列 / 手机 2 试管单列可滚动）</li>
+  </ul>
+
+  <h3>5.2 技术检查</h3>
+  <ul class="check-list">
+    <li class="done">HTML 标签语义正确，无报错</li>
+    <li class="done">CSS 无冗余样式，主流浏览器验证</li>
+    <li class="done">JavaScript 无控制台报错</li>
+    <li class="done">图片资源已压缩优化</li>
+    <li class="done">overflow: hidden 防页面滚动异常</li>
+    <li class="done">viewport meta 已添加</li>
+    <li>favicon 已配置（待补充）</li>
+    <li>Open Graph 标签已添加（待补充）</li>
+  </ul>
+
+  <h3>5.3 部署检查</h3>
+  <ul class="check-list">
+    <li>静态文件部署至 CDN 或静态托管</li>
+    <li>域名 / 路径配置正确</li>
+    <li>HTTPS 已启用</li>
+    <li>404 页面已配置</li>
+    <li>线上环境真机验证通过</li>
+  </ul>
+</div>
+
+<!-- PART 6 -->
+<div class="sect">
+  <span class="sect-num">Part 06</span>
+  <h2>数据埋点方案</h2>
+  <p>V1.0 纯静态前端，暂无数据采集。以下为引入统计 SDK（GA / 友盟）后的建议方案：</p>
+  <table>
+    <thead><tr><th>事件名</th><th>触发</th><th>参数</th><th>分析目的</th></tr></thead>
+    <tbody>
+      <tr><td><code>page_view</code></td><td>页面加载</td><td>page: index / game</td><td>UV/PV，首页→游戏转化</td></tr>
+      <tr><td><code>color_select</code></td><td>选中色卡</td><td>hex, name, source</td><td>颜色受欢迎程度</td></tr>
+      <tr><td><code>color_pour</code></td><td>倒色</td><td>tube, hex, step</td><td>平均操作步数</td></tr>
+      <tr><td><code>color_save</code></td><td>收藏</td><td>hex, name, count</td><td>收藏功能使用率</td></tr>
+      <tr><td><code>action_undo</code></td><td>撤回</td><td>step</td><td>试错意愿</td></tr>
+      <tr><td><code>action_reset</code></td><td>重置</td><td>step, tubes_used</td><td>探索周期</td></tr>
+      <tr><td><code>session_end</code></td><td>离开</td><td>duration, steps, saved</td><td>用户粘性</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PART 7 -->
+<div class="sect">
+  <span class="sect-num">Part 07</span>
+  <h2>产品版本路线图</h2>
+  <div class="roadmap">
+    <div class="road-node current">V1.0 核心体验</div>
+    <span class="road-arr">→</span>
+    <div class="road-node">V1.1 持久化 + 体验</div>
+    <span class="road-arr">→</span>
+    <div class="road-node">V1.2 挑战 + 分享</div>
+    <span class="road-arr">→</span>
+    <div class="road-node">V2.0 多模式 + 社交</div>
+  </div>
+  <table>
+    <thead><tr><th>版本</th><th>主题</th><th>核心功能</th><th>目标</th></tr></thead>
+    <tbody>
+      <tr><td><strong>V1.0</strong>（当前）</td><td>核心体验验证</td><td>基础混色、试管交互、收藏命名</td><td>验证玩法可行性</td></tr>
+      <tr><td><strong>V1.1</strong></td><td>体验补全</td><td><ul><li>localStorage 持久化</li><li>倒色音效</li><li>HEX 一键复制</li><li>新手引导</li><li>试管 HEX 实时显示</li></ul></td><td>提升留存</td></tr>
+      <tr><td><strong>V1.2</strong></td><td>目标感+传播</td><td><ul><li>混色挑战模式</li><li>星级评分</li><li>分享图片生成</li><li>收藏扩至 16</li></ul></td><td>提升活跃与自传播</td></tr>
+      <tr><td><strong>V2.0</strong></td><td>生态扩展</td><td><ul><li>CMYK 模式切换</li><li>教学模式</li><li>成就系统+颜色图鉴</li><li>微信小程序</li><li>多人协作</li></ul></td><td>拓展用户群</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PART 8 -->
+<div class="sect">
+  <span class="sect-num">附录</span>
+  <h2>术语表</h2>
+  <table>
+    <thead><tr><th>术语</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>RGB</strong></td><td>Red-Green-Blue，加法混色模型，光的三原色，屏幕显示使用</td></tr>
+      <tr><td><strong>CMYK</strong></td><td>Cyan-Magenta-Yellow-Key(Black)，减法混色模型，颜料/印刷使用</td></tr>
+      <tr><td><strong>HEX</strong></td><td>十六进制颜色表示法，如 #FF0000 代表红色</td></tr>
+      <tr><td><strong>Glassmorphism</strong></td><td>磨砂玻璃设计风格，使用 backdrop-filter: blur() 实现</td></tr>
+      <tr><td><strong>backdrop-filter</strong></td><td>CSS 属性，对元素背后区域应用滤镜（如模糊）</td></tr>
+      <tr><td><strong>localStorage</strong></td><td>浏览器本地存储 API，客户端持久化，无过期时间</td></tr>
+      <tr><td><strong>沙盒模式</strong></td><td>无固定目标、用户自由探索的游戏模式</td></tr>
+      <tr><td><strong>关卡模式</strong></td><td>有明确目标和通关条件的游戏模式</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="spacer"></div>
+</div>
+</body>
+</html>
