@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>色彩炼金</title>
+    <link rel="preload" href="bj.png" as="image">
+    <link rel="preload" href="bt.png" as="image">
+    <link rel="preload" href="ks.png" as="image">
     <link rel="stylesheet" href="style.css">
+    <style>
+        body { opacity: 0; transition: opacity 0.3s ease; }
+        body.loaded { opacity: 1; }
+    </style>
 </head>
 <body>
     <div class="home-container">
@@ -14,5 +21,18 @@
             <img src="ks.png" alt="开始游戏">
         </a>
     </div>
+    <script>
+        Promise.all(
+            ['bj.png', 'bt.png', 'ks.png'].map(src => {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = img.onerror = resolve;
+                    img.src = src;
+                });
+            })
+        ).then(() => document.body.classList.add('loaded'));
+        // Fallback: show page after 2s even if images haven't loaded
+        setTimeout(() => document.body.classList.add('loaded'), 2000);
+    </script>
 </body>
 </html>
