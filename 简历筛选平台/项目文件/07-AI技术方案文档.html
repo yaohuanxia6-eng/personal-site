@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能简历筛选平台 · AI 技术方案文档 v1.0.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --ink: #1c1a18;
+  --paper: #faf8f5;
+  --mid: #57534e;
+  --light: #e7e5e0;
+  --faint: #f4f0eb;
+  --red: #e60012;
+  --red-soft: #fce8ea;
+  --blue: #005bac;
+  --blue-soft: #e5effa;
+  --green: #059669;
+  --green-soft: #d1fae5;
+  --radius: 2px;
+  --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--ink); background: var(--paper); line-height: 1.72; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+/* COVER */
+.cover {
+  min-height: 100vh; display: grid; grid-template-rows: 1fr auto;
+  padding: clamp(40px,8vw,120px) clamp(24px,6vw,80px);
+  background: #1a1410; color: var(--paper); position: relative; overflow: hidden;
+}
+.cover::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse 70% 60% at 85% 15%, rgba(230,0,18,0.50), transparent),
+              radial-gradient(ellipse 40% 40% at 10% 85%, rgba(0,91,172,0.30), transparent);
+}
+.cover-inner { position:relative; z-index:1; max-width:800px; }
+.cover-label { font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:0.5; margin-bottom:32px; }
+.cover h1 { font-family:var(--font-display); font-size:clamp(48px,8vw,88px); font-weight:700; line-height:1.05; letter-spacing:-0.02em; margin-bottom:20px; }
+.cover h1 em { font-style:italic; color:#ff6b6b; }
+.cover-sub { font-size:clamp(16px,2.5vw,22px); font-weight:300; opacity:0.65; max-width:560px; margin-bottom:48px; }
+.cover-meta { display:flex; gap:40px; flex-wrap:wrap; font-size:13px; opacity:0.55; position:relative; z-index:1; align-self:end; }
+.cover-meta dt { font-family:var(--font-mono); text-transform:uppercase; letter-spacing:2px; font-size:10px; margin-bottom:4px; }
+.cover-meta dd { font-weight:500; font-size:14px; opacity:1; color:rgba(255,255,255,0.9); }
+
+/* LAYOUT */
+.doc { max-width:820px; margin:0 auto; padding:0 clamp(20px,4vw,48px); }
+.spacer { height:clamp(48px,8vh,96px); }
+
+/* PART DIVIDER */
+.part-divider {
+  padding: 64px 0 24px;
+  border-bottom: 3px solid var(--red);
+  margin-bottom: 0;
+}
+.part-divider .part-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+.part-divider h2 {
+  font-family: var(--font-display);
+  font-size: clamp(28px,4vw,40px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.part-divider p {
+  color: var(--mid);
+  font-size: 15px;
+}
+
+/* TOC */
+.toc-wrap { padding:48px 0; border-bottom:1px solid var(--light); }
+.toc-title { font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); margin-bottom:24px; }
+.toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 48px; }
+.toc-grid a { display:flex; align-items:baseline; gap:8px; text-decoration:none; color:var(--ink); padding:6px 0; font-size:14px; transition:color 0.2s; }
+.toc-grid a:hover { color:var(--red); }
+.toc-grid a .num { font-family:var(--font-mono); font-size:11px; color:var(--mid); min-width:28px; }
+.toc-part { grid-column: 1 / -1; font-family:var(--font-mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--red); padding-top:12px; margin-top:6px; border-top:1px solid var(--light); font-weight:600; }
+
+/* SECTIONS */
+.sect { padding:56px 0 40px; }
+.sect + .sect { border-top:1px solid var(--light); }
+.sect-num { font-family:var(--font-mono); font-size:11px; color:var(--red); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; display:block; }
+.sect h2 { font-family:var(--font-display); font-size:clamp(28px,4vw,36px); font-weight:700; line-height:1.2; letter-spacing:-0.01em; margin-bottom:28px; }
+.sect h3 { font-size:17px; font-weight:600; color:var(--ink); margin:32px 0 12px; padding-left:12px; border-left:3px solid var(--red); }
+.sect h4 { font-size:13px; font-weight:600; color:var(--mid); text-transform:uppercase; letter-spacing:1px; margin:24px 0 10px; font-family:var(--font-mono); }
+.sect p { color:var(--mid); margin-bottom:14px; }
+.sect ul, .sect ol { padding-left:20px; margin-bottom:14px; color:var(--mid); }
+.sect li { margin-bottom:5px; }
+.sect li strong { color:var(--ink); }
+.sect code { font-family:var(--font-mono); font-size:13px; background:var(--faint); padding:2px 6px; border-radius:2px; }
+
+/* TABLES */
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+thead th { text-align:left; font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--mid); padding:10px 16px; border-bottom:2px solid var(--ink); font-weight:500; }
+td { padding:12px 16px; border-bottom:1px solid #e7e5e4; color:var(--mid); vertical-align:top; }
+td strong { color:var(--ink); }
+tbody tr:hover td { background:var(--faint); }
+tbody tr:nth-child(even) td { background:rgba(0,0,0,0.015); }
+tbody tr:nth-child(even):hover td { background:var(--faint); }
+
+/* TAGS */
+.tag { display:inline-block; padding:1px 8px; border-radius:2px; font-family:var(--font-mono); font-size:11px; font-weight:500; letter-spacing:0.5px; }
+.tag-red { background:var(--red-soft); color:var(--red); }
+.tag-blue { background:var(--blue-soft); color:var(--blue); }
+.tag-green { background:var(--green-soft); color:var(--green); }
+.tag-gray { background:#f5f5f4; color:#57534e; border:1px solid var(--light); }
+.tag-p0 { background:#fecdd3; color:#9f1239; }
+.tag-p1 { background:#fef3c7; color:#92400e; }
+.tag-p2 { background:var(--green-soft); color:#065f46; }
+
+/* CALLOUTS */
+.callout { padding:20px 24px; margin:20px 0; font-size:14px; border-left:3px solid; }
+.callout-info { border-color:var(--blue); background:var(--blue-soft); color:#1e3a5f; }
+.callout-warn { border-color:#d97706; background:#fffbeb; color:#92400e; }
+.callout-red { border-color:var(--red); background:var(--red-soft); color:#9f1239; }
+.callout-success { border-color:var(--green); background:var(--green-soft); color:#065f46; }
+.callout strong { display:block; margin-bottom:4px; }
+
+/* METRIC STRIP */
+.metric-strip { display:flex; margin:28px 0; border:1px solid var(--light); }
+.metric-item { flex:1; padding:24px; border-right:1px solid var(--light); text-align:center; }
+.metric-item:last-child { border-right:none; }
+.metric-val { font-family:var(--font-display); font-size:36px; font-weight:700; color:var(--red); line-height:1; display:block; margin-bottom:6px; }
+.metric-lbl { font-family:var(--font-mono); font-size:10px; color:var(--mid); letter-spacing:1px; text-transform:uppercase; }
+
+/* FLOW */
+.flow { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin:16px 0; }
+.flow-step { padding:6px 14px; border:1px solid var(--light); font-size:13px; color:var(--ink); background:white; }
+.flow-step.highlight { background:var(--red-soft); border-color:var(--red); color:var(--red); font-weight:600; }
+.flow-arr { color:var(--mid); font-size:16px; }
+
+/* CODE BLOCK */
+.code-block { background:#1e1e1e; color:#d4d4d4; padding:24px 28px; margin:20px 0; border-radius:var(--radius); overflow-x:auto; font-family:var(--font-mono); font-size:13px; line-height:1.7; white-space:pre-wrap; word-break:break-all; }
+.code-block .comment { color:#6a9955; }
+.code-block .keyword { color:#569cd6; }
+.code-block .string { color:#ce9178; }
+.code-block .key { color:#9cdcfe; }
+.code-block .number { color:#b5cea8; }
+
+/* INFO CARD */
+.info-card { background:var(--faint); border:1px solid var(--light); padding:20px 24px; margin:16px 0; }
+.info-card h4 { font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--red); margin-bottom:12px; font-weight:600; }
+.info-card ul { list-style:none; padding:0; }
+.info-card ul li { padding:5px 0; color:var(--mid); font-size:14px; display:flex; align-items:flex-start; gap:8px; }
+.info-card ul li::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--red); flex-shrink:0; margin-top:8px; }
+.info-card ul li strong { color:var(--ink); }
+
+/* GRID 2 */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+
+/* ARCHITECTURE BOX */
+.arch-box { background:#1e1e1e; color:#d4d4d4; padding:28px 32px; margin:20px 0; border-radius:var(--radius); font-family:var(--font-mono); font-size:12px; line-height:1.8; overflow-x:auto; white-space:pre; }
+.arch-box .layer-label { color:#569cd6; font-weight:600; }
+.arch-box .component { color:#ce9178; }
+.arch-box .arrow { color:#6a9955; }
+.arch-box .highlight { color:#dcdcaa; }
+
+/* FOOTER */
+.footer { margin-top:64px; padding:40px 0; border-top:2px solid var(--ink); text-align:center; }
+.footer p { font-size:12px; color:var(--mid); margin-bottom:4px; }
+.footer .footer-brand { font-family:var(--font-mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:8px; }
+
+/* RESPONSIVE */
+@media (max-width:700px) { .toc-grid { grid-template-columns:1fr; } .metric-strip { flex-direction:column; } .cover-meta { flex-direction:column; gap:16px; } .grid-2 { grid-template-columns:1fr; } }
+
+/* PRINT */
+@media print { .cover { min-height:auto; padding:48px; } .sect { break-inside:avoid; } .part-divider { break-before:page; } }
+
+/* ANIMATE */
+.sect { animation:fadeUp 0.5s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-inner">
+    <p class="cover-label">AI Technical Specification · v1.0.0 · 2026-04-04</p>
+    <h1>AI 技术方案<br><em>文档</em></h1>
+    <p class="cover-sub">智能简历筛选平台 · AI 能力设计与技术实现</p>
+  </div>
+  <dl class="cover-meta">
+    <div>
+      <dt>版本</dt>
+      <dd>v1.0.0</dd>
+    </div>
+    <div>
+      <dt>日期</dt>
+      <dd>2026-04-04</dd>
+    </div>
+    <div>
+      <dt>负责人</dt>
+      <dd>五十二研究所 AI技术组</dd>
+    </div>
+    <div>
+      <dt>状态</dt>
+      <dd>已发布</dd>
+    </div>
+  </dl>
+</div>
+
+<!-- DOCUMENT BODY -->
+<div class="doc">
+  <div class="spacer"></div>
+
+  <!-- TOC -->
+  <nav class="toc-wrap">
+    <p class="toc-title">目录 · Table of Contents</p>
+    <div class="toc-grid">
+      <p class="toc-part">Part 1 — AI 能力概览与选型决策（面向决策层）</p>
+      <a href="#s01"><span class="num">§01</span> AI 在本系统中的价值定位</a>
+      <a href="#s04"><span class="num">§04</span> 数据安全与隐私合规</a>
+      <a href="#s02"><span class="num">§02</span> 大模型选型与对比</a>
+      <a href="#s05"><span class="num">§05</span> AI 准确率与人工修正闭环</a>
+      <a href="#s03"><span class="num">§03</span> AI 评分维度体系</a>
+      <a href="#s06"><span class="num">§06</span> API 调用成本估算</a>
+      <p class="toc-part">Part 2 — 技术实现方案（面向开发团队）</p>
+      <a href="#s07"><span class="num">§07</span> 整体 AI 架构</a>
+      <a href="#s12"><span class="num">§12</span> 简历解析 Pipeline 详解</a>
+      <a href="#s08"><span class="num">§08</span> 数据来源与录入机制</a>
+      <a href="#s13"><span class="num">§13</span> 评分算法详解</a>
+      <a href="#s09"><span class="num">§09</span> 数据清洗流程</a>
+      <a href="#s14"><span class="num">§14</span> 评测集设计与质量保障</a>
+      <a href="#s10"><span class="num">§10</span> Prompt 工程设计</a>
+      <a href="#s15"><span class="num">§15</span> 模型自迭代与持续优化</a>
+      <a href="#s11"><span class="num">§11</span> 多模型调度策略</a>
+      <a href="#s16"><span class="num">§16</span> 向量库与语义检索</a>
+      <a href="#s17" style="grid-column:1/-1"><span class="num">§17</span> 性能与并发设计</a>
+    </div>
+  </nav>
+
+  <!-- ================================================================== -->
+  <!-- PART 1 -->
+  <!-- ================================================================== -->
+  <div class="part-divider">
+    <p class="part-label">Part 1</p>
+    <h2>AI 能力概览与选型决策</h2>
+    <p>面向决策层 · 重点阐述 AI 价值、模型选型、成本与合规</p>
+  </div>
+
+  <!-- §01 -->
+  <section class="sect" id="s01">
+    <span class="sect-num">§ 01</span>
+    <h2>AI 在本系统中的价值定位</h2>
+
+    <h3>业务痛点分析</h3>
+    <p>中国电科五十二研究所每年面向社会招聘 120-150 个岗位，涵盖后端开发、前端开发、产品经理、UI 设计、测试工程师等多个技术方向。当前由 16 人 HR 团队负责全流程招聘管理。经过深入调研，我们识别出以下核心痛点：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>痛点编号</th>
+          <th>问题描述</th>
+          <th>影响程度</th>
+          <th>量化数据</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>P1</strong></td>
+          <td>HR 每日简历筛选耗时过长，人工逐份阅读效率低下</td>
+          <td><span class="tag tag-p0">严重</span></td>
+          <td>人均 3.5 小时/天，占工作时间 44%</td>
+        </tr>
+        <tr>
+          <td><strong>P2</strong></td>
+          <td>基于关键词的简单匹配导致大量不匹配候选人进入面试</td>
+          <td><span class="tag tag-p0">严重</span></td>
+          <td>面试转化率仅 5%，80% 面试无效</td>
+        </tr>
+        <tr>
+          <td><strong>P3</strong></td>
+          <td>不同 HR 对同一简历的评判标准不一致</td>
+          <td><span class="tag tag-p1">中等</span></td>
+          <td>同一简历不同 HR 打分差异达 30%+</td>
+        </tr>
+        <tr>
+          <td><strong>P4</strong></td>
+          <td>优质候选人因处理延迟被竞争对手抢先录用</td>
+          <td><span class="tag tag-p1">中等</span></td>
+          <td>平均简历处理周期 3-5 天</td>
+        </tr>
+        <tr>
+          <td><strong>P5</strong></td>
+          <td>多渠道简历汇总困难，存在重复处理和遗漏</td>
+          <td><span class="tag tag-p1">中等</span></td>
+          <td>约 15% 简历被重复筛选或遗漏</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>AI 解决方案定位</h3>
+    <p>本系统引入大语言模型（LLM）驱动的语义理解能力，从根本上替代传统关键词搜索模式。AI 不再停留在字面匹配，而是深入理解简历内容的语义信息，评估候选人与岗位的真实匹配度。</p>
+
+    <div class="callout callout-info">
+      <strong>核心理念</strong>
+      传统筛选 = 关键词命中率统计；AI 筛选 = 多维度语义理解 + 结构化评分 + 证据溯源。AI 不是替代 HR，而是作为 HR 的智能助手，将重复性筛选工作自动化，让 HR 聚焦于高价值的面试和人才评估环节。
+    </div>
+
+    <h3>三大核心 AI 能力</h3>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>能力一：智能简历解析</h4>
+        <ul>
+          <li><strong>多格式支持：</strong>PDF、Word（docx）、图片（JPG/PNG）、扫描件</li>
+          <li><strong>OCR 识别：</strong>基于 Tesseract 的中英文混合文档识别</li>
+          <li><strong>结构化提取：</strong>将非结构化文本转为标准化 JSON 数据</li>
+          <li><strong>字段覆盖：</strong>姓名、联系方式、教育背景、工作经历、技能列表、项目经验</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>能力二：多维度 AI 评分</h4>
+        <ul>
+          <li><strong>语义匹配：</strong>基于 LLM 理解简历与 JD 的深层语义关联</li>
+          <li><strong>五维评估：</strong>技术深度、项目经验、行业理解、协作能力、学习潜力</li>
+          <li><strong>证据溯源：</strong>每个评分维度均引用简历原文作为依据</li>
+          <li><strong>红线机制：</strong>一票否决规则保障最低准入标准</li>
+        </ul>
+      </div>
+    </div>
+    <div class="info-card">
+      <h4>能力三：智能匹配与排序</h4>
+      <ul>
+        <li><strong>全局排序：</strong>同一岗位的所有候选人按综合得分自动排序</li>
+        <li><strong>推荐分层：</strong>强烈推荐 / 推荐 / 建议复核 / 不推荐四级分层</li>
+        <li><strong>相似推荐：</strong>基于向量检索发现相似优质候选人</li>
+        <li><strong>人才库检索：</strong>语义搜索历史候选人库，快速召回往期优质人选</li>
+      </ul>
+    </div>
+
+    <h3>预期成效</h3>
+
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">60%</span>
+        <span class="metric-lbl">筛选时间缩减</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">5%&rarr;10%</span>
+        <span class="metric-lbl">面试转化率提升</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">&ge;80%</span>
+        <span class="metric-lbl">AI 推荐准确率</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">3天&rarr;1天</span>
+        <span class="metric-lbl">处理周期缩短</span>
+      </div>
+    </div>
+
+    <p>按照 16 人 HR 团队、人均每日 3.5 小时筛选工作计算：年度节省工时约 <strong>16 x 3.5 x 0.6 x 250 = 8,400 小时</strong>，折合约 <strong>4.2 人年</strong> 的人力释放，使 HR 能够投入更多精力在面试评估、候选人沟通和雇主品牌建设等高价值工作上。</p>
+  </section>
+
+  <!-- §02 -->
+  <section class="sect" id="s02">
+    <span class="sect-num">§ 02</span>
+    <h2>大模型选型与对比</h2>
+
+    <h3>候选模型对比</h3>
+    <p>在综合考虑国产化合规要求、中文理解能力、部署灵活性和成本等因素后，我们对主流大语言模型进行了全面评估，最终选定 DeepSeek-V3 和通义千问 Qwen-Max 作为主备模型组合。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>评估维度</th>
+          <th>DeepSeek-V3（主模型）</th>
+          <th>通义千问 Qwen-Max（备用）</th>
+          <th>GPT-4o（参考）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>厂商</strong></td>
+          <td>深度求索（国产）</td>
+          <td>阿里巴巴（国产）</td>
+          <td>OpenAI（美国）</td>
+        </tr>
+        <tr>
+          <td><strong>API 成本</strong></td>
+          <td><span class="tag tag-green">~0.5 元/万 tokens</span></td>
+          <td><span class="tag tag-blue">~1 元/万 tokens</span></td>
+          <td><span class="tag tag-red">~7 元/万 tokens</span></td>
+        </tr>
+        <tr>
+          <td><strong>响应延迟</strong></td>
+          <td>~800ms（首 token）</td>
+          <td>~900ms（首 token）</td>
+          <td>~1200ms（首 token）</td>
+        </tr>
+        <tr>
+          <td><strong>中文理解</strong></td>
+          <td>优秀（中文原生训练）</td>
+          <td>优秀（阿里原生中文模型）</td>
+          <td>良好（多语言通用）</td>
+        </tr>
+        <tr>
+          <td><strong>推理能力</strong></td>
+          <td>良好</td>
+          <td>优秀</td>
+          <td>优秀</td>
+        </tr>
+        <tr>
+          <td><strong>JSON 输出稳定性</strong></td>
+          <td>良好（偶需重试）</td>
+          <td>优秀（原生 JSON Mode）</td>
+          <td>优秀</td>
+        </tr>
+        <tr>
+          <td><strong>私有化部署</strong></td>
+          <td>支持（开源可部署）</td>
+          <td>支持（阿里云专属）</td>
+          <td>不支持</td>
+        </tr>
+        <tr>
+          <td><strong>数据合规</strong></td>
+          <td><span class="tag tag-green">国产合规</span></td>
+          <td><span class="tag tag-green">国产合规</span></td>
+          <td><span class="tag tag-red">数据出境风险</span></td>
+        </tr>
+        <tr>
+          <td><strong>适用场景</strong></td>
+          <td>日常批量筛选、P5 及以下岗位</td>
+          <td>复杂评估、P6+ 高级岗位</td>
+          <td>——</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>为什么不选 GPT-4o</h3>
+    <div class="callout callout-red">
+      <strong>国产化合规要求</strong>
+      作为中国电科下属研究所，人力资源数据属于敏感信息范畴。根据《数据安全法》和《个人信息保护法》要求，简历数据不得出境至境外服务器。GPT-4o 虽然综合能力优秀，但其 API 数据必须经由境外服务器处理，存在数据主权风险，不符合国产化合规要求。DeepSeek-V3 和通义千问均支持国内私有化部署，数据全程不出内网。
+    </div>
+
+    <h3>模型路由策略</h3>
+    <p>根据岗位级别和复杂度，系统自动选择最合适的模型进行评分：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>岗位级别</th>
+          <th>默认模型</th>
+          <th>路由原因</th>
+          <th>可覆盖</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>P5 及以下</strong>（初级/中级）</td>
+          <td>DeepSeek-V3</td>
+          <td>评估维度相对明确，侧重硬技能匹配，DeepSeek 性价比最优</td>
+          <td>是</td>
+        </tr>
+        <tr>
+          <td><strong>P6+</strong>（高级/专家/管理）</td>
+          <td>通义千问 Qwen-Max</td>
+          <td>高级岗位需评估软技能、管理能力、战略思维等复杂维度</td>
+          <td>是</td>
+        </tr>
+        <tr>
+          <td><strong>手动指定</strong></td>
+          <td>HR 自选</td>
+          <td>业务负责人可针对特定岗位手动指定评估模型</td>
+          <td>——</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>故障降级策略</h3>
+    <div class="flow">
+      <span class="flow-step highlight">主模型调用</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">超时(10s)?</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">重试一次</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">仍失败?</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">切换备用模型</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">备用也失败?</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">标记"解析失败"</span>
+    </div>
+    <p>故障降级全程自动执行，无需人工干预。切换备用模型时，评分结果会标注实际使用的模型版本，确保评分可追溯。系统每分钟检测模型可用性，一旦主模型恢复，自动切回主模型。</p>
+  </section>
+
+  <!-- §03 -->
+  <section class="sect" id="s03">
+    <span class="sect-num">§ 03</span>
+    <h2>AI 评分维度体系</h2>
+
+    <h3>五维评分模型</h3>
+    <p>AI 评分采用五维度加权模型，每个维度独立评分（0-10 分），最终加权计算综合得分。各维度权重可由业务负责人按岗位需求灵活调整。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>默认权重</th>
+          <th>评估内容</th>
+          <th>提取方法</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>核心技术栈深度</strong></td>
+          <td><span class="tag tag-red">30%</span></td>
+          <td>候选人核心技术栈与 JD 要求的匹配度，技术深度而非广度。关注是否有相关技术的深入实践经验，而非简单列举关键词。</td>
+          <td>关键词提取 + LLM 语义匹配 JD 技术要求</td>
+        </tr>
+        <tr>
+          <td><strong>高并发/项目经验</strong></td>
+          <td><span class="tag tag-red">25%</span></td>
+          <td>实际项目的规模指标：DAU、QPS、团队规模、数据量级；项目中承担的角色和具体贡献。</td>
+          <td>NER 提取数字指标 + LLM 评估项目复杂度</td>
+        </tr>
+        <tr>
+          <td><strong>行业业务理解</strong></td>
+          <td><span class="tag tag-blue">15%</span></td>
+          <td>候选人所在行业与目标岗位的行业相关性。政企/国防优先，ToB SaaS 次优，纯 ToC 需额外评估迁移能力。</td>
+          <td>行业关键词 + LLM 判断领域相关性</td>
+        </tr>
+        <tr>
+          <td><strong>团队协作与产出</strong></td>
+          <td><span class="tag tag-blue">15%</span></td>
+          <td>跨团队协作经验、技术方案推动能力、管理信号（带队人数、导师经历）、沟通表达能力线索。</td>
+          <td>LLM 分析简历中的协作描述和领导力信号</td>
+        </tr>
+        <tr>
+          <td><strong>学习潜力与自驱力</strong></td>
+          <td><span class="tag tag-blue">15%</span></td>
+          <td>教育背景（学历/学校层次）、技术博客/GitHub 活跃度、开源贡献、技术社区参与、简历质量和专业度。</td>
+          <td>字段提取 + LLM 评估成长轨迹</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info">
+      <strong>权重可配置</strong>
+      以上权重为系统默认值。业务负责人在创建或编辑岗位时，可以自定义各维度的权重、新增专属评估维度、调整提取规则。例如：前端岗位可将"核心技术栈深度"权重提高至 40%，同时降低"行业业务理解"至 10%。所有调整均实时生效，历史评分不受影响。
+    </div>
+
+    <h3>红线过滤规则（一票否决）</h3>
+    <p>在 AI 评分之前，系统先执行红线过滤。触发任一红线规则的候选人将被直接标记为"不推荐"，不再进入 AI 评分流程。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>红线类型</th>
+          <th>规则描述</th>
+          <th>示例</th>
+          <th>可配置</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>最低经验年限</strong></td>
+          <td>工作年限低于岗位最低要求</td>
+          <td>JD 要求 3 年以上，候选人仅 1 年</td>
+          <td>是（按岗位设置）</td>
+        </tr>
+        <tr>
+          <td><strong>学历底线</strong></td>
+          <td>学历不满足岗位最低要求</td>
+          <td>JD 要求本科及以上，候选人为专科</td>
+          <td>是（按岗位设置）</td>
+        </tr>
+        <tr>
+          <td><strong>工作稳定性</strong></td>
+          <td>近 3 年内跳槽次数超过阈值</td>
+          <td>3 年内换了 4 家公司</td>
+          <td>是（默认阈值 3 次）</td>
+        </tr>
+        <tr>
+          <td><strong>黑名单</strong></td>
+          <td>候选人在系统黑名单中</td>
+          <td>曾因严重问题被拒录的候选人</td>
+          <td>由 HR 管理员维护</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>评分等级划分</h3>
+
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val" style="color:var(--red);">&ge;85</span>
+        <span class="metric-lbl">强烈推荐</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val" style="color:var(--blue);">&ge;75</span>
+        <span class="metric-lbl">推荐</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val" style="color:#d97706;">&ge;60</span>
+        <span class="metric-lbl">建议复核</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val" style="color:var(--mid);">&lt;60</span>
+        <span class="metric-lbl">不推荐</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>等级</th>
+          <th>分数区间</th>
+          <th>HR 操作建议</th>
+          <th>预期占比</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-p0">强烈推荐</span></td>
+          <td>85-100 分</td>
+          <td>优先安排面试，建议 48 小时内联系候选人</td>
+          <td>~10-15%</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-p2">推荐</span></td>
+          <td>75-84 分</td>
+          <td>纳入面试候选池，可按业务节奏安排</td>
+          <td>~20-30%</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-p1">建议复核</span></td>
+          <td>60-74 分</td>
+          <td>HR 人工复核 AI 评分理由，决定是否面试</td>
+          <td>~25-35%</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">不推荐</span></td>
+          <td>0-59 分</td>
+          <td>默认不进入面试流程，HR 可"强捞"例外处理</td>
+          <td>~30-40%</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §04 -->
+  <section class="sect" id="s04">
+    <span class="sect-num">§ 04</span>
+    <h2>数据安全与隐私合规</h2>
+
+    <h3>AI 调用前数据脱敏</h3>
+    <p>简历数据在发送给大模型 API 之前，必须经过严格的脱敏处理。脱敏在本地服务端完成，确保敏感信息不会离开内部系统。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>脱敏字段</th>
+          <th>处理方式</th>
+          <th>是否必选</th>
+          <th>示例</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>姓名</strong></td>
+          <td>替换为"某候选人"</td>
+          <td><span class="tag tag-red">必选</span></td>
+          <td>"张三" &rarr; "某候选人"</td>
+        </tr>
+        <tr>
+          <td><strong>手机号</strong></td>
+          <td>完全隐藏</td>
+          <td><span class="tag tag-red">必选</span></td>
+          <td>"138****1234" &rarr; 移除</td>
+        </tr>
+        <tr>
+          <td><strong>邮箱</strong></td>
+          <td>完全隐藏</td>
+          <td><span class="tag tag-red">必选</span></td>
+          <td>"xxx@xxx.com" &rarr; 移除</td>
+        </tr>
+        <tr>
+          <td><strong>证件照/头像</strong></td>
+          <td>移除图片</td>
+          <td><span class="tag tag-red">必选</span></td>
+          <td>不发送任何图片至模型</td>
+        </tr>
+        <tr>
+          <td><strong>现单位名称</strong></td>
+          <td>替换为"某公司"或行业描述</td>
+          <td><span class="tag tag-blue">可选</span></td>
+          <td>"阿里巴巴" &rarr; "某互联网大厂"</td>
+        </tr>
+        <tr>
+          <td><strong>院校名称</strong></td>
+          <td>替换为院校层次</td>
+          <td><span class="tag tag-blue">可选</span></td>
+          <td>"清华大学" &rarr; "某 985 高校"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <strong>可选脱敏说明</strong>
+      现单位名称和院校名称的脱敏为可选项，由系统管理员在后台配置。开启后可进一步降低信息泄露风险，但可能影响"行业业务理解"和"学习潜力"维度的评分精度。建议根据实际安全等级需求决定是否开启。
+    </div>
+
+    <h3>内网私有化部署</h3>
+    <div class="info-card">
+      <h4>部署架构安全保障</h4>
+      <ul>
+        <li><strong>零数据出境：</strong>所有服务部署在研究所内网，简历数据全生命周期不出内网</li>
+        <li><strong>模型 API 内网化：</strong>DeepSeek-V3 支持本地部署，通义千问可通过阿里云专属区域部署</li>
+        <li><strong>网络隔离：</strong>AI 服务与外网物理隔离，仅通过内部 API 网关对接前端系统</li>
+        <li><strong>加密传输：</strong>内网服务间通信采用 mTLS 加密，防止中间人攻击</li>
+      </ul>
+    </div>
+
+    <h3>审计与追溯</h3>
+    <p>每一次 AI 操作都会留下完整的审计记录，确保操作可追溯、可审查。</p>
+    <table>
+      <thead>
+        <tr>
+          <th>记录字段</th>
+          <th>说明</th>
+          <th>示例值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>操作时间</strong></td>
+          <td>精确到毫秒的时间戳</td>
+          <td>2026-04-04 14:30:25.123</td>
+        </tr>
+        <tr>
+          <td><strong>操作人</strong></td>
+          <td>触发 AI 评分的 HR 工号</td>
+          <td>HR-2024-008</td>
+        </tr>
+        <tr>
+          <td><strong>操作类型</strong></td>
+          <td>解析/评分/重评/强捞</td>
+          <td>AI_SCORE</td>
+        </tr>
+        <tr>
+          <td><strong>模型版本</strong></td>
+          <td>实际调用的模型和版本号</td>
+          <td>deepseek-v3-20260401</td>
+        </tr>
+        <tr>
+          <td><strong>输入摘要</strong></td>
+          <td>发送给模型的脱敏后 prompt 哈希</td>
+          <td>sha256:a3f8c2...</td>
+        </tr>
+        <tr>
+          <td><strong>输出结果</strong></td>
+          <td>模型返回的完整评分 JSON</td>
+          <td>{'score': 82, 'tier': '推荐', ...}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>数据留存策略</h3>
+    <p>简历数据采用 AES-256 加密存储，留存周期可由管理员配置。默认策略为：活跃候选人数据永久保留，已关闭岗位相关数据保留 2 年后自动归档加密，归档数据保留 5 年后彻底销毁。所有销毁操作均生成不可篡改的销毁日志。</p>
+  </section>
+
+  <!-- §05 -->
+  <section class="sect" id="s05">
+    <span class="sect-num">§ 05</span>
+    <h2>AI 准确率与人工修正闭环</h2>
+
+    <h3>准确率定义与目标</h3>
+    <p>AI 推荐准确率是衡量系统核心价值的关键指标。我们采用以下公式进行计算：</p>
+
+    <div class="code-block"><span class="comment">// 准确率计算公式</span>
+<span class="key">准确率</span> = (<span class="string">AI推荐且HR通过</span> + <span class="string">AI淘汰且HR淘汰</span>) / <span class="string">总评估数</span> × 100%
+
+<span class="comment">// 其中：</span>
+<span class="comment">//   AI推荐且HR通过 = AI 给出"推荐"或"强烈推荐"且 HR 确认通过面试的数量</span>
+<span class="comment">//   AI淘汰且HR淘汰 = AI 给出"不推荐"且 HR 未做例外处理（强捞）的数量</span>
+<span class="comment">//   总评估数 = 评估周期内 AI 处理的简历总数</span></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>定义</th>
+          <th>初期目标</th>
+          <th>优化目标</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>综合准确率</strong></td>
+          <td>AI 判断与 HR 判断一致的比例</td>
+          <td>&ge;80%</td>
+          <td>&ge;86%</td>
+        </tr>
+        <tr>
+          <td><strong>假阳性率</strong></td>
+          <td>AI 推荐但 HR 否决（高分误判）</td>
+          <td>&le;15%</td>
+          <td>&le;10%</td>
+        </tr>
+        <tr>
+          <td><strong>假阴性率</strong></td>
+          <td>AI 不推荐但 HR 强捞（低分遗珠）</td>
+          <td>&le;8%</td>
+          <td>&le;5%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>人工修正闭环机制</h3>
+    <p>HR 的每一次操作反馈都是模型优化的宝贵数据。系统通过"人工修正 &rarr; 数据采集 &rarr; 规则调整 &rarr; 验证上线"的闭环持续提升 AI 准确率。</p>
+
+    <div class="flow">
+      <span class="flow-step">HR 审核 AI 结果</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">修正操作（强捞/否决）</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">系统记录修正数据</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">每日凌晨分析</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">调整维度权重</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">验证集回归测试</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">自动上线/回滚</span>
+    </div>
+
+    <h3>每日自学习机制</h3>
+    <div class="info-card">
+      <h4>每日凌晨 2:00 AM 自动执行</h4>
+      <ul>
+        <li><strong>采集：</strong>收集前一天所有 HR 修正操作，包括强捞低分候选人、否决高分候选人、手动调分</li>
+        <li><strong>分析：</strong>识别哪些评分维度存在系统性偏差，例如"技术深度"维度是否持续偏高</li>
+        <li><strong>调整：</strong>对偏差维度的权重进行微调（单次调整幅度不超过 &plusmn;2%，防止过度拟合）</li>
+        <li><strong>验证：</strong>将调整后的规则在 200 份标注数据集上运行回归测试</li>
+        <li><strong>决策：</strong>仅当准确率提升时自动部署新规则，否则保持原规则不变</li>
+      </ul>
+    </div>
+
+    <h3>A/B 测试灰度发布</h3>
+    <p>对于较大的规则变更（如新增评分维度、修改 Prompt 模板），采用灰度发布策略逐步验证：</p>
+    <div class="flow">
+      <span class="flow-step">10% 流量</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">观察 3 天</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">30% 流量</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">观察 3 天</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">50% 流量</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">观察 3 天</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">100% 全量</span>
+    </div>
+    <p>灰度期间，系统同时记录新旧规则版本的评分结果，产品团队可在后台查看对比报告，随时决定加速推进或回滚。</p>
+  </section>
+
+  <!-- §06 -->
+  <section class="sect" id="s06">
+    <span class="sect-num">§ 06</span>
+    <h2>API 调用成本估算</h2>
+
+    <h3>基础假设</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>参数</th>
+          <th>数值</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>年度招聘岗位数</strong></td>
+          <td>120-150 个</td>
+          <td>五十二研究所全年招聘需求</td>
+        </tr>
+        <tr>
+          <td><strong>年度处理简历数</strong></td>
+          <td>~500 份</td>
+          <td>含多渠道去重后的有效简历</td>
+        </tr>
+        <tr>
+          <td><strong>单份简历输入 tokens</strong></td>
+          <td>~2,000 tokens</td>
+          <td>脱敏后简历文本 + JD 文本 + System Prompt</td>
+        </tr>
+        <tr>
+          <td><strong>单份简历输出 tokens</strong></td>
+          <td>~800 tokens</td>
+          <td>五维度评分 + 证据 + 风险提示的 JSON</td>
+        </tr>
+        <tr>
+          <td><strong>主模型使用比例</strong></td>
+          <td>~80%（DeepSeek-V3）</td>
+          <td>P5 及以下岗位走主模型</td>
+        </tr>
+        <tr>
+          <td><strong>备模型使用比例</strong></td>
+          <td>~20%（通义千问）</td>
+          <td>P6+ 岗位走备用模型</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>成本明细</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>模型</th>
+          <th>简历数量</th>
+          <th>tokens/份</th>
+          <th>单价</th>
+          <th>年度费用</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>DeepSeek-V3</strong></td>
+          <td>400 份</td>
+          <td>2,800</td>
+          <td>0.5 元/万 tokens</td>
+          <td><strong>56 元</strong></td>
+        </tr>
+        <tr>
+          <td><strong>通义千问 Qwen-Max</strong></td>
+          <td>100 份</td>
+          <td>2,800</td>
+          <td>1.0 元/万 tokens</td>
+          <td><strong>28 元</strong></td>
+        </tr>
+        <tr>
+          <td><strong>重评 / 重试</strong></td>
+          <td>~50 份（估计）</td>
+          <td>2,800</td>
+          <td>混合单价</td>
+          <td><strong>~10 元</strong></td>
+        </tr>
+        <tr>
+          <td colspan="4" style="text-align:right; font-weight:600; color:var(--ink);">年度 API 总成本</td>
+          <td><strong style="color:var(--red); font-size:18px;">~94 元</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-success">
+      <strong>成本对比分析</strong>
+      年度 API 成本不足 100 元，而 HR 团队每年节省约 8,400 小时工时。按人力成本估算，仅人工筛选时间的节省价值就超过 30 万元/年。投入产出比极为可观，AI 能力的引入在成本维度几乎可以忽略不计。
+    </div>
+
+    <h3>成本预警机制</h3>
+    <p>虽然当前预估成本极低，系统仍设置了多级成本预警机制以应对异常情况：</p>
+    <ul>
+      <li><strong>日预警：</strong>单日 API 调用费用超过 5 元触发邮件通知</li>
+      <li><strong>周预警：</strong>单周累计超过 20 元触发管理员通知</li>
+      <li><strong>月熔断：</strong>单月累计超过 100 元自动暂停非紧急 AI 调用，仅保留手动触发</li>
+    </ul>
+  </section>
+
+  <!-- ================================================================== -->
+  <!-- PART 2 -->
+  <!-- ================================================================== -->
+  <div class="part-divider">
+    <p class="part-label">Part 2</p>
+    <h2>技术实现方案</h2>
+    <p>面向开发团队 · 架构设计、实现细节与工程规范</p>
+  </div>
+
+  <!-- §07 -->
+  <section class="sect" id="s07">
+    <span class="sect-num">§ 07</span>
+    <h2>整体 AI 架构</h2>
+
+    <h3>系统架构概览</h3>
+    <p>智能简历筛选平台的 AI 子系统采用异步流水线架构，将简历从上传到最终评分拆解为多个独立的处理阶段，每个阶段可独立扩缩容、独立重试。</p>
+
+    <div class="arch-box"><span class="layer-label">[ 数据接入层 ]</span>
+  <span class="component">手动上传</span> / <span class="component">BOSS直聘API</span> / <span class="component">猎聘API</span> / <span class="component">前程无忧API</span> / <span class="component">内部推荐</span>
+        <span class="arrow">|</span>
+        <span class="arrow">v</span>
+<span class="layer-label">[ 文件解析层 ]</span>
+  <span class="component">PDF Parser</span> <span class="arrow">|</span> <span class="component">Word Parser</span> <span class="arrow">|</span> <span class="component">OCR Engine</span>(Tesseract)
+        <span class="arrow">|</span>
+        <span class="arrow">v</span>
+<span class="layer-label">[ 数据清洗层 ]</span>
+  <span class="highlight">格式标准化</span> <span class="arrow">&rarr;</span> <span class="highlight">字段提取</span> <span class="arrow">&rarr;</span> <span class="highlight">内容去噪</span> <span class="arrow">&rarr;</span> <span class="highlight">结构化转换</span> <span class="arrow">&rarr;</span> <span class="highlight">质量校验</span> <span class="arrow">&rarr;</span> <span class="highlight">脱敏处理</span>
+        <span class="arrow">|</span>
+        <span class="arrow">v</span>
+<span class="layer-label">[ AI 评分层 ]</span>
+  <span class="component">Prompt 构建</span> <span class="arrow">&rarr;</span> <span class="component">模型路由</span> <span class="arrow">&rarr;</span> <span class="component">LLM 调用</span>(DeepSeek/Qwen) <span class="arrow">&rarr;</span> <span class="component">结果校验</span>
+        <span class="arrow">|</span>
+        <span class="arrow">v</span>
+<span class="layer-label">[ 存储层 ]</span>
+  <span class="component">MySQL</span>(结构化数据) <span class="arrow">|</span> <span class="component">Milvus</span>(向量索引) <span class="arrow">|</span> <span class="component">MinIO</span>(原始文件)
+        <span class="arrow">|</span>
+        <span class="arrow">v</span>
+<span class="layer-label">[ 展示层 ]</span>
+  <span class="component">Vue 3 前端</span> <span class="arrow">&rarr;</span> <span class="highlight">评分看板</span> / <span class="highlight">候选人排序</span> / <span class="highlight">详情与证据</span></div>
+
+    <h3>服务拆分</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>服务名称</th>
+          <th>职责</th>
+          <th>技术栈</th>
+          <th>部署方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Upload Service</strong></td>
+          <td>文件接收、格式校验、写入 MinIO、发布解析任务</td>
+          <td>FastAPI + Python 3.11</td>
+          <td>2 实例</td>
+        </tr>
+        <tr>
+          <td><strong>Parse Service</strong></td>
+          <td>PDF/Word/OCR 解析、文本提取、结构化转换</td>
+          <td>FastAPI + PyPDF2 + Tesseract</td>
+          <td>2 实例（CPU 密集型）</td>
+        </tr>
+        <tr>
+          <td><strong>AI Scoring Service</strong></td>
+          <td>Prompt 构建、模型路由、LLM 调用、评分计算</td>
+          <td>FastAPI + LangChain</td>
+          <td>2 实例</td>
+        </tr>
+        <tr>
+          <td><strong>Vector Service</strong></td>
+          <td>向量化、去重检测、相似候选人检索</td>
+          <td>FastAPI + Milvus SDK</td>
+          <td>1 实例</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>核心技术选型</h3>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>后端框架</h4>
+        <ul>
+          <li><strong>FastAPI（Python 3.11）：</strong>异步支持、自动 API 文档、类型安全</li>
+          <li><strong>LangChain：</strong>LLM 编排框架，支持多模型切换、Prompt 管理、重试机制</li>
+          <li><strong>Celery + Redis：</strong>异步任务队列，解耦解析和评分流程</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>存储方案</h4>
+        <ul>
+          <li><strong>MySQL 8.0：</strong>候选人结构化数据、评分记录、审计日志</li>
+          <li><strong>Milvus 2.3：</strong>简历向量索引，支持语义搜索和去重</li>
+          <li><strong>Redis 7.0：</strong>任务队列、缓存、分布式锁</li>
+          <li><strong>MinIO：</strong>原始简历文件对象存储</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- §08 -->
+  <section class="sect" id="s08">
+    <span class="sect-num">§ 08</span>
+    <h2>数据来源与录入机制</h2>
+
+    <h3>五大数据源</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>数据源</th>
+          <th>同步方式</th>
+          <th>同步频率</th>
+          <th>数据格式</th>
+          <th>特殊处理</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>手动上传</strong></td>
+          <td>HR 批量上传</td>
+          <td>实时</td>
+          <td>PDF / Word / 图片</td>
+          <td>单批最多 50 份，支持拖拽上传</td>
+        </tr>
+        <tr>
+          <td><strong>BOSS 直聘</strong></td>
+          <td>API 自动同步</td>
+          <td>每 10 分钟</td>
+          <td>结构化 JSON + 简历附件</td>
+          <td>优先使用结构化字段，附件作为补充解析</td>
+        </tr>
+        <tr>
+          <td><strong>猎聘</strong></td>
+          <td>API 自动同步</td>
+          <td>每 30 分钟</td>
+          <td>结构化字段为主</td>
+          <td>猎聘数据结构最规范，优先使用结构化字段</td>
+        </tr>
+        <tr>
+          <td><strong>前程无忧</strong></td>
+          <td>API 自动同步</td>
+          <td>每 60 分钟</td>
+          <td>附件 + 部分结构化字段</td>
+          <td>附件解析为主，需去重（与其他渠道交叉）</td>
+        </tr>
+        <tr>
+          <td><strong>内部推荐</strong></td>
+          <td>HR 手动录入 / 推荐链接</td>
+          <td>实时</td>
+          <td>混合格式</td>
+          <td>推荐人信息关联，标记为内推渠道</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>去重策略</h3>
+    <p>同一候选人可能通过多个渠道投递简历，系统需要自动识别并合并：</p>
+    <div class="info-card">
+      <h4>三级去重机制</h4>
+      <ul>
+        <li><strong>精确匹配：</strong>手机号完全一致 &rarr; 确认为同一人，自动合并</li>
+        <li><strong>准精确匹配：</strong>姓名 + 邮箱一致 &rarr; 确认为同一人，自动合并</li>
+        <li><strong>模糊匹配：</strong>姓名 + 毕业院校 + 毕业年份一致 &rarr; 标记为疑似重复，HR 人工确认</li>
+      </ul>
+    </div>
+    <p>合并策略：保留最新版本简历作为主档案，其他版本作为历史记录。渠道来源信息全部保留，便于分析各渠道的简历质量和转化率。</p>
+
+    <h3>统一处理管线</h3>
+    <p>无论简历来自哪个渠道，经过去重后统一进入相同的处理管线：</p>
+    <div class="flow">
+      <span class="flow-step">数据接入</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">去重检测</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">格式标准化</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">Parse 解析</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">AI 评分</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">结果入库</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">通知 HR</span>
+    </div>
+
+    <h3>数据格式归一化</h3>
+    <p>不同招聘平台的数据字段名称和格式各异，系统维护一套字段映射表，将各平台数据统一为内部标准 Schema：</p>
+    <div class="code-block"><span class="comment">// 内部标准 Resume Schema（简化示例）</span>
+{
+  <span class="key">"candidate_id"</span>: <span class="string">"CAN-2026-001234"</span>,
+  <span class="key">"source"</span>: <span class="string">"boss_zhipin"</span>,
+  <span class="key">"personal"</span>: {
+    <span class="key">"name"</span>: <span class="string">"张三"</span>,
+    <span class="key">"phone"</span>: <span class="string">"138****1234"</span>,
+    <span class="key">"email"</span>: <span class="string">"***@***.com"</span>,
+    <span class="key">"gender"</span>: <span class="string">"male"</span>,
+    <span class="key">"birth_year"</span>: <span class="number">1995</span>,
+    <span class="key">"location"</span>: <span class="string">"合肥"</span>
+  },
+  <span class="key">"education"</span>: [
+    { <span class="key">"school"</span>: <span class="string">"中国科学技术大学"</span>, <span class="key">"degree"</span>: <span class="string">"硕士"</span>, <span class="key">"major"</span>: <span class="string">"计算机科学"</span>, <span class="key">"year"</span>: <span class="number">2020</span> }
+  ],
+  <span class="key">"work_history"</span>: [
+    { <span class="key">"company"</span>: <span class="string">"某互联网公司"</span>, <span class="key">"title"</span>: <span class="string">"高级后端工程师"</span>, <span class="key">"start"</span>: <span class="string">"2020-07"</span>, <span class="key">"end"</span>: <span class="string">"至今"</span>, <span class="key">"description"</span>: <span class="string">"..."</span> }
+  ],
+  <span class="key">"skills"</span>: [<span class="string">"Java"</span>, <span class="string">"Spring Boot"</span>, <span class="string">"MySQL"</span>, <span class="string">"Redis"</span>, <span class="string">"Kubernetes"</span>],
+  <span class="key">"projects"</span>: [ ... ]
+}</div>
+  </section>
+
+  <!-- §09 -->
+  <section class="sect" id="s09">
+    <span class="sect-num">§ 09</span>
+    <h2>文本提取与预处理</h2>
+
+    <div class="callout callout-info">
+      <strong>设计理念：让 LLM 做重活，预处理只做最少必要工作。</strong><br>
+      传统简历筛选系统需要复杂的数据清洗（正则提取、NER实体识别、字段标准化等），因为它们依赖关键词匹配。而本系统采用 LLM 方案，大模型本身就能理解排版混乱、格式不统一的原始文本，因此<strong>不需要传统意义上的数据清洗</strong>。预处理只需完成两件事：把文件变成文本、把隐私信息脱敏。
+    </div>
+
+    <h3>处理流程（仅 3 步）</h3>
+    <div class="flow">
+      <span class="flow-step">文件 &rarr; 文本提取</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">PII 脱敏</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">发送给 LLM 评分</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>步骤</th>
+          <th>处理内容</th>
+          <th>技术手段</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Step 1：文本提取</strong></td>
+          <td>从文件中提取出纯文本内容</td>
+          <td>PDF &rarr; pdfplumber<br>Word &rarr; python-docx<br>图片/扫描件 &rarr; Tesseract OCR</td>
+          <td>这是唯一的"转换"步骤，目标是把任何格式的简历变成文本字符串。不需要做字段拆分或结构化——LLM 会自己理解。</td>
+        </tr>
+        <tr>
+          <td><strong>Step 2：PII 脱敏</strong></td>
+          <td>在发送 LLM 前，隐藏候选人隐私信息</td>
+          <td>正则匹配（手机号、邮箱、身份证号）+ 姓名替换为"某候选人"</td>
+          <td>脱敏后的文本发给 LLM 评分，原始信息保留在本地数据库中供 HR 查看。管理员可在系统设置中配置脱敏范围。</td>
+        </tr>
+        <tr>
+          <td><strong>Step 3：发送 LLM</strong></td>
+          <td>将脱敏后的简历原文 + JD 文本一起发送给大模型</td>
+          <td>LangChain API 调用</td>
+          <td>LLM 在一次调用中完成全部工作：理解简历内容、提取关键信息、对比 JD 需求、输出结构化评分。无需人工预处理字段。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>为什么不需要传统数据清洗？</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>传统系统需要做的</th>
+          <th>本系统是否需要</th>
+          <th>原因</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>正则提取姓名/手机/邮箱</td>
+          <td>仅脱敏需要，不需要结构化</td>
+          <td>LLM 直接从原文理解候选人信息</td>
+        </tr>
+        <tr>
+          <td>NER 实体识别（公司名、学校名）</td>
+          <td>不需要</td>
+          <td>LLM 原生理解这些实体</td>
+        </tr>
+        <tr>
+          <td>技能关键词提取与标准化</td>
+          <td>不需要</td>
+          <td>LLM 能理解"Spring Boot"和"SpringBoot"是同一技术</td>
+        </tr>
+        <tr>
+          <td>工作经历结构化拆分</td>
+          <td>不需要</td>
+          <td>LLM 能从自由文本中理解时间线和职责</td>
+        </tr>
+        <tr>
+          <td>去除页眉页脚/水印</td>
+          <td>不需要</td>
+          <td>LLM 会自动忽略无关内容，不影响评分</td>
+        </tr>
+        <tr>
+          <td>编码/格式统一</td>
+          <td>不需要</td>
+          <td>文本提取工具已输出统一的 UTF-8 字符串</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>文本提取失败处理</h3>
+    <p>文本提取是唯一可能失败的环节。失败时按以下策略降级：</p>
+
+    <div class="flow">
+      <span class="flow-step">正常提取文本</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">失败? OCR 增强模式（高DPI+去噪+校正）</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">仍失败? 标记"解析失败"</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">HR 选择：重试 / 人工录入</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>失败类型</th><th>原因</th><th>处理方式</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>格式无法识别</td><td>扫描图片分辨率过低</td><td>可重试（OCR增强模式），或人工录入关键信息</td></tr>
+        <tr><td>文件损坏</td><td>上传不完整或文件本身损坏</td><td>仅支持人工录入</td></tr>
+        <tr><td>文件加密</td><td>PDF 设置了密码保护</td><td>仅支持人工录入</td></tr>
+        <tr><td>内容为空</td><td>文件可打开但无有效内容</td><td>仅支持人工录入</td></tr>
+      </tbody>
+    </table>
+    <p>人工录入时，HR 填写姓名、经验年限、核心技能等关键字段，LLM 基于这些简要信息进行评分（准确度会低于完整简历，系统会标注"信息完整度较低"）。</p>
+
+    <h3>数据质量指标</h3>
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">&ge;98%</span>
+        <span class="metric-lbl">文本提取成功率</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">&le;2%</span>
+        <span class="metric-lbl">需人工兜底比例</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">&le;1%</span>
+        <span class="metric-lbl">脱敏遗漏率</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- §10 -->
+  <section class="sect" id="s10">
+    <span class="sect-num">§ 10</span>
+    <h2>Prompt 工程设计</h2>
+
+    <h3>System Prompt 结构</h3>
+    <p>AI 评分的核心在于 Prompt 的设计。我们的 System Prompt 由四个部分组成：角色定义、任务描述、输出格式约束、防幻觉规则。</p>
+
+    <div class="code-block"><span class="comment">// ========== System Prompt 模板 ==========</span>
+
+<span class="keyword">【角色定义】</span>
+你是一位拥有 15 年以上经验的资深 HR 和技术面试官，专注于IT互联网行业的
+人才评估。你擅长从简历文本中识别候选人的真实技术水平、项目经验深度和
+职业发展潜力。你的评估风格严谨、客观、有据可依。
+
+<span class="keyword">【任务描述】</span>
+请根据以下「岗位描述(JD)」和「候选人简历」，从 {N} 个维度对候选人进行
+全面评估。每个维度给出 0-10 分的评分，并引用简历中的具体文字作为评分依据。
+
+<span class="keyword">【评分维度】</span>
+{动态注入：根据岗位配置的维度列表、权重和评估标准}
+
+<span class="keyword">【输出格式】</span>
+严格按照以下 JSON 格式输出，不要输出任何 JSON 之外的内容：
+{
+  <span class="key">"dimensions"</span>: [
+    {
+      <span class="key">"name"</span>: <span class="string">"维度名称"</span>,
+      <span class="key">"score"</span>: <span class="number">0-10的整数</span>,
+      <span class="key">"evidence"</span>: <span class="string">"引用简历原文作为评分依据"</span>,
+      <span class="key">"comment"</span>: <span class="string">"评分理由的简要说明"</span>
+    }
+  ],
+  <span class="key">"risks"</span>: [<span class="string">"识别到的风险点列表"</span>],
+  <span class="key">"highlights"</span>: [<span class="string">"候选人的突出亮点"</span>],
+  <span class="key">"overall_comment"</span>: <span class="string">"对候选人的综合评价（2-3句话）"</span>
+}
+
+<span class="keyword">【约束规则】</span>
+1. 每个维度的 evidence 字段必须直接引用简历中的原文，不可编造。
+2. 如果简历中缺少某维度的信息，score 给 3 分并在 comment 中说明"简历未提供相关信息"。
+3. 不要假设简历未提及的能力，仅基于简历文本进行评估。
+4. risks 字段需要识别：频繁跳槽、职业空白期、技能与岗位不匹配等风险。
+5. 输出必须是合法的 JSON，不包含任何额外文本或 markdown 标记。</div>
+
+    <h3>User Prompt 模板</h3>
+    <div class="code-block"><span class="comment">// ========== User Prompt 模板 ==========</span>
+
+<span class="keyword">【岗位描述 JD】</span>
+岗位名称：{position_title}
+岗位级别：{position_level}
+部门：{department}
+---
+{jd_text_compressed}
+
+<span class="keyword">【候选人简历】</span>
+（以下信息已脱敏处理）
+---
+{resume_text_desensitized}
+
+请严格按照 System Prompt 中定义的格式进行评估并输出 JSON。</div>
+
+    <h3>Few-shot 校准示例</h3>
+    <p>为了确保评分一致性，在 System Prompt 中嵌入 2-3 个标注过的简历评分示例，让模型理解评分尺度：</p>
+    <div class="callout callout-info">
+      <strong>Few-shot 策略</strong>
+      嵌入一个高分示例（8-9 分段）和一个低分示例（3-4 分段），让模型建立评分锚点。示例选取自评测集中 HR 共识度最高的案例。Few-shot 示例随维度配置变化自动更新。
+    </div>
+
+    <h3>防幻觉机制</h3>
+    <div class="info-card">
+      <h4>四重防幻觉保障</h4>
+      <ul>
+        <li><strong>证据强制引用：</strong>每个维度评分必须附带简历原文引用，后端校验 evidence 是否真实出现在简历文本中</li>
+        <li><strong>低温采样：</strong>temperature 设为 0.1，最大程度降低随机性，保证相同输入产生相似输出</li>
+        <li><strong>缺失信息兜底：</strong>明确要求模型在信息缺失时给出固定低分（3 分），而非编造能力</li>
+        <li><strong>输出校验：</strong>后端对 JSON 结构、分数范围（0-10）、必填字段进行严格校验，不合规则重试</li>
+      </ul>
+    </div>
+
+    <h3>Token 优化策略</h3>
+    <p>为控制 API 成本和响应速度，对输入内容进行压缩优化：</p>
+    <ul>
+      <li><strong>JD 压缩：</strong>仅保留核心技术要求、经验要求、岗位职责，移除公司介绍、福利待遇等无关内容</li>
+      <li><strong>简历压缩：</strong>工作经历保留最近 3 段，教育经历保留最高学历，移除自我评价等低信息量内容</li>
+      <li><strong>格式精简：</strong>移除多余空行、缩进、修饰性文字，保留纯信息内容</li>
+      <li><strong>目标：</strong>单份简历的总输入 tokens 控制在 2,000 以内</li>
+    </ul>
+  </section>
+
+  <!-- §11 -->
+  <section class="sect" id="s11">
+    <span class="sect-num">§ 11</span>
+    <h2>多模型调度策略</h2>
+
+    <h3>路由核心逻辑</h3>
+    <div class="code-block"><span class="comment">// 模型路由伪代码</span>
+<span class="keyword">function</span> <span class="highlight">select_model</span>(position_level, override_model):
+    <span class="comment">// 1. 手动指定优先</span>
+    <span class="keyword">if</span> override_model:
+        <span class="keyword">return</span> override_model
+
+    <span class="comment">// 2. 按岗位级别路由</span>
+    <span class="keyword">if</span> position_level &lt;= <span class="string">"P5"</span>:
+        <span class="keyword">return</span> <span class="string">"deepseek-v3"</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">"qwen-max"</span>
+
+<span class="keyword">function</span> <span class="highlight">call_with_fallback</span>(prompt, model):
+    <span class="comment">// 主模型调用（10s 超时）</span>
+    result = call_api(model, prompt, timeout=<span class="number">10</span>)
+    <span class="keyword">if</span> result.success:
+        <span class="keyword">return</span> result
+
+    <span class="comment">// 重试一次</span>
+    result = call_api(model, prompt, timeout=<span class="number">10</span>)
+    <span class="keyword">if</span> result.success:
+        <span class="keyword">return</span> result
+
+    <span class="comment">// 切换备用模型</span>
+    backup = <span class="string">"qwen-max"</span> <span class="keyword">if</span> model == <span class="string">"deepseek-v3"</span> <span class="keyword">else</span> <span class="string">"deepseek-v3"</span>
+    result = call_api(backup, prompt, timeout=<span class="number">15</span>)
+    <span class="keyword">if</span> result.success:
+        result.meta.actual_model = backup  <span class="comment">// 记录实际使用模型</span>
+        <span class="keyword">return</span> result
+
+    <span class="comment">// 全部失败</span>
+    <span class="keyword">return</span> FailureResult(status=<span class="string">"PARSE_FAILED"</span>)</div>
+
+    <h3>并发控制</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>控制维度</th>
+          <th>限制值</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>单模型并发上限</strong></td>
+          <td>10 个</td>
+          <td>每个模型最多同时发起 10 个 API 调用</td>
+        </tr>
+        <tr>
+          <td><strong>全局并发上限</strong></td>
+          <td>15 个</td>
+          <td>所有模型合计不超过 15 个并发</td>
+        </tr>
+        <tr>
+          <td><strong>单用户限流</strong></td>
+          <td>5 个/分钟</td>
+          <td>防止单个 HR 大量手动触发评分</td>
+        </tr>
+        <tr>
+          <td><strong>重试间隔</strong></td>
+          <td>指数退避（1s, 2s, 4s）</td>
+          <td>避免在模型异常时雪崩式重试</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>响应校验</h3>
+    <p>模型返回的 JSON 必须通过以下校验才视为有效响应：</p>
+    <ul>
+      <li><strong>JSON 格式校验：</strong>必须是合法 JSON，能被解析器正常解析</li>
+      <li><strong>结构完整性：</strong>必须包含 <code>dimensions</code>、<code>risks</code>、<code>highlights</code>、<code>overall_comment</code> 四个顶层字段</li>
+      <li><strong>评分范围：</strong>每个维度的 <code>score</code> 必须为 0-10 的整数</li>
+      <li><strong>维度完整性：</strong>返回的维度数量必须等于配置的维度数量</li>
+      <li><strong>证据非空：</strong>每个维度的 <code>evidence</code> 字段不得为空字符串</li>
+    </ul>
+    <p>校验不通过时，自动重试（最多 2 次），重试时在 Prompt 末尾追加格式提醒。</p>
+
+    <h3>模型版本管理</h3>
+    <div class="callout callout-info">
+      <strong>版本钉定策略</strong>
+      每条评分记录都会关联实际使用的模型版本号（如 deepseek-v3-20260401）。当查看历史评分时，可以清楚知道该评分基于哪个模型版本产生。模型升级时，旧版本评分不会被追溯修改，但可以触发"批量重评"操作使用新模型重新评估。
+    </div>
+
+    <h3>成本监控</h3>
+    <ul>
+      <li><strong>实时统计：</strong>每次 API 调用记录 input_tokens、output_tokens、耗时、费用</li>
+      <li><strong>日报汇总：</strong>每日 8:00 AM 发送前一天的 API 使用统计报告</li>
+      <li><strong>异常告警：</strong>当日累计费用超过阈值（5 元）时，触发邮件和系统内通知</li>
+    </ul>
+  </section>
+
+  <!-- §12 -->
+  <section class="sect" id="s12">
+    <span class="sect-num">§ 12</span>
+    <h2>简历解析 Pipeline 详解</h2>
+
+    <h3>文件类型检测与路由</h3>
+    <p>系统通过文件 MIME Type 和扩展名双重判断文件类型，自动选择对应的解析器：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>文件类型</th>
+          <th>解析工具</th>
+          <th>优势</th>
+          <th>限制</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>PDF（文本型）</strong></td>
+          <td>pdfplumber</td>
+          <td>保留表格结构、精确提取文本和坐标</td>
+          <td>无法处理图片型 PDF</td>
+        </tr>
+        <tr>
+          <td><strong>PDF（扫描型）</strong></td>
+          <td>Tesseract OCR</td>
+          <td>支持中英文混合识别，可配置 DPI</td>
+          <td>依赖扫描质量，低分辨率可能失败</td>
+        </tr>
+        <tr>
+          <td><strong>Word（docx）</strong></td>
+          <td>python-docx</td>
+          <td>完美保留文档结构和格式信息</td>
+          <td>不支持 doc 格式（需先转换）</td>
+        </tr>
+        <tr>
+          <td><strong>图片（jpg/png）</strong></td>
+          <td>Tesseract OCR</td>
+          <td>直接对图片进行文字识别</td>
+          <td>手写体、艺术字体识别率较低</td>
+        </tr>
+        <tr>
+          <td><strong>加密 PDF</strong></td>
+          <td>——</td>
+          <td>——</td>
+          <td>自动检测加密，标记为"文件加密"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>OCR 增强模式</h3>
+    <p>当标准解析失败时，系统自动切换到 OCR 增强模式进行重试：</p>
+    <div class="info-card">
+      <h4>OCR 增强处理流程</h4>
+      <ul>
+        <li><strong>高 DPI 重渲染：</strong>将 PDF 页面以 300 DPI 重新渲染为图片（标准模式为 150 DPI）</li>
+        <li><strong>图像预处理：</strong>对比度增强、降噪（高斯模糊 + 二值化）、倾斜矫正（Hough 变换）</li>
+        <li><strong>分区识别：</strong>将页面分割为多个区域，逐区域识别后合并，提高复杂版面的准确率</li>
+        <li><strong>置信度过滤：</strong>OCR 结果的字符置信度低于 60% 的区域标记为"识别不确定"</li>
+      </ul>
+    </div>
+
+    <h3>解析失败分类与处理</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>失败类别</th>
+          <th>错误码</th>
+          <th>触发条件</th>
+          <th>处理策略</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>格式错误</strong></td>
+          <td><code>FORMAT_ERROR</code></td>
+          <td>低分辨率扫描件、严重损坏的排版</td>
+          <td>OCR 增强重试 &rarr; 人工录入</td>
+        </tr>
+        <tr>
+          <td><strong>文件损坏</strong></td>
+          <td><code>CORRUPT_FILE</code></td>
+          <td>文件无法打开、数据流异常</td>
+          <td>直接转人工录入</td>
+        </tr>
+        <tr>
+          <td><strong>文件加密</strong></td>
+          <td><code>ENCRYPTED</code></td>
+          <td>PDF 设有密码保护</td>
+          <td>通知 HR 获取无密码版本或人工录入</td>
+        </tr>
+        <tr>
+          <td><strong>内容为空</strong></td>
+          <td><code>EMPTY_CONTENT</code></td>
+          <td>文件能打开但提取不到任何文字</td>
+          <td>OCR 增强重试 &rarr; 人工录入</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>输出格式</h3>
+    <p>解析成功后，输出标准化的 Resume JSON 对象，包含以下顶层字段：</p>
+    <div class="code-block">{
+  <span class="key">"parse_meta"</span>: {
+    <span class="key">"parser"</span>: <span class="string">"pdfplumber"</span>,
+    <span class="key">"parse_time_ms"</span>: <span class="number">2340</span>,
+    <span class="key">"confidence"</span>: <span class="number">0.95</span>,
+    <span class="key">"ocr_used"</span>: <span class="keyword">false</span>,
+    <span class="key">"pages"</span>: <span class="number">2</span>
+  },
+  <span class="key">"personal"</span>: { ... },
+  <span class="key">"education"</span>: [ ... ],
+  <span class="key">"work_history"</span>: [ ... ],
+  <span class="key">"skills"</span>: [ ... ],
+  <span class="key">"projects"</span>: [ ... ],
+  <span class="key">"raw_text"</span>: <span class="string">"完整提取文本（用于LLM评分）"</span>,
+  <span class="key">"quality_flags"</span>: [<span class="string">"MISSING_PHONE"</span>, <span class="string">"SHORT_WORK_HISTORY"</span>]
+}</div>
+  </section>
+
+  <!-- §13 -->
+  <section class="sect" id="s13">
+    <span class="sect-num">§ 13</span>
+    <h2>评分算法详解</h2>
+
+    <h3>评分流程</h3>
+    <p>从结构化简历数据到最终评分结果，需要经过五个步骤的计算：</p>
+
+    <div class="flow">
+      <span class="flow-step">Step 1: LLM 维度评分</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">Step 2: 加权计算</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">Step 3: 红线惩罚</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">Step 4: 归一化</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">Step 5: 等级判定</span>
+    </div>
+
+    <h3>Step 1：LLM 维度评分</h3>
+    <p>将脱敏后的简历文本和 JD 发送给 LLM，获取每个维度的独立评分（0-10 整数）和评分证据。</p>
+
+    <h3>Step 2：加权计算</h3>
+    <div class="code-block"><span class="comment">// 加权平均计算</span>
+<span class="key">weighted_sum</span> = 0
+<span class="key">weight_total</span> = 0
+
+<span class="keyword">for</span> dim <span class="keyword">in</span> dimensions:
+    weighted_sum += dim.score * dim.weight
+    weight_total += dim.weight
+
+<span class="key">base_score</span> = weighted_sum / weight_total  <span class="comment">// 结果为 0-10 区间</span>
+
+<span class="comment">// 示例：</span>
+<span class="comment">// 技术深度: 8分 x 30% = 2.4</span>
+<span class="comment">// 项目经验: 7分 x 25% = 1.75</span>
+<span class="comment">// 行业理解: 6分 x 15% = 0.9</span>
+<span class="comment">// 团队协作: 7分 x 15% = 1.05</span>
+<span class="comment">// 学习潜力: 8分 x 15% = 1.2</span>
+<span class="comment">// base_score = (2.4+1.75+0.9+1.05+1.2) / 1.0 = 7.3</span></div>
+
+    <h3>Step 3：红线惩罚</h3>
+    <p>如果候选人触发了红线规则，按照以下规则进行惩罚扣分：</p>
+    <table>
+      <thead>
+        <tr>
+          <th>红线类型</th>
+          <th>惩罚方式</th>
+          <th>扣分值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>经验年限不足</strong></td>
+          <td>绝对扣分</td>
+          <td>-20 分（百分制）</td>
+        </tr>
+        <tr>
+          <td><strong>学历不达标</strong></td>
+          <td>绝对扣分</td>
+          <td>-20 分（百分制）</td>
+        </tr>
+        <tr>
+          <td><strong>工作稳定性差</strong></td>
+          <td>绝对扣分</td>
+          <td>-15 分（百分制）</td>
+        </tr>
+        <tr>
+          <td><strong>黑名单命中</strong></td>
+          <td>直接归零</td>
+          <td>score = 0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Step 4：归一化至 0-100</h3>
+    <div class="code-block"><span class="comment">// 归一化公式</span>
+<span class="key">final_score</span> = max(<span class="number">0</span>, round(base_score * <span class="number">10</span>) - penalty)
+
+<span class="comment">// 完整公式表达：</span>
+<span class="comment">// score = max(0, round( SUM(dim_score_i * weight_i) / SUM(weight_i) * 10 ) - penalty)</span>
+
+<span class="comment">// 示例（无红线惩罚）：</span>
+<span class="comment">// final_score = max(0, round(7.3 * 10) - 0) = 73</span>
+
+<span class="comment">// 示例（触发经验不足红线）：</span>
+<span class="comment">// final_score = max(0, round(7.3 * 10) - 20) = 53</span></div>
+
+    <h3>Step 5：等级判定</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>最终得分</th>
+          <th>等级标签</th>
+          <th>颜色标识</th>
+          <th>HR 操作建议</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>85-100</td>
+          <td><span class="tag tag-p0">强烈推荐</span></td>
+          <td>红色</td>
+          <td>优先安排面试，48 小时内联系</td>
+        </tr>
+        <tr>
+          <td>75-84</td>
+          <td><span class="tag tag-p2">推荐</span></td>
+          <td>绿色</td>
+          <td>纳入面试候选池</td>
+        </tr>
+        <tr>
+          <td>60-74</td>
+          <td><span class="tag tag-p1">建议复核</span></td>
+          <td>黄色</td>
+          <td>HR 人工复核评分理由后决定</td>
+        </tr>
+        <tr>
+          <td>0-59</td>
+          <td><span class="tag tag-gray">不推荐</span></td>
+          <td>灰色</td>
+          <td>默认不安排面试，可"强捞"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>HR 评分解读指南</h3>
+    <div class="callout callout-info">
+      <strong>如何使用 AI 评分</strong>
+      AI 评分是辅助工具而非最终决策。建议 HR 重点关注：(1) 各维度评分是否均衡，有无明显短板；(2) evidence 引用的简历原文是否准确反映候选人水平；(3) risks 列表中是否有不可接受的风险点。对于"建议复核"区间的候选人，应仔细阅读 AI 给出的评分理由后再做判断。
+    </div>
+  </section>
+
+  <!-- §14 -->
+  <section class="sect" id="s14">
+    <span class="sect-num">§ 14</span>
+    <h2>评测集设计与质量保障</h2>
+
+    <h3>评测集构成</h3>
+    <p>评测集（Gold Set）是衡量 AI 评分质量的基准数据集，由资深 HR 和业务负责人共同标注。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>规格</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>总量</strong></td>
+          <td>200 份简历</td>
+          <td>覆盖各岗位类型和评分区间</td>
+        </tr>
+        <tr>
+          <td><strong>岗位分布</strong></td>
+          <td>每类 40 份</td>
+          <td>后端开发、前端开发、产品经理、UI 设计、测试工程师</td>
+        </tr>
+        <tr>
+          <td><strong>评分分布</strong></td>
+          <td>高 20% / 中 40% / 低 40%</td>
+          <td>确保各评分段均有充足样本</td>
+        </tr>
+        <tr>
+          <td><strong>标注人数</strong></td>
+          <td>每份至少 3 人</td>
+          <td>取中位数作为 Ground Truth</td>
+        </tr>
+        <tr>
+          <td><strong>边缘案例</strong></td>
+          <td>至少 30 份</td>
+          <td>转行者、职业空白期、海外教育、自由职业者</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>评估指标体系</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>指标名称</th>
+          <th>计算方法</th>
+          <th>达标阈值</th>
+          <th>优秀阈值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>评分相关性</strong></td>
+          <td>AI 综合分与人工综合分的 Pearson 相关系数</td>
+          <td>r &ge; 0.80</td>
+          <td>r &ge; 0.90</td>
+        </tr>
+        <tr>
+          <td><strong>等级一致率</strong></td>
+          <td>AI 判定等级与人工判定等级完全一致的比例</td>
+          <td>&ge; 80%</td>
+          <td>&ge; 88%</td>
+        </tr>
+        <tr>
+          <td><strong>假阳性率</strong></td>
+          <td>AI 高分（&ge;75）但人工否决的比例</td>
+          <td>&le; 10%</td>
+          <td>&le; 6%</td>
+        </tr>
+        <tr>
+          <td><strong>假阴性率</strong></td>
+          <td>AI 低分（&lt;60）但人工认可的比例</td>
+          <td>&le; 5%</td>
+          <td>&le; 3%</td>
+        </tr>
+        <tr>
+          <td><strong>Top-10 排序重合度</strong></td>
+          <td>同一岗位 AI 排名 Top-10 与人工 Top-10 的交集比例</td>
+          <td>&ge; 70%</td>
+          <td>&ge; 85%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>回归测试机制</h3>
+    <p>每次模型变更或 Prompt 修改前，必须在完整评测集上运行回归测试：</p>
+    <div class="flow">
+      <span class="flow-step">代码/Prompt 变更</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">运行 200 份评测集</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">计算各项指标</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">与基线对比</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">全部达标?</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">允许上线</span>
+    </div>
+    <p>如果任一核心指标（评分相关性、假阴性率）低于达标阈值，变更将被自动阻止，需要修正后重新测试。</p>
+
+    <h3>A/B 测试框架</h3>
+    <div class="info-card">
+      <h4>灰度对比测试</h4>
+      <ul>
+        <li><strong>流量分割：</strong>按候选人 ID 哈希分流，确保同一候选人在测试期间始终走同一版本</li>
+        <li><strong>双版本并跑：</strong>实验组和对照组同时记录评分结果，HR 仅看到其中一组</li>
+        <li><strong>统计显著性：</strong>至少运行 50 个样本后，用卡方检验判断差异是否显著（p &lt; 0.05）</li>
+        <li><strong>自动决策：</strong>实验组所有指标优于对照组且统计显著时，自动推荐全量上线</li>
+      </ul>
+    </div>
+
+    <h3>持续评估</h3>
+    <p>除了变更前的回归测试，系统还执行月度持续评估：</p>
+    <ul>
+      <li><strong>每月抽检：</strong>随机抽取 50 份已评分简历，由资深 HR 重新独立打分</li>
+      <li><strong>漂移检测：</strong>对比 AI 评分与人工重评结果，监测评分是否出现系统性偏移</li>
+      <li><strong>评估报告：</strong>每月生成质量评估报告，包含准确率变化趋势、错误案例分析、优化建议</li>
+    </ul>
+  </section>
+
+  <!-- §15 -->
+  <section class="sect" id="s15">
+    <span class="sect-num">§ 15</span>
+    <h2>模型自迭代与持续优化</h2>
+
+    <h3>每日自动优化</h3>
+    <p>系统通过每日自动化流程持续优化评分质量，形成"数据驱动 + 安全约束"的自迭代机制。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>阶段</th>
+          <th>执行时间</th>
+          <th>操作内容</th>
+          <th>安全约束</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>数据采集</strong></td>
+          <td>2:00 AM</td>
+          <td>收集前一天所有 HR 修正操作：强捞低分候选人、否决高分候选人、手动调分记录</td>
+          <td>仅采集已确认的操作</td>
+        </tr>
+        <tr>
+          <td><strong>偏差分析</strong></td>
+          <td>2:10 AM</td>
+          <td>统计各维度的系统性偏差方向和幅度，识别需要调整的维度</td>
+          <td>至少 5 条修正记录才触发分析</td>
+        </tr>
+        <tr>
+          <td><strong>权重微调</strong></td>
+          <td>2:20 AM</td>
+          <td>对偏差维度进行权重微调，单次调整幅度不超过 &plusmn;2%</td>
+          <td><span class="tag tag-red">安全护栏</span> 单次 &le;2%，累计 &le;10%</td>
+        </tr>
+        <tr>
+          <td><strong>回归验证</strong></td>
+          <td>2:30 AM</td>
+          <td>在 200 份评测集上运行回归测试，对比调整前后各项指标</td>
+          <td>任一核心指标下降则不部署</td>
+        </tr>
+        <tr>
+          <td><strong>自动部署</strong></td>
+          <td>2:45 AM</td>
+          <td>验证通过则自动部署新规则版本，否则保持原版本</td>
+          <td>自动生成变更日志</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <strong>安全护栏设计</strong>
+      自动优化的核心风险是过度拟合或误调。系统通过以下护栏确保安全：(1) 单次权重调整不超过 &plusmn;2%；(2) 累计自动调整不超过初始值的 &plusmn;10%，超出需人工审批；(3) 连续 3 天回归不通过时，自动暂停自优化并通知产品团队。
+    </div>
+
+    <h3>月度人工审查</h3>
+    <div class="info-card">
+      <h4>月度质量回顾</h4>
+      <ul>
+        <li><strong>参与人员：</strong>产品经理、HR 负责人、技术负责人</li>
+        <li><strong>审查内容：</strong>月度评分质量报告、HR 反馈汇总、维度权重变化趋势</li>
+        <li><strong>决策权限：</strong>可审批超过 &plusmn;10% 的权重调整、新增/删除评分维度、修改 Prompt 模板</li>
+        <li><strong>输出物：</strong>更新后的评分规则版本、下月优化方向</li>
+      </ul>
+    </div>
+
+    <h3>版本管理</h3>
+    <p>每次规则变更都会创建新的版本号，完整记录变更内容，支持一键回滚：</p>
+    <div class="code-block"><span class="comment">// 规则版本记录示例</span>
+{
+  <span class="key">"version"</span>: <span class="string">"rule-v1.2.7"</span>,
+  <span class="key">"created_at"</span>: <span class="string">"2026-04-04T02:45:00+08:00"</span>,
+  <span class="key">"trigger"</span>: <span class="string">"nightly_auto_optimize"</span>,
+  <span class="key">"changes"</span>: [
+    { <span class="key">"dimension"</span>: <span class="string">"核心技术栈深度"</span>, <span class="key">"weight_before"</span>: <span class="number">0.30</span>, <span class="key">"weight_after"</span>: <span class="number">0.31</span> },
+    { <span class="key">"dimension"</span>: <span class="string">"行业业务理解"</span>, <span class="key">"weight_before"</span>: <span class="number">0.15</span>, <span class="key">"weight_after"</span>: <span class="number">0.14</span> }
+  ],
+  <span class="key">"validation"</span>: {
+    <span class="key">"accuracy_before"</span>: <span class="number">0.823</span>,
+    <span class="key">"accuracy_after"</span>: <span class="number">0.831</span>,
+    <span class="key">"status"</span>: <span class="string">"deployed"</span>
+  },
+  <span class="key">"rollback_to"</span>: <span class="string">"rule-v1.2.6"</span>
+}</div>
+  </section>
+
+  <!-- §16 -->
+  <section class="sect" id="s16">
+    <span class="sect-num">§ 16</span>
+    <h2>向量库与语义检索</h2>
+
+    <h3>Milvus 向量数据库</h3>
+    <p>系统采用 Milvus 2.3 作为向量数据库，支撑三个核心场景的语义检索需求。</p>
+
+    <h3>三大应用场景</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>场景</th>
+          <th>输入</th>
+          <th>检索方式</th>
+          <th>阈值</th>
+          <th>用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>简历去重</strong></td>
+          <td>新简历向量</td>
+          <td>最近邻搜索 + 余弦相似度</td>
+          <td>cosine &ge; 0.92</td>
+          <td>判定是否同一人，防止重复处理</td>
+        </tr>
+        <tr>
+          <td><strong>相似推荐</strong></td>
+          <td>目标候选人向量</td>
+          <td>Top-K 近邻（K=20）</td>
+          <td>cosine &ge; 0.75</td>
+          <td>"帮我找更多类似这位候选人的简历"</td>
+        </tr>
+        <tr>
+          <td><strong>人才库搜索</strong></td>
+          <td>自然语言查询向量</td>
+          <td>向量搜索 + 属性过滤</td>
+          <td>cosine &ge; 0.60</td>
+          <td>HR 用自然语言描述需求，语义搜索候选人库</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>向量化方案</h3>
+    <div class="info-card">
+      <h4>Embedding 技术选型</h4>
+      <ul>
+        <li><strong>Embedding 模型：</strong>text-embedding-v2（通义千问系列），768 维向量</li>
+        <li><strong>输入内容：</strong>脱敏后的简历全文（截断至 512 tokens），重点保留技能和经验描述</li>
+        <li><strong>索引类型：</strong>IVF_FLAT（倒排文件 + 扁平量化），在检索速度和准确率之间取得平衡</li>
+        <li><strong>nlist 参数：</strong>128（适合万级数据规模，500-10000 条简历）</li>
+        <li><strong>nprobe 参数：</strong>16（搜索时探测 16 个聚类中心，召回率约 95%）</li>
+      </ul>
+    </div>
+
+    <h3>向量更新策略</h3>
+    <ul>
+      <li><strong>新增：</strong>简历解析完成后，立即生成向量并写入 Milvus</li>
+      <li><strong>更新：</strong>简历内容发生变更时（如 HR 手动编辑），重新生成向量并替换</li>
+      <li><strong>删除：</strong>候选人从系统中移除时，同步删除对应向量</li>
+      <li><strong>批量重建：</strong>Embedding 模型升级时，可触发全量向量重建任务（预计耗时 30 分钟/1000 条）</li>
+    </ul>
+
+    <h3>性能指标</h3>
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">&lt;50ms</span>
+        <span class="metric-lbl">单次检索延迟</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">&ge;95%</span>
+        <span class="metric-lbl">召回率</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">768</span>
+        <span class="metric-lbl">向量维度</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">10K</span>
+        <span class="metric-lbl">设计容量上限</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- §17 -->
+  <section class="sect" id="s17">
+    <span class="sect-num">§ 17</span>
+    <h2>性能与并发设计</h2>
+
+    <h3>异步处理架构</h3>
+    <p>简历从上传到评分完成是一个耗时过程（可能需要 30 秒到 2 分钟），系统采用全异步架构，确保用户体验不受影响。</p>
+
+    <div class="flow">
+      <span class="flow-step highlight">上传文件</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">立即返回 task_id</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">后台解析</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step">后台评分</span>
+      <span class="flow-arr">&rarr;</span>
+      <span class="flow-step highlight">WebSocket 通知完成</span>
+    </div>
+
+    <p>用户上传简历后立即收到上传成功响应（含任务 ID），后续的解析和评分在后台异步执行。当处理完成时，通过 WebSocket 实时推送通知到前端。</p>
+
+    <h3>任务队列设计</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>队列名称</th>
+          <th>优先级</th>
+          <th>处理场景</th>
+          <th>并发数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>parse:high</strong></td>
+          <td>高</td>
+          <td>HR 手动上传的简历</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><strong>parse:normal</strong></td>
+          <td>中</td>
+          <td>自动同步的简历（BOSS/猎聘/前程无忧）</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td><strong>score:high</strong></td>
+          <td>高</td>
+          <td>手动触发的评分请求</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><strong>score:normal</strong></td>
+          <td>中</td>
+          <td>自动批量评分</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td><strong>score:rescore</strong></td>
+          <td>低</td>
+          <td>规则变更后的批量重评</td>
+          <td>2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>批量处理</h3>
+    <div class="info-card">
+      <h4>批量上传处理规则</h4>
+      <ul>
+        <li><strong>单批上限：</strong>50 份简历/次，超出部分自动排队到下一批</li>
+        <li><strong>并行处理：</strong>同批简历最多 5 份并行解析，避免资源竞争</li>
+        <li><strong>进度反馈：</strong>前端显示批量处理进度条（已完成/总数），支持取消未处理的剩余任务</li>
+        <li><strong>失败隔离：</strong>单份简历失败不影响同批其他简历的处理</li>
+      </ul>
+    </div>
+
+    <h3>延迟目标</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>处理环节</th>
+          <th>P50 延迟</th>
+          <th>P95 延迟</th>
+          <th>超时阈值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>文件上传</strong></td>
+          <td>&lt;2s</td>
+          <td>&lt;5s</td>
+          <td>30s</td>
+        </tr>
+        <tr>
+          <td><strong>简历解析（PDF/Word）</strong></td>
+          <td>~5s</td>
+          <td>&lt;15s</td>
+          <td>30s</td>
+        </tr>
+        <tr>
+          <td><strong>简历解析（OCR）</strong></td>
+          <td>~10s</td>
+          <td>&lt;25s</td>
+          <td>60s</td>
+        </tr>
+        <tr>
+          <td><strong>AI 评分</strong></td>
+          <td>~3s</td>
+          <td>&lt;8s</td>
+          <td>15s（含重试）</td>
+        </tr>
+        <tr>
+          <td><strong>单份简历全流程</strong></td>
+          <td>~15s</td>
+          <td>&lt;40s</td>
+          <td>120s</td>
+        </tr>
+        <tr>
+          <td><strong>50 份批量处理</strong></td>
+          <td>~90s</td>
+          <td>&lt;120s</td>
+          <td>300s</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>扩缩容策略</h3>
+    <p>当前规模（500 份/年）下，2 实例足以支撑。但系统设计了水平扩缩容能力，以应对招聘旺季或未来业务增长：</p>
+    <ul>
+      <li><strong>扩容触发：</strong>当任务队列深度超过 100 且持续 5 分钟时，自动扩容 AI 服务实例</li>
+      <li><strong>缩容触发：</strong>当队列深度持续为 0 超过 30 分钟时，缩减至最小实例数</li>
+      <li><strong>最小实例：</strong>2 个（保证高可用）</li>
+      <li><strong>最大实例：</strong>6 个（成本上限约束）</li>
+    </ul>
+
+    <h3>监控告警</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>监控指标</th>
+          <th>告警阈值</th>
+          <th>告警方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>API 延迟 P95</strong></td>
+          <td>&gt; 10s</td>
+          <td>系统内通知 + 企业微信群消息</td>
+        </tr>
+        <tr>
+          <td><strong>API 错误率</strong></td>
+          <td>&gt; 5%</td>
+          <td>系统内通知 + 企业微信群消息</td>
+        </tr>
+        <tr>
+          <td><strong>任务队列深度</strong></td>
+          <td>&gt; 200</td>
+          <td>系统内通知</td>
+        </tr>
+        <tr>
+          <td><strong>模型可用性</strong></td>
+          <td>连续 3 次健康检查失败</td>
+          <td>系统内通知 + 短信</td>
+        </tr>
+        <tr>
+          <td><strong>解析失败率</strong></td>
+          <td>&gt; 5%</td>
+          <td>系统内通知</td>
+        </tr>
+        <tr>
+          <td><strong>日 API 费用</strong></td>
+          <td>&gt; 5 元</td>
+          <td>邮件通知</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="footer-brand">中国电科五十二研究所 · 智能简历筛选平台</p>
+    <p>AI 技术方案文档 v1.0.0 &nbsp;|&nbsp; 2026-04-04</p>
+    <p style="margin-top:12px; font-size:11px; color:#a8a29e;">本文档为内部技术资料，仅供项目团队参考使用。未经授权不得对外传播。</p>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+</body>
+</html>

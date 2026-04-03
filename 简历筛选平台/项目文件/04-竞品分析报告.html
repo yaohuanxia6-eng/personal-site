@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>竞品分析报告 - 智能简历筛选平台</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --ink:#1c1a18; --paper:#faf8f5; --mid:#57534e; --light:#e7e5e0; --faint:#f4f0eb;
+  --red:#e60012; --red-soft:#fce8ea; --blue:#005bac; --blue-soft:#e5effa;
+  --font-display:'Playfair Display','Noto Serif SC',serif;
+  --font-body:'DM Sans','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--ink);background:var(--paper);line-height:1.72;font-size:15px;-webkit-font-smoothing:antialiased}
+.cover{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding:clamp(40px,8vw,120px) clamp(24px,6vw,80px);background:#1a1410;color:var(--paper);position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 55% at 85% 20%,rgba(13,148,136,0.42),transparent),radial-gradient(ellipse 45% 50% at 10% 82%,rgba(6,182,212,0.28),transparent)}
+.cover-inner{position:relative;z-index:1;max-width:800px}
+.cover-label{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.5;margin-bottom:32px}
+.cover h1{font-family:var(--font-display);font-size:clamp(40px,7vw,80px);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:20px}
+.cover h1 em{font-style:italic;color:#2dd4bf}
+.cover-sub{font-size:clamp(16px,2.5vw,22px);font-weight:300;opacity:0.65;max-width:560px;margin-bottom:48px}
+.cover-meta{display:flex;gap:40px;flex-wrap:wrap;opacity:0.55;position:relative;z-index:1;align-self:end}
+.cover-meta dt{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:2px;font-size:10px;margin-bottom:4px}
+.cover-meta dd{font-weight:500;font-size:14px;color:rgba(255,255,255,0.9)}
+.doc{max-width:820px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.toc-wrap{padding:48px 0;border-bottom:1px solid var(--light)}
+.toc-title{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--mid);margin-bottom:24px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 48px}
+.toc-grid a{display:flex;align-items:baseline;gap:8px;text-decoration:none;color:var(--ink);padding:6px 0;font-size:14px;transition:color 0.2s}
+.toc-grid a:hover{color:var(--red)}
+.toc-grid a .num{font-family:var(--font-mono);font-size:11px;color:var(--mid);min-width:28px}
+.sect{padding:56px 0 40px}
+.sect+.sect{border-top:1px solid var(--light)}
+.sect-num{font-family:var(--font-mono);font-size:11px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block}
+.sect h2{font-family:var(--font-display);font-size:clamp(28px,4vw,36px);font-weight:700;line-height:1.2;letter-spacing:-0.01em;margin-bottom:28px}
+.sect h3{font-size:17px;font-weight:600;color:var(--ink);margin:32px 0 12px;padding-left:12px;border-left:3px solid var(--red)}
+.sect h4{font-size:13px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;font-family:var(--font-mono)}
+.sect p{color:var(--mid);margin-bottom:14px}
+.sect ul,.sect ol{padding-left:20px;margin-bottom:14px;color:var(--mid)}
+.sect li{margin-bottom:6px}
+.sect li strong{color:var(--ink)}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+thead th{text-align:left;font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);padding:10px 16px;border-bottom:2px solid var(--ink);font-weight:500}
+td{padding:12px 16px;border-bottom:1px solid #e7e5e4;color:var(--mid);vertical-align:top}
+td strong{color:var(--ink)}
+tbody tr:hover td{background:var(--faint)}
+.callout{padding:20px 24px;margin:20px 0;font-size:14px;border-left:3px solid}
+.callout-info{border-color:var(--blue);background:var(--blue-soft);color:#1e3a5f}
+.callout-warn{border-color:#d97706;background:#fffbeb;color:#92400e}
+.callout strong{display:block;margin-bottom:4px}
+.quote-block{border-left:3px solid var(--red);padding:16px 20px;margin:16px 0;background:var(--faint)}
+.quote-text{font-family:var(--font-display);font-size:16px;font-style:italic;color:var(--ink);margin-bottom:8px}
+.quote-attr{font-family:var(--font-mono);font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:1px}
+.metric-strip{display:flex;margin:28px 0;border:1px solid var(--light)}
+.metric-item{flex:1;padding:24px;border-right:1px solid var(--light);text-align:center}
+.metric-item:last-child{border-right:none}
+.metric-val{font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--red);line-height:1;display:block;margin-bottom:6px}
+.metric-lbl{font-family:var(--font-mono);font-size:10px;color:var(--mid);letter-spacing:1px;text-transform:uppercase}
+/* 竞品对比表格增强 */
+.comp-check{color:var(--red);font-weight:700}
+.comp-cross{color:var(--light)}
+.comp-partial{color:#d97706}
+/* 竞品卡片 */
+.comp-card{border:1px solid var(--light);border-radius:4px;padding:28px;margin-bottom:28px;border-top:3px solid var(--ink)}
+.comp-card.direct{border-top-color:var(--red)}
+.comp-card.indirect{border-top-color:#d97706}
+.comp-card.ref{border-top-color:var(--blue)}
+.comp-card-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+.comp-card-header h3{font-size:20px;font-weight:700;color:var(--ink);margin:0;padding:0;border:none}
+.comp-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.comp-tag.direct{background:var(--red-soft);color:var(--red)}
+.comp-tag.indirect{background:#fffbeb;color:#92400e}
+.comp-tag.ref{background:var(--blue-soft);color:var(--blue)}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.pros,.cons{padding:16px;font-size:14px;border-radius:2px}
+.pros{background:rgba(0,91,172,0.04);border:1px solid rgba(0,91,172,0.15)}
+.cons{background:var(--red-soft);border:1px solid rgba(230,0,18,0.15)}
+.pros h4{color:var(--blue);font-size:12px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.cons h4{color:var(--red);font-size:12px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.pros ul,.cons ul{color:var(--mid);padding-left:16px}
+.pros li,.cons li{margin-bottom:5px}
+/* 差异化卡片 */
+.diff-card{background:var(--faint);border-left:3px solid var(--blue);padding:20px 24px;margin-bottom:16px}
+.diff-card h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.diff-card p{color:var(--mid);font-size:14px;margin:0}
+/* 矩阵表格居中 */
+.matrix-table thead th{text-align:center}
+.matrix-table thead th:first-child{text-align:left}
+.matrix-table td{text-align:center}
+.matrix-table td:first-child{text-align:left;font-weight:600;color:var(--ink)}
+/* 高亮 */
+.highlight-blue{color:var(--blue);font-weight:600}
+@media(max-width:700px){.toc-grid{grid-template-columns:1fr}.metric-strip{flex-direction:column}.cover-meta{flex-direction:column;gap:16px}.pros-cons{grid-template-columns:1fr}}
+.sect{animation:fadeUp 0.5s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.page-footer{text-align:center;padding:48px clamp(20px,4vw,48px) 32px;color:var(--mid);font-size:13px;border-top:1px solid var(--light);max-width:820px;margin:0 auto;font-family:var(--font-mono);letter-spacing:0.5px}
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">五十二研究所 · 产品研发部</div>
+    <h1>市场竞品调研与<br><em>竞品分析报告</em></h1>
+    <p class="cover-sub">智能简历筛选平台 · 市场竞品调研与差异化定位 · 2026年3月</p>
+  </div>
+  <dl class="cover-meta">
+    <div><dt>文档版本</dt><dd>v1.0.0</dd></div>
+    <div><dt>日期</dt><dd>2026-03-08</dd></div>
+    <div><dt>编制</dt><dd>产品研发部</dd></div>
+    <div><dt>密级</dt><dd>内部文档</dd></div>
+  </dl>
+</div>
+
+<div class="doc">
+
+<!-- 目录 -->
+<div class="toc-wrap">
+  <div class="toc-title">目录 · Contents</div>
+  <nav class="toc-grid">
+    <a href="#overview"><span class="num">01</span>分析概述</a>
+    <a href="#gap"><span class="num">05</span>市场空白与机会</a>
+    <a href="#landscape"><span class="num">02</span>竞品全景图</a>
+    <a href="#position"><span class="num">06</span>差异化定位</a>
+    <a href="#detail"><span class="num">03</span>竞品详细分析</a>
+    <a href="#conclusion"><span class="num">07</span>结论与建议</a>
+    <a href="#matrix"><span class="num">04</span>功能对比矩阵</a>
+    <a href="#"><span class="num"></span></a>
+  </nav>
+</div>
+
+<!-- 一、分析概述 -->
+<div class="sect" id="overview">
+  <span class="sect-num">Section 01</span>
+  <h2>分析概述</h2>
+
+  <h3>分析目的</h3>
+  <p>系统梳理国内外AI简历筛选与智能招聘领域的主要产品，评估其功能覆盖度、AI能力、部署方式和定价策略，为智能简历筛选平台的产品定位和差异化策略提供决策依据。重点关注：<strong>能否满足五十二研究所的本地部署需求、AI语义匹配能力、业务方参与机制</strong>。</p>
+
+  <h3>分析维度与竞品范围</h3>
+  <div class="metric-strip">
+    <div class="metric-item">
+      <span class="metric-val">8</span>
+      <span class="metric-lbl">分析竞品数量</span>
+    </div>
+    <div class="metric-item">
+      <span class="metric-val">9</span>
+      <span class="metric-lbl">功能对比维度</span>
+    </div>
+    <div class="metric-item">
+      <span class="metric-val">3</span>
+      <span class="metric-lbl">竞品层次</span>
+    </div>
+  </div>
+
+  <h3>竞品选取标准</h3>
+  <table>
+    <thead><tr><th>层次</th><th>定义</th><th>竞品</th></tr></thead>
+    <tbody>
+      <tr><td><strong>直接竞品</strong></td><td>具备AI简历筛选/评分能力的招聘管理系统</td><td>Moka AI、北森iTalentX、用友大易</td></tr>
+      <tr><td><strong>间接竞品</strong></td><td>综合招聘管理平台，含基础智能功能</td><td>飞书招聘、钉钉智能招聘</td></tr>
+      <tr><td><strong>参考竞品</strong></td><td>海外领先产品或创新型方案</td><td>Greenhouse、Lever、猎聘AI筛选</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 二、竞品全景 -->
+<div class="sect" id="landscape">
+  <span class="sect-num">Section 02</span>
+  <h2>竞品全景图</h2>
+
+  <h3>市场格局概览</h3>
+  <p>2025年中国智能招聘市场规模约128亿元，年增长率15%，但AI招聘工具的渗透率不足15%。市场呈现以下特点：</p>
+  <ul>
+    <li><strong>SaaS为主</strong>：90%以上的产品采用云端SaaS部署，私有化部署方案少且价格高</li>
+    <li><strong>大客户导向</strong>：主流产品定价10万+/年，面向500人以上企业，中小规模组织选择有限</li>
+    <li><strong>AI能力参差</strong>：多数产品的"AI"仍停留在关键词匹配阶段，真正具备LLM语义理解能力的产品较少</li>
+    <li><strong>校招场景薄弱</strong>：现有产品普遍针对社招优化，校招简历同质化的特殊挑战尚未被有效解决</li>
+  </ul>
+</div>
+
+<!-- 三、竞品详细分析 -->
+<div class="sect" id="detail">
+  <span class="sect-num">Section 03</span>
+  <h2>竞品详细分析</h2>
+
+  <!-- Moka AI -->
+  <div class="comp-card direct">
+    <div class="comp-card-header">
+      <h3>Moka AI 智能招聘</h3>
+      <span class="comp-tag direct">直接竞品</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>Moka（摩卡智能科技）· 成立于2015年 · 北京</td></tr>
+        <tr><td>产品定位</td><td>一站式智能招聘管理系统，面向中大型互联网企业</td></tr>
+        <tr><td>核心功能</td><td>AI简历解析、智能推荐、招聘流程管理、数据分析、人才库管理、Offer管理</td></tr>
+        <tr><td>AI能力</td><td>自研NLP简历解析（准确率约92%）、基于机器学习的人岗匹配推荐、智能标签体系</td></tr>
+        <tr><td>部署方式</td><td>SaaS云端为主，私有化部署需单独谈（价格翻倍+）</td></tr>
+        <tr><td>定价</td><td>标准版约8-12万/年，企业版15-25万/年，私有化30万+/年起</td></tr>
+        <tr><td>客户规模</td><td>2000+企业客户，以互联网、金融、零售行业为主</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>优势</h4>
+        <ul>
+          <li>产品成熟度高，功能全面覆盖招聘全流程</li>
+          <li>AI简历解析能力在国内领先</li>
+          <li>丰富的第三方渠道对接（50+招聘渠道）</li>
+          <li>数据分析和报表能力强</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不足</h4>
+        <ul>
+          <li>私有化部署成本高（30万+/年），超出内部工具预算</li>
+          <li>AI匹配仍以关键词+标签为主，语义理解深度不足</li>
+          <li>不支持业务方自定义AI评分维度和权重</li>
+          <li>校招场景优化不足，同质化简历区分能力弱</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 北森 -->
+  <div class="comp-card direct">
+    <div class="comp-card-header">
+      <h3>北森 iTalentX</h3>
+      <span class="comp-tag direct">直接竞品</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>北森云计算 · 成立于2002年 · 北京 · 已上市</td></tr>
+        <tr><td>产品定位</td><td>一体化HR SaaS平台（含招聘、绩效、人事等全模块），面向大型企业</td></tr>
+        <tr><td>核心功能</td><td>招聘管理、人才测评、AI简历筛选、校招解决方案、数据分析</td></tr>
+        <tr><td>AI能力</td><td>简历智能解析、人才画像、AI初筛推荐、人才测评（行业积累深）</td></tr>
+        <tr><td>部署方式</td><td>SaaS为主，支持混合部署（数据在客户侧，应用在云端）</td></tr>
+        <tr><td>定价</td><td>招聘模块15-30万/年起，全套HR系统50万+/年，实施周期3-6个月</td></tr>
+        <tr><td>客户规模</td><td>6000+大中型企业客户，央企/国企客户较多</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>优势</h4>
+        <ul>
+          <li>HR领域深耕20+年，企业级经验丰富</li>
+          <li>人才测评能力强（心理学背景），校招场景有积累</li>
+          <li>央企/国企合规经验丰富，安全资质齐全</li>
+          <li>支持混合部署方案</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不足</h4>
+        <ul>
+          <li>系统庞大复杂，实施周期长（3-6个月）</li>
+          <li>定价远超内部工具预算，最低15万/年起</li>
+          <li>AI能力偏传统ML，未引入LLM语义理解</li>
+          <li>功能过于全面，对小团队（16人HR）来说过重</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用友大易 -->
+  <div class="comp-card direct">
+    <div class="comp-card-header">
+      <h3>用友大易 招聘云</h3>
+      <span class="comp-tag direct">直接竞品</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>用友网络 · 大易云（招聘业务线）· 上海</td></tr>
+        <tr><td>产品定位</td><td>智能招聘管理平台，定位企业级招聘数字化转型</td></tr>
+        <tr><td>核心功能</td><td>AI简历解析、智能推荐、招聘门户、校招管理、Offer管理、入职管理</td></tr>
+        <tr><td>AI能力</td><td>简历解析（OCR+NLP）、人岗匹配推荐、候选人画像、智能排序</td></tr>
+        <tr><td>部署方式</td><td>SaaS/私有化均支持，与用友ERP生态打通</td></tr>
+        <tr><td>定价</td><td>标准版约10-15万/年，私有化20-40万/年</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>优势</h4>
+        <ul>
+          <li>与用友ERP/HCM生态无缝集成</li>
+          <li>支持私有化部署，满足数据安全要求</li>
+          <li>校招管理模块相对完善</li>
+          <li>价格比Moka和北森相对合理</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不足</h4>
+        <ul>
+          <li>AI能力偏弱，以规则匹配为主</li>
+          <li>用户体验和界面设计较老旧</li>
+          <li>独立使用性差，强依赖用友生态</li>
+          <li>不支持业务方参与评分模型配置</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 飞书招聘 -->
+  <div class="comp-card indirect">
+    <div class="comp-card-header">
+      <h3>飞书招聘</h3>
+      <span class="comp-tag indirect">间接竞品</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>字节跳动 · 飞书（Lark）</td></tr>
+        <tr><td>产品定位</td><td>飞书生态内的招聘管理工具，强调协作与效率</td></tr>
+        <tr><td>核心功能</td><td>招聘流程管理、面试安排、协作评价、招聘看板、渠道管理</td></tr>
+        <tr><td>AI能力</td><td>基础简历解析、智能面试日程安排，AI筛选能力较弱</td></tr>
+        <tr><td>部署方式</td><td>SaaS云端，不支持私有化</td></tr>
+        <tr><td>定价</td><td>飞书企业版内含，招聘模块约3-8万/年</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>优势</h4>
+        <ul>
+          <li>与飞书IM/日历/文档深度集成，协作体验极佳</li>
+          <li>面试安排和多人协作评价做得好</li>
+          <li>性价比高，已用飞书的企业迁移成本低</li>
+          <li>界面现代，用户体验优秀</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不足</h4>
+        <ul>
+          <li>AI简历筛选能力弱，不具备语义匹配</li>
+          <li>不支持私有化部署</li>
+          <li>不支持自定义AI模型和评分维度</li>
+          <li>对外部招聘渠道对接有限</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 钉钉智能招聘 -->
+  <div class="comp-card indirect">
+    <div class="comp-card-header">
+      <h3>钉钉智能招聘</h3>
+      <span class="comp-tag indirect">间接竞品</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>阿里巴巴 · 钉钉</td></tr>
+        <tr><td>产品定位</td><td>钉钉生态招聘管理工具，面向中小企业</td></tr>
+        <tr><td>核心功能</td><td>招聘流程管理、简历收集、面试管理、入职办理</td></tr>
+        <tr><td>AI能力</td><td>基础简历解析（通义千问加持），智能推荐能力有限</td></tr>
+        <tr><td>部署方式</td><td>SaaS云端，专有钉支持私有化（价格高）</td></tr>
+        <tr><td>定价</td><td>基础版免费，专业版约2-5万/年</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>优势</h4>
+        <ul>
+          <li>价格低甚至免费，适合预算有限的团队</li>
+          <li>与钉钉OA/审批/考勤等打通</li>
+          <li>通义千问大模型能力正在逐步集成</li>
+          <li>中小企业市场占有率高</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不足</h4>
+        <ul>
+          <li>招聘功能相对简单，更像是流程管理工具</li>
+          <li>AI筛选能力弱，缺少评分和排序</li>
+          <li>不支持自定义模型和评分权重</li>
+          <li>专有钉私有化成本高，部署复杂</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Greenhouse -->
+  <div class="comp-card ref">
+    <div class="comp-card-header">
+      <h3>Greenhouse</h3>
+      <span class="comp-tag ref">参考竞品（海外）</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>Greenhouse Software · 成立于2012年 · 纽约 · 已上市</td></tr>
+        <tr><td>产品定位</td><td>全球领先的招聘运营平台，强调结构化招聘和数据驱动</td></tr>
+        <tr><td>核心功能</td><td>结构化面试、候选人评分卡、招聘分析、DEI招聘、400+集成</td></tr>
+        <tr><td>AI能力</td><td>AI辅助JD优化、候选人自动筛选、预测性分析</td></tr>
+        <tr><td>部署方式</td><td>SaaS云端，不支持私有化</td></tr>
+        <tr><td>定价</td><td>约$6,000-$50,000/年（按企业规模）</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>参考价值</h4>
+        <ul>
+          <li>结构化面试评分卡设计值得借鉴——面试官按维度打分，减少主观偏差</li>
+          <li>数据驱动的招聘漏斗分析和渠道效能评估做得深入</li>
+          <li>候选人体验优化（NPS评分机制）值得参考</li>
+          <li>丰富的API和集成生态，可作为平台架构参考</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不适用点</h4>
+        <ul>
+          <li>不支持中文简历解析和中国招聘渠道</li>
+          <li>不支持私有化部署</li>
+          <li>价格和定位面向海外中大型企业</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lever -->
+  <div class="comp-card ref">
+    <div class="comp-card-header">
+      <h3>Lever (Employ Inc.)</h3>
+      <span class="comp-tag ref">参考竞品（海外）</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>Employ Inc.（2022年与JazzHR、Jobvite合并）· 旧金山</td></tr>
+        <tr><td>产品定位</td><td>CRM+ATS一体化人才获取平台，强调候选人关系管理</td></tr>
+        <tr><td>核心功能</td><td>人才CRM、AI候选人推荐、自动化工作流、多元化招聘、分析报表</td></tr>
+        <tr><td>AI能力</td><td>AI候选人推荐、简历自动解析、候选人匹配评分、自动化培育流程</td></tr>
+        <tr><td>定价</td><td>约$8,000-$60,000/年</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>参考价值</h4>
+        <ul>
+          <li>人才库CRM设计值得借鉴——候选人不只是"一次性资源"，而是可持续运营的资产</li>
+          <li>自动化培育流程：对暂时不合适的候选人保持联系，未来岗位匹配时自动推荐</li>
+          <li>多维度候选人评分系统，支持团队协作评价</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不适用点</h4>
+        <ul>
+          <li>不支持中国市场和中文处理</li>
+          <li>CRM功能对内部招聘场景过重</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 猎聘AI -->
+  <div class="comp-card ref">
+    <div class="comp-card-header">
+      <h3>猎聘 AI筛选</h3>
+      <span class="comp-tag ref">参考竞品</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:120px;">维度</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr><td>公司</td><td>猎聘网（同道精英）· 北京 · 已上市</td></tr>
+        <tr><td>产品定位</td><td>招聘平台内嵌AI筛选工具，面向付费企业用户</td></tr>
+        <tr><td>核心功能</td><td>AI简历推荐、智能匹配、人才搜索、企业品牌展示</td></tr>
+        <tr><td>AI能力</td><td>基于平台数据的AI推荐匹配、简历智能排序、人才画像</td></tr>
+        <tr><td>部署方式</td><td>平台内置，不可独立部署</td></tr>
+        <tr><td>定价</td><td>企业会员3-10万/年（含AI功能）</td></tr>
+      </tbody>
+    </table>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>优势</h4>
+        <ul>
+          <li>基于大量真实简历数据训练，推荐质量有一定保障</li>
+          <li>中高端人才库质量好</li>
+          <li>与猎聘生态深度绑定，简历资源丰富</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>不足</h4>
+        <ul>
+          <li>AI能力限于平台内，不能筛选其他渠道的简历</li>
+          <li>不支持自定义评分模型</li>
+          <li>不可独立部署，数据在平台侧</li>
+          <li>只是单一渠道解决方案，不解决碎片化问题</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 四、功能对比矩阵 -->
+<div class="sect" id="matrix">
+  <span class="sect-num">Section 04</span>
+  <h2>功能对比矩阵</h2>
+
+  <div style="overflow-x:auto;">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th style="text-align:left;min-width:130px;">功能维度</th>
+          <th>Moka AI</th>
+          <th>北森</th>
+          <th>用友大易</th>
+          <th>飞书招聘</th>
+          <th>钉钉招聘</th>
+          <th>猎聘AI</th>
+          <th style="color:var(--blue);">简历筛选平台<br>(规划)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>简历智能解析</td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>LLM语义匹配</td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>AI量化评分</td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>评分维度可配置</td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>多渠道导入</td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>人才库管理</td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>数据分析看板</td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>本地/私有化部署</td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-partial">&#9679;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+        <tr>
+          <td>自定义AI模型</td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-cross">&#10007;</span></td>
+          <td><span class="comp-check">&#10003;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--mid);margin-top:12px;font-family:var(--font-mono);">
+    <span class="comp-check">&#10003;</span> 完全支持 &nbsp;&nbsp;
+    <span class="comp-partial">&#9679;</span> 部分支持/有限 &nbsp;&nbsp;
+    <span class="comp-cross">&#10007;</span> 不支持
+  </p>
+</div>
+
+<!-- 五、市场空白与机会 -->
+<div class="sect" id="gap">
+  <span class="sect-num">Section 05</span>
+  <h2>市场空白与机会</h2>
+
+  <div class="callout callout-info">
+    <strong>空白一：本地部署 + AI语义匹配的组合缺失</strong>
+    支持私有化部署的产品（用友大易、北森混合部署）AI能力偏传统ML；而AI能力强的产品（Moka、飞书）不支持或价格高昂的私有化部署。五十二研究所的核心诉求——数据不出内网 + LLM语义理解——目前无产品能同时满足。
+  </div>
+
+  <div class="callout callout-info">
+    <strong>空白二：业务方参与AI评分配置的机制不存在</strong>
+    所有被分析竞品中，AI评分模型均为产品预设或由供应商定制，没有一个产品支持业务部门自主配置评分维度和权重。但调研发现，HR与业务部门的认知错位（评分4.0/5）是第二大痛点，根因正是缺乏业务方参与用人标准定义的机制。
+  </div>
+
+  <div class="callout callout-info">
+    <strong>空白三：校招简历同质化的AI解决方案空白</strong>
+    现有AI筛选产品普遍针对社招简历优化（通过工作经验、项目经历区分），对校招简历的同质化挑战（学历类似、缺少项目经验、简历模板化）缺乏有效解决方案。五十二研究所校招占40%，这一场景的AI优化空间很大。
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>空白四：中小规模组织的轻量化方案</strong>
+    主流产品定价10万+/年，功能设计面向500+人规模企业。对于16人HR团队、年招120-150人的规模，这些产品功能过重、价格过高。市场缺少一款功能精准、成本可控、快速部署的内部工具方案。
+  </div>
+</div>
+
+<!-- 六、差异化定位 -->
+<div class="sect" id="position">
+  <span class="sect-num">Section 06</span>
+  <h2>智能简历筛选平台差异化定位</h2>
+
+  <h3>核心差异化优势</h3>
+
+  <div class="diff-card">
+    <h4>差异点一：LLM驱动的语义匹配（vs 关键词匹配）</h4>
+    <p>基于大语言模型实现简历与JD的深度语义理解，而非传统关键词或标签匹配。能够识别"用户增长"与"DAU提升"、"高并发系统"与"分布式架构"之间的语义关联，从根本上解决关键词搜索的语义鸿沟问题。</p>
+  </div>
+  <div class="diff-card">
+    <h4>差异点二：业务方可参与的评分模型配置</h4>
+    <p>业务部门负责人可以自定义岗位的评分维度和权重（如技术深度30%、架构经验25%、业务理解15%），通过在线表单或导入方式提交用人标准。AI评分模型根据业务方配置动态调整，从机制上消除HR与业务的认知错位。</p>
+  </div>
+  <div class="diff-card">
+    <h4>差异点三：内网本地部署，数据零外流</h4>
+    <p>采用Docker容器化方案，全部组件（前端、后端、AI服务、数据库）部署在所内网环境。简历数据、候选人信息、AI模型均不出内网，完全满足研究所数据安全合规要求。开发成本可控，无需支付高额SaaS年费。</p>
+  </div>
+  <div class="diff-card">
+    <h4>差异点四：AI透明可解释 + 人工复核闭环</h4>
+    <p>AI不做黑箱决策，每个评分附带维度拆解和评判依据。HR可对AI评分进行"认同/否决/强捞"三种反馈，反馈数据驱动模型持续优化。这种设计直接回应了HR团队对"AI漏人"和"黑箱"的核心顾虑。</p>
+  </div>
+
+  <h3>竞争定位对比总结</h3>
+  <table>
+    <thead><tr><th>维度</th><th>Moka/北森</th><th>飞书/钉钉</th><th style="color:var(--blue);">智能简历筛选平台</th></tr></thead>
+    <tbody>
+      <tr><td>目标客户</td><td>中大型企业（500+人）</td><td>已用飞书/钉钉的企业</td><td class="highlight-blue">中小规模组织内部团队</td></tr>
+      <tr><td>AI核心能力</td><td>关键词+标签匹配</td><td>基础解析</td><td class="highlight-blue">LLM语义理解</td></tr>
+      <tr><td>评分模型</td><td>产品预设，不可配置</td><td>无评分功能</td><td class="highlight-blue">业务方可配置维度/权重</td></tr>
+      <tr><td>部署方式</td><td>SaaS为主，私有化价高</td><td>纯SaaS</td><td class="highlight-blue">本地Docker部署</td></tr>
+      <tr><td>年度成本</td><td>10-30万+</td><td>3-8万</td><td class="highlight-blue">开发成本可控，无年费</td></tr>
+      <tr><td>实施周期</td><td>1-6个月</td><td>1-2周</td><td class="highlight-blue">2-4周</td></tr>
+      <tr><td>校招优化</td><td>有限</td><td>无</td><td class="highlight-blue">针对性优化</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 七、结论与建议 -->
+<div class="sect" id="conclusion">
+  <span class="sect-num">Section 07</span>
+  <h2>结论与建议</h2>
+
+  <h3>核心结论</h3>
+
+  <div class="callout callout-info">
+    <strong>结论一：外采不可行</strong>
+    现有竞品均无法同时满足五十二研究所的三个核心需求：本地部署、LLM语义匹配、业务方参与评分配置。外采产品的定价（10-30万+/年）也远超内部工具的合理预算。自研是更优选择。
+  </div>
+  <div class="callout callout-info">
+    <strong>结论二：差异化空间明确</strong>
+    智能简历筛选平台可以在四个维度建立差异化：LLM语义匹配（无竞品具备）、业务方评分配置（市场空白）、本地部署（稀缺能力）、轻量化设计（市场缺失）。这不是"做一个更便宜的Moka"，而是"做一个Moka做不到的东西"。
+  </div>
+  <div class="callout callout-info">
+    <strong>结论三：可借鉴的设计思路</strong>
+    Greenhouse的结构化面试评分卡、Lever的人才库CRM思路、Moka的渠道效能分析、北森的校招管理模块——这些成熟设计可在平台中选择性借鉴，避免从零摸索。
+  </div>
+
+  <h3>行动建议</h3>
+  <table>
+    <thead><tr><th>序号</th><th>建议</th><th>优先级</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>确认自研路线，启动MVP开发</strong></td><td>P0</td><td>外采不可行已论证，尽早启动自研以抢占内部落地时间窗口</td></tr>
+      <tr><td>2</td><td><strong>MVP聚焦AI语义匹配 + 评分排序</strong></td><td>P0</td><td>解决Top1痛点，形成核心竞争力</td></tr>
+      <tr><td>3</td><td>借鉴Greenhouse评分卡设计</td><td>P1</td><td>业务方配置评分维度的交互设计可参考其结构化评分卡</td></tr>
+      <tr><td>4</td><td>参考Lever的人才库流转机制</td><td>P2</td><td>v2版本引入候选人生命周期管理</td></tr>
+      <tr><td>5</td><td>关注钉钉通义千问的AI进展</td><td>持续</td><td>如果钉钉招聘引入强AI能力，可能成为未来竞争对手</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- /doc -->
+
+<footer class="page-footer">
+  智能简历筛选平台 · 竞品分析报告 v1.0.0<br>
+  五十二研究所 · 产品研发部 · 2026年3月8日<br>
+  内部文档 · 请勿外传
+</footer>
+
+</body>
+</html>

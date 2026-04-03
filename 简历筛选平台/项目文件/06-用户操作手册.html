@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历筛选平台 · 用户操作手册 v3.0.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --ink: #1c1917;
+  --paper: #f8fafc;
+  --mid: #4b5563;
+  --light: #e2e8f0;
+  --faint: #f1f5f9;
+  --accent: #005bac;
+  --accent-soft: #e5effa;
+  --red: #c9000e;
+  --red-soft: #fce8e9;
+  --green: #166534;
+  --green-soft: #dcfce7;
+  --amber: #92400e;
+  --amber-soft: #fef3c7;
+  --purple: #5b21b6;
+  --purple-soft: #ede9fe;
+  --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--ink); background: var(--paper); line-height: 1.75; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+/* 封面 - 暗色 */
+.cover {
+  min-height: 100vh;
+  background: #1a1410;
+  color: var(--paper);
+  padding: clamp(64px, 10vw, 140px) clamp(24px, 6vw, 80px) clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 80% 20%, rgba(0,91,172,0.40) 0%, transparent 65%),
+              radial-gradient(ellipse 50% 40% at 15% 75%, rgba(0,91,172,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cover::after {
+  content: none;
+}
+.cover-inner { position: relative; z-index: 1; max-width: 640px; }
+.cover-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.cover-eyebrow::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); }
+.cover h1 { font-family: var(--font-display); font-size: clamp(44px, 7vw, 80px); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; color: var(--paper); margin-bottom: 16px; }
+.cover h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.cover-sub { font-size: 17px; color: rgba(253,252,250,0.6); font-weight: 300; max-width: 480px; line-height: 1.7; margin-bottom: 48px; }
+.cover-meta { display: flex; gap: 0; align-self: end; position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 24px; }
+.cover-meta-item { padding: 0 32px 0 0; margin-right: 32px; border-right: 1px solid rgba(255,255,255,0.12); }
+.cover-meta-item:last-child { border-right: none; }
+.cover-meta-item dt { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(253,252,250,0.45); margin-bottom: 4px; }
+.cover-meta-item dd { font-size: 14px; font-weight: 500; color: var(--paper); }
+
+.doc { max-width: 840px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+
+.toc-wrap { padding: 56px 0 48px; border-bottom: 1px solid var(--light); }
+.toc-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+.toc-label::after { content: ''; flex: 1; height: 1px; background: var(--light); }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 40px; }
+.toc-grid a { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: var(--ink); padding: 8px 0; font-size: 14px; border-bottom: 1px solid transparent; transition: all 0.2s; }
+.toc-grid a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.toc-grid a .num { font-family: var(--font-mono); font-size: 11px; color: var(--mid); min-width: 32px; }
+
+.sect { padding: 64px 0 48px; }
+.sect + .sect { border-top: 1px solid var(--light); }
+.sect-num { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.sect h2 { font-family: var(--font-display); font-size: clamp(28px, 4vw, 40px); font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 32px; }
+.sect h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin: 36px 0 12px; display: flex; align-items: center; gap: 10px; }
+.sect h3::before { content: ''; display: inline-block; width: 3px; height: 17px; background: var(--accent); flex-shrink: 0; }
+.sect h4 { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--mid); text-transform: uppercase; letter-spacing: 1.5px; margin: 28px 0 10px; }
+.sect p { color: var(--mid); margin-bottom: 14px; }
+.sect ul, .sect ol { padding-left: 20px; margin-bottom: 16px; color: var(--mid); }
+.sect li { margin-bottom: 6px; }
+.sect li strong { color: var(--ink); }
+
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+thead th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); padding: 12px 16px; border-bottom: 2px solid var(--ink); font-weight: 500; }
+td { padding: 13px 16px; border-bottom: 1px solid var(--light); color: var(--mid); vertical-align: top; }
+td strong { color: var(--ink); }
+tbody tr:hover td { background: var(--faint); }
+
+.callout { padding: 20px 24px; margin: 24px 0; font-size: 14px; border-left: 3px solid; line-height: 1.7; }
+.callout-info { border-color: var(--accent); background: var(--accent-soft); color: #1e3a5f; }
+.callout-warn { border-color: #d97706; background: var(--amber-soft); color: #92400e; }
+.callout-red { border-color: var(--red); background: var(--red-soft); color: #7f1d1d; }
+.callout strong { display: block; margin-bottom: 4px; font-weight: 600; }
+
+/* 步骤块 */
+.step-list { margin: 20px 0; }
+.step-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--light); }
+.step-item:last-child { border-bottom: none; }
+.step-num { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--light); line-height: 1; flex-shrink: 0; min-width: 48px; padding-top: 4px; }
+.step-body h4 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+.step-body p { font-size: 14px; color: var(--mid); margin-bottom: 10px; }
+
+/* 操作路径 */
+.path-block { background: var(--faint); border: 1px solid var(--light); border-left: 3px solid var(--accent); padding: 12px 16px; font-family: var(--font-mono); font-size: 13px; color: var(--mid); margin: 12px 0; }
+.path-block strong { color: var(--accent); font-weight: 500; }
+
+/* 角色权限网格 */
+.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--light); margin: 20px 0; }
+.role-card { padding: 24px; border-right: 1px solid var(--light); }
+.role-card:last-child { border-right: none; }
+.role-card-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.role-card.spec .role-card-label { color: var(--red); }
+.role-card.admin .role-card-label { color: var(--accent); }
+.role-card.biz .role-card-label { color: var(--purple); }
+.role-card h4 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 12px; font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+.role-card ul { padding-left: 16px; color: var(--mid); font-size: 13px; }
+.role-card li { margin-bottom: 5px; line-height: 1.6; }
+.role-card-footer { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--light); font-size: 12px; color: var(--mid); font-family: var(--font-mono); }
+
+/* 流程图 */
+.flow { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin: 20px 0; }
+.flow-step { padding: 8px 16px; border: 1px solid var(--light); font-size: 13px; color: var(--ink); background: white; }
+.flow-step.new { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); font-style: italic; }
+.flow-arr { color: var(--light); font-size: 18px; padding: 0 4px; }
+
+/* 状态徽章 */
+.badge { display: inline-block; padding: 3px 10px; font-family: var(--font-mono); font-size: 11px; border: 1px solid; }
+.badge-wait { background: var(--amber-soft); border-color: #fcd34d; color: var(--amber); }
+.badge-ok { background: var(--green-soft); border-color: #86efac; color: var(--green); }
+.badge-reject { background: var(--red-soft); border-color: #f9c0c2; color: var(--red); }
+.badge-hold { background: var(--faint); border-color: var(--light); color: var(--mid); }
+.badge-purple { background: var(--purple-soft); border-color: #c4b5fd; color: var(--purple); }
+.badge-info { background: var(--accent-soft); border-color: #93c5fd; color: var(--accent); }
+
+.doc-footer { border-top: 2px solid var(--light); padding: 32px 0 48px; margin-top: 64px; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--mid); letter-spacing: 1px; text-transform: uppercase; }
+
+/* 变更对比块 */
+.change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--light); margin: 20px 0; }
+.change-col { padding: 20px 24px; }
+.change-col:first-child { border-right: 1px solid var(--light); }
+.change-col-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+.change-col.v2 .change-col-label { color: var(--mid); }
+.change-col.v3 .change-col-label { color: var(--accent); }
+.change-col ul { padding-left: 16px; color: var(--mid); font-size: 13px; line-height: 2; }
+
+/* 材料清单网格 */
+.checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0; }
+.checklist-item { padding: 10px 14px; background: white; border: 1px solid var(--light); font-size: 13px; color: var(--mid); display: flex; align-items: center; gap: 8px; }
+.checklist-item::before { content: '\2610'; color: var(--accent); font-size: 16px; }
+
+/* 特性标签 */
+.feature-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+.feature-tag { font-family: var(--font-mono); font-size: 11px; padding: 4px 12px; border: 1px solid var(--light); color: var(--mid); background: white; }
+.feature-tag.new { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* 流程时间线 */
+.pipeline { display: flex; align-items: flex-start; margin: 20px 0; overflow-x: auto; padding-bottom: 8px; }
+.pipeline-node { text-align: center; min-width: 100px; padding: 0 8px; }
+.pipeline-circle { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; }
+.pipeline-circle.blue { background: var(--accent); }
+.pipeline-circle.purple { background: var(--purple); }
+.pipeline-circle.green { background: var(--green); }
+.pipeline-label { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.pipeline-sub { font-size: 11px; color: var(--mid); }
+.pipeline-arr { display: flex; align-items: center; padding: 0 4px; padding-bottom: 32px; color: var(--light); font-size: 20px; }
+
+/* 支持渠道网格 */
+.support-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--light); margin: 20px 0; }
+.support-card { padding: 24px; text-align: center; border-right: 1px solid var(--light); }
+.support-card:last-child { border-right: none; }
+.support-icon { font-size: 28px; margin-bottom: 12px; }
+.support-card h4 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+.support-card p { font-size: 13px; color: var(--mid); margin: 0; }
+
+/* FAQ */
+.faq-item { border-bottom: 1px solid var(--light); padding: 24px 0; }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 10px; display: flex; gap: 12px; }
+.faq-q-mark { font-family: var(--font-mono); font-size: 13px; color: var(--accent); flex-shrink: 0; padding-top: 1px; }
+.faq-a { font-size: 14px; color: var(--mid); padding-left: 28px; line-height: 1.8; }
+
+@media (max-width: 700px) {
+  .toc-grid, .role-grid, .change-grid, .checklist-grid, .support-grid { grid-template-columns: 1fr; }
+  .cover-meta { flex-direction: column; }
+  .role-card { border-right: none; border-bottom: 1px solid var(--light); }
+  .role-card:last-child { border-bottom: none; }
+}
+.sect { animation: fadeUp 0.5s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- ==================== 封面 ==================== -->
+<div class="cover" data-doc-num="07">
+  <div class="cover-inner">
+    <div class="cover-eyebrow">简历筛选平台 &mdash; 操作指南</div>
+    <h1>用户操作<br><em>手册</em></h1>
+    <p class="cover-sub">v3.0.0 在 v2 基础上打通面试 &rarr; Offer &rarr; 入职全链路，并引入筛选规则版本管理，让每次招聘有据可查、有规可循。</p>
+  </div>
+  <dl class="cover-meta">
+    <div class="cover-meta-item"><dt>文档编号</dt><dd>07</dd></div>
+    <div class="cover-meta-item"><dt>版本</dt><dd>v3.0.0</dd></div>
+    <div class="cover-meta-item"><dt>发布日期</dt><dd>2026-03-28</dd></div>
+    <div class="cover-meta-item"><dt>适用对象</dt><dd>HR 专员 / 主管 / 业务负责人</dd></div>
+  </dl>
+</div>
+
+<!-- ==================== 正文 ==================== -->
+<div class="doc">
+
+  <!-- 目录 -->
+  <nav class="toc-wrap">
+    <div class="toc-label">目录</div>
+    <div class="toc-grid">
+      <a href="#welcome"><span class="num">01</span>欢迎与版本概览</a>
+      <a href="#pipeline"><span class="num">05</span>面试全流程管理</a>
+      <a href="#roles"><span class="num">02</span>角色与权限</a>
+      <a href="#offer"><span class="num">06</span>Offer 管理</a>
+      <a href="#quickstart"><span class="num">03</span>快速入门</a>
+      <a href="#onboarding"><span class="num">07</span>入职跟踪</a>
+      <a href="#workflow"><span class="num">04</span>完整工作流步骤</a>
+      <a href="#rules"><span class="num">08</span>筛选规则版本管理</a>
+      <a href="#faq"><span class="num">09</span>常见问题</a>
+      <a href="#support"><span class="num">10</span>联系支持</a>
+    </div>
+  </nav>
+
+  <!-- ==================== 01 欢迎 ==================== -->
+  <section class="sect" id="welcome">
+    <span class="sect-num">01 &mdash; Welcome</span>
+    <h2>欢迎使用简历筛选平台 v3</h2>
+
+    <div class="callout callout-info">
+      <strong>v3.0.0 核心升级</strong>
+      v3.0.0 在 v2 基础上打通<strong>面试 &rarr; Offer &rarr; 入职</strong>全链路，并引入<strong>筛选规则版本管理</strong>，让每次招聘有据可查、有规可循。
+    </div>
+
+    <h3>功能概览</h3>
+
+    <div class="feature-tags">
+      <span class="feature-tag">双角色权限体系（保留）</span>
+      <span class="feature-tag">人才库管理（保留）</span>
+      <span class="feature-tag">AI 质量闭环（保留）</span>
+      <span class="feature-tag">高级筛选器（保留）</span>
+      <span class="feature-tag">审批中心与数据看板（保留）</span>
+      <span class="feature-tag new">面试安排与轮次管理</span>
+      <span class="feature-tag new">面试官评价（支持业务负责人）</span>
+      <span class="feature-tag new">Offer 发放、谈薪与状态跟踪</span>
+      <span class="feature-tag new">入职跟踪（报到确认、资料收集）</span>
+      <span class="feature-tag new">筛选规则版本管理（版本对比/回滚）</span>
+      <span class="feature-tag new">完整招聘漏斗分析报表</span>
+    </div>
+
+    <h3>从 v2 升级到 v3，有哪些新变化？</h3>
+
+    <div class="change-grid">
+      <div class="change-col v2">
+        <div class="change-col-label">v2 具备（保留）</div>
+        <ul>
+          <li>双角色权限体系</li>
+          <li>人才库管理</li>
+          <li>AI 质量闭环（纠错反馈）</li>
+          <li>高级筛选器</li>
+          <li>审批中心与数据看板</li>
+        </ul>
+      </div>
+      <div class="change-col v3">
+        <div class="change-col-label">v3 新增</div>
+        <ul>
+          <li>面试安排与轮次管理</li>
+          <li>面试官评价（支持业务负责人）</li>
+          <li>Offer 发放、谈薪与状态跟踪</li>
+          <li>入职跟踪（报到确认、资料收集）</li>
+          <li>筛选规则版本管理（版本对比/回滚）</li>
+          <li>完整招聘漏斗分析报表</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 02 角色与权限 ==================== -->
+  <section class="sect" id="roles">
+    <span class="sect-num">02 &mdash; Roles &amp; Permissions</span>
+    <h2>角色与权限</h2>
+    <p>v3 新增"业务负责人"角色，打通 HR 与用人部门的协作闭环；系统管理员负责后台配置与监控。</p>
+
+    <div class="role-grid">
+      <!-- HR专员 -->
+      <div class="role-card spec">
+        <div class="role-card-label">HR 专员 &mdash; 执行角色</div>
+        <h4>HR 专员</h4>
+        <ul>
+          <li>上传与管理简历</li>
+          <li>AI 评分查看与复核</li>
+          <li>创建和管理岗位</li>
+          <li>安排面试时间</li>
+          <li>发送 Offer 通知</li>
+          <li>跟进入职材料</li>
+          <li>查询人才库</li>
+        </ul>
+      </div>
+      <!-- HR主管 -->
+      <div class="role-card admin">
+        <div class="role-card-label">HR 主管 &mdash; 管理角色</div>
+        <h4>HR 主管</h4>
+        <ul>
+          <li>专员全部权限</li>
+          <li>审批候选人晋级</li>
+          <li>审批 Offer 条件</li>
+          <li>查看完整漏斗报表</li>
+          <li>管理团队账号</li>
+          <li>导出全量数据</li>
+        </ul>
+      </div>
+      <!-- 系统管理员 -->
+      <div class="role-card admin">
+        <div class="role-card-label">系统管理员 &mdash; 后台配置</div>
+        <h4>系统管理员</h4>
+        <ul>
+          <li>招聘总览大盘</li>
+          <li>岗位监控（只读）</li>
+          <li>渠道与导入配置</li>
+          <li>AI 模型与评分规则配置</li>
+          <li>报表中心与数据分析</li>
+          <li>权限与审计管理</li>
+          <li>系统设置（模型/规则/通知）</li>
+        </ul>
+      </div>
+      <!-- 业务负责人 -->
+      <div class="role-card biz">
+        <div class="role-card-label">业务负责人 &mdash; v3 新增角色</div>
+        <h4>业务负责人</h4>
+        <ul>
+          <li>查看分配给本部门的候选人</li>
+          <li>填写面试评价</li>
+          <li>提交面试结论（通过/淘汰）</li>
+          <li>查看本部门招聘进度</li>
+          <li>接收 Offer 审批通知</li>
+        </ul>
+        <div class="role-card-footer">不可操作：简历上传、评分配置、人才库管理、数据导出</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 03 快速入门 ==================== -->
+  <section class="sect" id="quickstart">
+    <span class="sect-num">03 &mdash; Quick Start</span>
+    <h2>快速入门</h2>
+    <p>v3 完整工作流：筛选 &rarr; 审批 &rarr; 面试 &rarr; Offer &rarr; 入职，全程在系统内流转。</p>
+
+    <h3>招聘全流程一览</h3>
+
+    <div class="pipeline">
+      <div class="pipeline-node">
+        <div class="pipeline-circle blue">1</div>
+        <div class="pipeline-label">简历筛选</div>
+        <div class="pipeline-sub">上传 · AI评分</div>
+      </div>
+      <div class="pipeline-arr">&rarr;</div>
+      <div class="pipeline-node">
+        <div class="pipeline-circle blue">2</div>
+        <div class="pipeline-label">主管审批</div>
+        <div class="pipeline-sub">复核 · 批准</div>
+      </div>
+      <div class="pipeline-arr">&rarr;</div>
+      <div class="pipeline-node">
+        <div class="pipeline-circle purple">3</div>
+        <div class="pipeline-label">面试安排</div>
+        <div class="pipeline-sub">多轮 · 评价</div>
+      </div>
+      <div class="pipeline-arr">&rarr;</div>
+      <div class="pipeline-node">
+        <div class="pipeline-circle purple">4</div>
+        <div class="pipeline-label">Offer 发放</div>
+        <div class="pipeline-sub">谈薪 · 审批</div>
+      </div>
+      <div class="pipeline-arr">&rarr;</div>
+      <div class="pipeline-node">
+        <div class="pipeline-circle green">5</div>
+        <div class="pipeline-label">入职跟踪</div>
+        <div class="pipeline-sub">报到 · 档案</div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      第 1–2 阶段与 v2 相同；第 3–5 阶段为 v3 新增功能
+    </div>
+
+    <h3>操作流程概览</h3>
+
+    <div class="flow">
+      <div class="flow-step">上传简历</div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step">AI 评分</div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step">主管审批</div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step new">安排面试</div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step new">面试评价</div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step new">Offer 审批</div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step new">入职跟踪</div>
+    </div>
+  </section>
+
+  <!-- ==================== 04 完整工作流步骤 ==================== -->
+  <section class="sect" id="workflow">
+    <span class="sect-num">04 &mdash; Workflow Steps</span>
+    <h2>完整工作流步骤</h2>
+    <p>以下为 v3 核心操作步骤说明，重点展示步骤 3–5（v3 新增部分）。</p>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>上传简历 &amp; AI 评分</h4>
+          <p>HR 专员在筛选工作台中选择岗位，批量上传简历文件（支持 PDF / Word / 图片）。系统自动解析并完成 AI 评分，结果通常在 2 分钟内返回。若解析失败（如文件加密、图片模糊），系统会标记"解析失败"状态并置顶提醒，HR 可选择"重试解析（OCR增强模式）"或"人工录入"关键信息后由AI评分。</p>
+          <div class="path-block"><strong>路径：</strong>筛选工作台 &rarr; 选择岗位 &rarr; 批量上传简历 &rarr; 查看评分结果（解析失败项置顶处理）</div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>主管审批</h4>
+          <p>HR 专员复核评分结果后，将目标候选人提交主管审批。主管在"审批中心"逐一或批量审批，审批通过后候选人进入面试阶段。</p>
+          <div class="path-block"><strong>路径：</strong>审批中心 &rarr; 待审批列表 &rarr; 查看候选人详情 &rarr; 批准 / 驳回</div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>安排面试</h4>
+          <p>在候选人详情页点击"安排面试"，选择面试轮次（一面/二面/终面）、面试官（含业务负责人账号）和时间段。系统自动发送日历邀请。面试结束后，面试官在系统内填写评价并提交结论。</p>
+          <div class="path-block"><strong>路径：</strong>候选人详情 &rarr; 面试管理 &rarr; 新增面试轮次 &rarr; 选择面试官和时间 &rarr; 发送邀请</div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h4>发放 Offer</h4>
+          <p>终面通过后，HR 专员在"Offer 管理"中填写薪资、职级、入职日期等信息，提交主管审批。审批通过后系统生成 Offer 文件，可在线发送给候选人，并追踪候选人的确认状态。</p>
+          <div class="path-block"><strong>路径：</strong>候选人详情 &rarr; Offer 管理 &rarr; 填写 Offer 信息 &rarr; 提交主管审批 &rarr; 审批通过后发送</div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h4>入职跟踪</h4>
+          <p>Offer 确认后，候选人进入"入职跟踪"阶段。HR 专员在系统中记录资料提交进度（身份证、学历证明、劳动合同等），并在候选人实际报到后将状态更新为"已入职"，完成整个招聘闭环。</p>
+          <div class="path-block"><strong>路径：</strong>候选人详情 &rarr; 入职跟踪 &rarr; 更新资料收集状态 &rarr; 报到后标记"已入职"</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 05 面试全流程 ==================== -->
+  <section class="sect" id="pipeline">
+    <span class="sect-num">05 &mdash; Interview Pipeline</span>
+    <h2>面试全流程管理</h2>
+    <p>从一面到终面，多轮面试统一在系统内管理。</p>
+
+    <h3>面试轮次设置</h3>
+    <p>系统支持最多 4 轮面试，主管可在岗位配置中自定义轮次名称和要求：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>轮次</th>
+          <th>默认名称</th>
+          <th>面试官要求</th>
+          <th>时长建议</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>第 1 轮</strong></td>
+          <td>HR 初面</td>
+          <td>HR 专员或主管</td>
+          <td>30 分钟</td>
+        </tr>
+        <tr>
+          <td><strong>第 2 轮</strong></td>
+          <td>业务面试</td>
+          <td>业务负责人</td>
+          <td>60 分钟</td>
+        </tr>
+        <tr>
+          <td><strong>第 3 轮</strong></td>
+          <td>复试</td>
+          <td>部门主管或高管</td>
+          <td>45 分钟</td>
+        </tr>
+        <tr>
+          <td><strong>第 4 轮</strong></td>
+          <td>终面</td>
+          <td>所级领导（可选）</td>
+          <td>30 分钟</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>面试评价填写（面试官操作）</h3>
+    <p>面试结束后，面试官在系统内填写结构化评价，结果自动汇入候选人档案。</p>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>进入待评价列表</h4>
+          <p>登录后系统首页显示待评价提醒，或通过"我的面试"菜单进入待评价列表。</p>
+          <div class="path-block"><strong>路径：</strong>我的面试 &rarr; 待评价列表 &rarr; 选择候选人</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>填写评分维度</h4>
+          <p>对以下 5 个维度分别打 1–5 分：专业能力、沟通表达、问题解决思路、文化契合度、学习潜力。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>填写必选结论</h4>
+          <p>选择面试结论：<span class="badge badge-ok">强烈推荐</span>&nbsp;<span class="badge badge-ok">推荐</span>&nbsp;<span class="badge badge-wait">待定</span>&nbsp;<span class="badge badge-reject">不推荐/淘汰</span>，并填写不少于 50 字的文字说明，以及是否建议存入人才库。</p>
+          <div class="path-block"><strong>路径：</strong>填写评分和文字评价 &rarr; 提交结论</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>面试状态说明</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>状态</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-wait">待安排</span></td>
+          <td>候选人已通过上轮审核，等待 HR 安排下一轮面试时间</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-info">已安排</span></td>
+          <td>面试时间已确认，邀请已发送，等待面试进行</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">待评价</span></td>
+          <td>面试已完成，等待面试官在系统内提交评价</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-ok">已通过</span></td>
+          <td>当轮面试通过，等待安排下一轮或进入 Offer 流程</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-reject">已淘汰</span></td>
+          <td>候选人在此轮面试中被淘汰，可选择是否存入人才库</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ==================== 06 Offer 管理 ==================== -->
+  <section class="sect" id="offer">
+    <span class="sect-num">06 &mdash; Offer Management</span>
+    <h2>Offer 管理</h2>
+    <p>从 Offer 拟定到候选人确认，全程在系统内留存记录。</p>
+
+    <h3>Offer 信息填写项</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>类别</th>
+          <th>填写项</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>薪资信息</strong></td>
+          <td>税前月薪、绩效奖金比例、薪资结构（12薪/14薪等）、试用期薪资比例</td>
+        </tr>
+        <tr>
+          <td><strong>岗位信息</strong></td>
+          <td>职级 / 职称、所属部门、直接主管、期望入职日期</td>
+        </tr>
+        <tr>
+          <td><strong>福利信息</strong></td>
+          <td>社保公积金基数、补贴明细（餐补/交通等）、年假天数</td>
+        </tr>
+        <tr>
+          <td><strong>流程信息</strong></td>
+          <td>Offer 有效期、候选人确认截止日期、谈薪备注</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Offer 发放步骤</h3>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>填写 Offer 信息</h4>
+          <p>HR 专员在候选人详情页进入"Offer 管理"，填写薪资、岗位、福利等完整信息。</p>
+          <div class="path-block"><strong>路径：</strong>候选人详情 &rarr; Offer 管理 &rarr; 新建 Offer</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>提交主管审批</h4>
+          <p>填写完成后提交 HR 主管审批薪资条件。审批期间状态显示为 <span class="badge badge-wait">审批中</span>。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>发送 Offer</h4>
+          <p>审批通过后，系统生成 Offer 文件，HR 专员点击"发送"。候选人收到邮件后即可在线查看并回复。状态更新为 <span class="badge badge-info">已发送</span>。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>跟踪候选人回复</h4>
+          <p>候选人在线确认接受后状态自动变为 <span class="badge badge-ok">已接受</span>，进入入职跟踪；若拒绝则显示 <span class="badge badge-reject">已拒绝</span>，系统提示填写拒绝原因并可推荐备用候选人。</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Offer 状态追踪</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>状态</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-wait">审批中</span></td>
+          <td>Offer 已提交，等待 HR 主管审批薪资条件</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-info">已发送</span></td>
+          <td>Offer 通过审批，已通过系统发送给候选人，等待候选人回复</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-ok">已接受</span></td>
+          <td>候选人确认接受 Offer，自动进入入职跟踪阶段</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-reject">已拒绝</span></td>
+          <td>候选人拒绝 Offer，系统提示填写拒绝原因，可选择从人才库推荐备用候选人</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-wait">谈薪中</span></td>
+          <td>候选人有疑问，HR 与候选人协商薪资，主管授权后可修改 Offer 重新发送</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ==================== 07 入职跟踪 ==================== -->
+  <section class="sect" id="onboarding">
+    <span class="sect-num">07 &mdash; Onboarding Tracking</span>
+    <h2>入职跟踪</h2>
+    <p>Offer 接受后自动进入入职跟踪，HR 专员全程掌握进度。</p>
+
+    <h3>入职材料清单</h3>
+    <p>系统内置材料清单，HR 专员逐项更新收集状态，避免遗漏。可在岗位配置中自定义材料清单，新增或删除条目。</p>
+
+    <div class="checklist-grid">
+      <div class="checklist-item">身份证复印件</div>
+      <div class="checklist-item">最高学历证书</div>
+      <div class="checklist-item">学位证书</div>
+      <div class="checklist-item">离职证明</div>
+      <div class="checklist-item">签订劳动合同</div>
+      <div class="checklist-item">银行卡信息</div>
+      <div class="checklist-item">个人信息表</div>
+      <div class="checklist-item">报到确认</div>
+    </div>
+
+    <div class="path-block"><strong>路径：</strong>候选人详情 &rarr; 入职跟踪 &rarr; 更新资料收集状态 &rarr; 报到后标记"已入职"</div>
+
+    <h3>入职状态节点</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>状态</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-wait">待入职</span></td>
+          <td>Offer 已接受，等待入职日期到来，系统自动提醒材料准备</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-info">材料收集中</span></td>
+          <td>候选人材料正在逐步提交，HR 专员持续更新清单状态</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-ok">已入职</span></td>
+          <td>候选人已报到，HR 标记"已入职"后本次招聘正式闭环，数据汇入漏斗报表</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-reject">放弃入职</span></td>
+          <td>候选人最终未到岗，记录原因后重新激活岗位招聘</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ==================== 08 筛选规则版本管理 ==================== -->
+  <section class="sect" id="rules">
+    <span class="sect-num">08 &mdash; Rule Version Control</span>
+    <h2>筛选规则版本管理</h2>
+    <p>v3 引入规则版本控制，确保不同批次招聘的评分标准有据可查，支持对比与回滚。</p>
+
+    <h3>什么是筛选规则版本？</h3>
+    <p>每次管理员在"系统设置 &gt; 评分规则与版本"中修改岗位的 AI 评分权重、必要条件或过滤条件，系统会自动保存一个新的规则版本（如 v1.0 &rarr; v1.1），并记录修改者、修改时间和修改内容对比。</p>
+
+    <div class="callout callout-info">
+      <strong>版本记录包含</strong>
+      各评分维度的权重值；硬性筛选条件（学历门槛、工作年限下限等）；AI 模型参数快照（用于复现历史评分结果）；修改人 &amp; 修改时间戳；修改备注（主管填写）
+    </div>
+
+    <h3>版本操作说明</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>操作</th>
+          <th>说明</th>
+          <th>权限</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>查看历史版本</strong></td>
+          <td>浏览所有历史规则版本列表，点击任意版本查看详情</td>
+          <td>HR 专员 / 主管</td>
+        </tr>
+        <tr>
+          <td><strong>版本对比</strong></td>
+          <td>选择两个版本进行 Diff 对比，高亮显示权重变化</td>
+          <td>HR 专员 / 主管</td>
+        </tr>
+        <tr>
+          <td><strong>设为当前版本</strong></td>
+          <td>将历史版本回滚为当前生效版本（需填写回滚原因）</td>
+          <td>HR 主管</td>
+        </tr>
+        <tr>
+          <td><strong>按版本重新评分</strong></td>
+          <td>对现有简历使用历史版本规则重新计算评分，便于横向比较</td>
+          <td>HR 主管</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="path-block"><strong>路径：</strong>系统设置 &rarr; 评分规则与版本 &rarr; 历史版本 &rarr; 选择版本 &rarr; 对比 / 回滚</div>
+
+    <div class="callout callout-warn">
+      <strong>注意</strong>修改评分权重后，已有候选人评分不会自动更新。新规则仅对此后上传的简历生效。如需对历史简历重新评分，需主管在"规则版本管理"中手动触发"按新版本重新评分"操作。
+    </div>
+  </section>
+
+  <!-- ==================== 09 常见问题 ==================== -->
+  <section class="sect" id="faq">
+    <span class="sect-num">09 &mdash; FAQ</span>
+    <h2>常见问题</h2>
+    <p>v3 版本高频疑问解答。</p>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-mark">Q</span>业务负责人可以直接在系统里约候选人面试吗？</div>
+      <div class="faq-a">不可以。面试时间由 HR 专员统一安排，业务负责人只负责填写面试评价和提交结论。这样可以避免候选人收到多方联系，确保统一的候选人体验。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-mark">Q</span>面试官没有在规定时间内填写评价怎么办？</div>
+      <div class="faq-a">系统会在面试结束后第 1 天和第 2 天各发送一次提醒通知。若超过 3 个工作日仍未填写，HR 主管会收到预警，可手动催评或代为填写（填写后会标注"代填"）。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-mark">Q</span>Offer 发出去后，候选人怎么查看和确认？</div>
+      <div class="faq-a">候选人会收到系统发送的邮件（含安全链接），点击后可在网页查看 Offer 详情，并选择"接受"或"拒绝"。无需注册账号，链接有效期与 Offer 有效期一致。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-mark">Q</span>修改了评分权重后，已有的候选人评分会自动更新吗？</div>
+      <div class="faq-a">不会自动更新。系统默认保留历史评分结果，新规则仅对此后上传的简历生效。如需对历史简历重新评分，需主管在"规则版本管理"中手动触发"按新版本重新评分"操作。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-mark">Q</span>候选人拒绝 Offer 后，数据还会计入漏斗报表吗？</div>
+      <div class="faq-a">会。候选人的完整流转路径（投递 &rarr; 初筛 &rarr; 面试 &rarr; Offer &rarr; 拒绝）都会记录在漏斗报表中，并自动归类至"Offer 拒绝"节点。主管可查看拒绝原因分布，用于优化后续招聘策略。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="faq-q-mark">Q</span>候选人已入职，其在人才库的状态会变化吗？</div>
+      <div class="faq-a">若该候选人在人才库中有记录，系统会自动将其状态更新为"已入职（内部）"，并标注入职时间和所属部门。避免未来的招聘流程意外将在职员工纳入候选人范围。</div>
+    </div>
+  </section>
+
+  <!-- ==================== 10 联系支持 ==================== -->
+  <section class="sect" id="support">
+    <span class="sect-num">10 &mdash; Support</span>
+    <h2>联系支持</h2>
+    <p>遇到问题？我们提供多种支持渠道。</p>
+
+    <div class="support-grid">
+      <div class="support-card">
+        <div class="support-icon">&#128172;</div>
+        <h4>系统内反馈</h4>
+        <p>点击右下角"?"按钮，工作日 24h 内响应</p>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">&#128231;</div>
+        <h4>邮件支持</h4>
+        <p>talentscout@52research.com</p>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">&#128214;</div>
+        <h4>帮助中心</h4>
+        <p>系统内含视频教程和操作演示</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="doc-footer">
+    <span>简历筛选平台 &middot; 用户操作手册 &middot; v3.0.0</span>
+    <span>2026-03-28 &middot; 五十二研究所 &middot; 内部文档</span>
+  </footer>
+
+</div><!-- end .doc -->
+</body>
+</html>

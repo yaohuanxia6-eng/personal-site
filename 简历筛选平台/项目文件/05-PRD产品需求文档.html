@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历筛选平台 · 产品需求文档 v3.0.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --ink: #1c1a18;
+  --paper: #faf8f5;
+  --mid: #57534e;
+  --light: #e7e5e0;
+  --faint: #f4f0eb;
+  --red: #e60012;
+  --red-soft: #fce8ea;
+  --blue: #005bac;
+  --blue-soft: #e5effa;
+  --radius: 2px;
+  --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--ink); background: var(--paper); line-height: 1.72; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+/* COVER */
+.cover {
+  min-height: 100vh; display: grid; grid-template-rows: 1fr auto;
+  padding: clamp(40px,8vw,120px) clamp(24px,6vw,80px);
+  background: #1a1410; color: var(--paper); position: relative; overflow: hidden;
+}
+.cover::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse 70% 60% at 85% 15%, rgba(230,0,18,0.50), transparent),
+              radial-gradient(ellipse 40% 40% at 10% 85%, rgba(180,0,10,0.30), transparent);
+}
+.cover-inner { position:relative; z-index:1; max-width:800px; }
+.cover-label { font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:0.5; margin-bottom:32px; }
+.cover h1 { font-family:var(--font-display); font-size:clamp(48px,8vw,88px); font-weight:700; line-height:1.05; letter-spacing:-0.02em; margin-bottom:20px; }
+.cover h1 em { font-style:italic; color:#ff6b6b; }
+.cover-sub { font-size:clamp(16px,2.5vw,22px); font-weight:300; opacity:0.65; max-width:560px; margin-bottom:48px; }
+.cover-meta { display:flex; gap:40px; flex-wrap:wrap; font-size:13px; opacity:0.55; position:relative; z-index:1; align-self:end; }
+.cover-meta dt { font-family:var(--font-mono); text-transform:uppercase; letter-spacing:2px; font-size:10px; margin-bottom:4px; }
+.cover-meta dd { font-weight:500; font-size:14px; opacity:1; color:rgba(255,255,255,0.9); }
+
+/* LAYOUT */
+.doc { max-width:820px; margin:0 auto; padding:0 clamp(20px,4vw,48px); }
+.spacer { height:clamp(48px,8vh,96px); }
+
+/* TOC */
+.toc-wrap { padding:48px 0; border-bottom:1px solid var(--light); }
+.toc-title { font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); margin-bottom:24px; }
+.toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 48px; }
+.toc-grid a { display:flex; align-items:baseline; gap:8px; text-decoration:none; color:var(--ink); padding:6px 0; font-size:14px; transition:color 0.2s; }
+.toc-grid a:hover { color:var(--red); }
+.toc-grid a .num { font-family:var(--font-mono); font-size:11px; color:var(--mid); min-width:28px; }
+
+/* SECTIONS */
+.sect { padding:56px 0 40px; }
+.sect + .sect { border-top:1px solid var(--light); }
+.sect-num { font-family:var(--font-mono); font-size:11px; color:var(--red); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; display:block; }
+.sect h2 { font-family:var(--font-display); font-size:clamp(28px,4vw,36px); font-weight:700; line-height:1.2; letter-spacing:-0.01em; margin-bottom:28px; }
+.sect h3 { font-size:17px; font-weight:600; color:var(--ink); margin:32px 0 12px; padding-left:12px; border-left:3px solid var(--red); }
+.sect h4 { font-size:13px; font-weight:600; color:var(--mid); text-transform:uppercase; letter-spacing:1px; margin:24px 0 10px; font-family:var(--font-mono); }
+.sect p { color:var(--mid); margin-bottom:14px; }
+.sect ul, .sect ol { padding-left:20px; margin-bottom:14px; color:var(--mid); }
+.sect li { margin-bottom:5px; }
+.sect li strong { color:var(--ink); }
+.sect code { font-family:var(--font-mono); font-size:13px; background:var(--faint); padding:2px 6px; border-radius:2px; }
+
+/* TABLES */
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+thead th { text-align:left; font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--mid); padding:10px 16px; border-bottom:2px solid var(--ink); font-weight:500; }
+td { padding:12px 16px; border-bottom:1px solid #e7e5e4; color:var(--mid); vertical-align:top; }
+td strong { color:var(--ink); }
+tbody tr:hover td { background:var(--faint); }
+
+/* TAGS */
+.tag { display:inline-block; padding:1px 8px; border-radius:2px; font-family:var(--font-mono); font-size:11px; font-weight:500; letter-spacing:0.5px; }
+.tag-p0 { background:#fecdd3; color:#9f1239; }
+.tag-p1 { background:#fef3c7; color:#92400e; }
+.tag-p2 { background:#d1fae5; color:#065f46; }
+.tag-new { background:var(--red-soft); color:var(--red); }
+.tag-enhanced { background:var(--blue-soft); color:var(--blue); }
+.tag-v1 { background:#f5f5f4; color:#57534e; border:1px solid var(--light); }
+.tag-v2 { background:var(--blue-soft); color:var(--blue); }
+.tag-v3 { background:var(--red-soft); color:var(--red); }
+
+/* CALLOUTS */
+.callout { padding:20px 24px; margin:20px 0; font-size:14px; border-left:3px solid; }
+.callout-info { border-color:var(--blue); background:var(--blue-soft); color:#1e3a5f; }
+.callout-warn { border-color:#d97706; background:#fffbeb; color:#92400e; }
+.callout-red { border-color:var(--red); background:var(--red-soft); color:#9f1239; }
+.callout strong { display:block; margin-bottom:4px; }
+
+/* METRIC STRIP */
+.metric-strip { display:flex; margin:28px 0; border:1px solid var(--light); }
+.metric-item { flex:1; padding:24px; border-right:1px solid var(--light); text-align:center; }
+.metric-item:last-child { border-right:none; }
+.metric-val { font-family:var(--font-display); font-size:36px; font-weight:700; color:var(--red); line-height:1; display:block; margin-bottom:6px; }
+.metric-lbl { font-family:var(--font-mono); font-size:10px; color:var(--mid); letter-spacing:1px; text-transform:uppercase; }
+
+/* FLOW */
+.flow { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin:16px 0; }
+.flow-step { padding:6px 14px; border:1px solid var(--light); font-size:13px; color:var(--ink); background:white; }
+.flow-arr { color:var(--light); font-size:16px; }
+
+/* COLOR SWATCHES */
+.swatch-row { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0; }
+.swatch { display:flex; align-items:center; gap:8px; padding:6px 12px 6px 6px; border:1px solid var(--light); background:white; }
+.swatch-dot { width:22px; height:22px; border-radius:50%; flex-shrink:0; border:1px solid rgba(0,0,0,0.08); }
+.swatch-info { font-family:var(--font-mono); font-size:12px; color:var(--mid); }
+
+/* SITEMAP */
+.sitemap { font-family:var(--font-mono); font-size:13px; line-height:2; color:var(--mid); padding:24px 32px; background:var(--faint); border:1px solid var(--light); margin:16px 0; }
+.sitemap strong { color:var(--ink); }
+
+/* VERSION BLOCK */
+.ver-block { border:1px solid var(--light); margin-bottom:12px; }
+.ver-block-head { display:flex; align-items:center; gap:16px; padding:14px 20px; background:var(--faint); border-bottom:1px solid var(--light); }
+.ver-tag { font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--red); min-width:60px; }
+.ver-date { font-family:var(--font-mono); font-size:12px; color:var(--mid); }
+.ver-desc { font-size:13px; color:var(--mid); flex:1; }
+.ver-block-body { padding:20px 24px; }
+.ver-block.current .ver-block-head { border-left:3px solid var(--red); }
+
+/* PERM MATRIX */
+.perm-matrix { margin:20px 0; }
+.perm-matrix .header-row { display:grid; grid-template-columns:2fr repeat(4,1fr); gap:4px; padding:10px 0; border-bottom:2px solid var(--light); }
+.perm-matrix .header-row span { font-size:12px; font-weight:600; color:var(--ink); text-align:center; font-family:var(--font-mono); font-size:11px; }
+.perm-matrix .header-row span:first-child { text-align:left; }
+.perm-matrix .data-row { display:grid; grid-template-columns:2fr repeat(4,1fr); gap:4px; padding:9px 0; border-bottom:1px solid var(--light); font-size:13px; }
+.perm-matrix .data-row span { text-align:center; color:var(--mid); }
+.perm-matrix .data-row span:first-child { text-align:left; color:var(--ink); font-weight:500; }
+.perm-check { color:#059669 !important; }
+.perm-cross { color:#d1d5db !important; }
+
+/* STATE FLOW */
+.state-flow { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; align-items:center; }
+.state-node { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border:1px solid var(--light); font-size:13px; color:var(--ink); background:white; }
+.state-node .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.dot-green { background:#22c55e; }
+.dot-yellow { background:#f59e0b; }
+.dot-blue { background:#3b82f6; }
+.dot-purple { background:#8b5cf6; }
+.dot-red { background:#ef4444; }
+.dot-gray { background:#9ca3af; }
+.state-arrow { color:var(--mid); font-size:14px; }
+
+/* INFO CARD */
+.info-card { background:var(--faint); border:1px solid var(--light); padding:20px 24px; margin:16px 0; }
+.info-card h4 { font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--red); margin-bottom:12px; font-weight:600; }
+.info-card ul { list-style:none; padding:0; }
+.info-card ul li { padding:5px 0; color:var(--mid); font-size:14px; display:flex; align-items:flex-start; gap:8px; }
+.info-card ul li::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--red); flex-shrink:0; margin-top:8px; }
+.info-card ul li strong { color:var(--ink); }
+
+/* GRID 2 */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+
+/* RESPONSIVE */
+@media (max-width:700px) { .toc-grid { grid-template-columns:1fr; } .metric-strip { flex-direction:column; } .cover-meta { flex-direction:column; gap:16px; } .grid-2 { grid-template-columns:1fr; } }
+
+/* PRINT */
+@media print { .cover { min-height:auto; padding:48px; } .sect { break-inside:avoid; } }
+
+/* ANIMATE */
+.sect { animation:fadeUp 0.5s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-inner">
+    <p class="cover-label">Product Requirements Document · v3.0.0 · 2026-03-28</p>
+    <h1>简历筛选<br><em>平台</em></h1>
+    <p class="cover-sub">完整版 · 全流程招聘管理平台产品需求文档</p>
+  </div>
+  <dl class="cover-meta">
+    <div>
+      <dt>版本</dt>
+      <dd>v3.0.0</dd>
+    </div>
+    <div>
+      <dt>日期</dt>
+      <dd>2026-03-28</dd>
+    </div>
+    <div>
+      <dt>负责人</dt>
+      <dd>五十二研究所 HR团队</dd>
+    </div>
+    <div>
+      <dt>状态</dt>
+      <dd>已发布</dd>
+    </div>
+  </dl>
+</div>
+
+<!-- DOCUMENT BODY -->
+<div class="doc">
+  <div class="spacer"></div>
+
+  <!-- TOC -->
+  <nav class="toc-wrap">
+    <p class="toc-title">目录 · Table of Contents</p>
+    <div class="toc-grid">
+      <a href="#s00"><span class="num">§00</span> 版本迭代历史</a>
+      <a href="#s05"><span class="num">§05</span> 系统架构</a>
+      <a href="#s01"><span class="num">§01</span> 产品概述</a>
+      <a href="#s06"><span class="num">§06</span> 完整招聘流程</a>
+      <a href="#s02"><span class="num">§02</span> 简历数据来源</a>
+      <a href="#s07"><span class="num">§07</span> AI评分机制</a>
+      <a href="#s03"><span class="num">§03</span> 用户角色与权限</a>
+      <a href="#s08"><span class="num">§08</span> 非功能需求</a>
+      <a href="#s04"><span class="num">§04</span> 功能清单</a>
+      <a href="#s09"><span class="num">§09</span> 视觉设计规范</a>
+    </div>
+  </nav>
+
+  <!-- §00 版本迭代历史 -->
+  <section class="sect" id="s00">
+    <span class="sect-num">§ 00</span>
+    <h2>版本迭代历史</h2>
+
+    <!-- 版本时间线 -->
+    <div class="ver-block">
+      <div class="ver-block-head">
+        <span class="ver-tag">v1.0.0</span>
+        <span class="ver-date">2026-03-10 ~ 04-04（4周）</span>
+        <span class="ver-desc">MVP · 基础简历筛选工具 — 上传解析、AI评分、排序、人工复核，共 9 项功能</span>
+        <span class="tag tag-v1">已归档</span>
+      </div>
+    </div>
+    <div class="ver-block">
+      <div class="ver-block-head">
+        <span class="ver-tag">v2.0.0</span>
+        <span class="ver-date">2026-04-07 ~ 04-25（3周）</span>
+        <span class="ver-desc">增强版 · 协同提效 — 双角色体系、人才库、AI质量闭环、高级筛选、数据看板，共 19 项功能（净增 10 项）</span>
+        <span class="tag tag-v2">已归档</span>
+      </div>
+    </div>
+    <div class="ver-block current">
+      <div class="ver-block-head">
+        <span class="ver-tag">v3.0.0</span>
+        <span class="ver-date">2026-04-28 ~ 05-16（3周）· 全量上线 06-06</span>
+        <span class="ver-desc">完整版 · 全流程招聘平台 — 面试管理、Offer管理、入职管理、规则版本管理、权限审计，共 28 项功能（净增 9 项）</span>
+        <span class="tag tag-v3">当前版本</span>
+      </div>
+    </div>
+
+    <h3>v1.0.0 — MVP版本</h3>
+    <p><strong>背景：</strong>五十二研究所 HR 团队在调研中反映，每个岗位平均收到 150-200 份简历，人工逐一阅读耗时 3-5 天，且不同 HR 专员评判标准不一，导致推荐给业务部门的候选人质量参差不齐。v1 版本聚焦于核心痛点，以最小可行产品形态验证 AI 辅助筛选的可行性与效果。</p>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>设计目标</h4>
+        <ul>
+          <li>将单次简历筛选时间从 3-5 天压缩至 <strong>4 小时以内</strong></li>
+          <li>AI 筛选结果与资深 HR 判断一致率 ≥ 75%</li>
+          <li>支持批量上传，一次处理不少于 50 份简历</li>
+          <li>解析准确率（结构化字段提取）≥ 90%</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>版本局限（已在 v2 改进）</h4>
+        <ul>
+          <li>仅支持单一 HR 角色，无权限分级</li>
+          <li>候选人数据不跨岗位留存，无人才库</li>
+          <li>AI 评分标准固化，无反馈机制</li>
+          <li>招聘流程止步于"推荐面试"，后续无跟踪</li>
+        </ul>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>功能模块</th><th>功能描述</th><th>优先级</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>岗位管理</strong></td><td>创建/编辑/归档岗位，填写 JD 信息（岗位名称、部门、学历要求、技能标签）；配置 AI 评分权重（经验/学历/技能三维度）</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>简历上传</strong></td><td>支持 PDF / Word / 图片格式批量上传，单次最多 50 份；拖拽上传 + 文件选择器双入口；上传进度实时显示</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>AI 解析引擎</strong></td><td>自动提取候选人姓名、联系方式、教育背景、工作经历、技能标签等结构化字段；非标准简历格式容错处理；解析失败处理机制：自动重试（OCR增强模式）→ 人工录入兜底 → 失败状态跟踪，确保无简历遗漏</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>AI 智能评分</strong></td><td>基于岗位 JD 与候选人简历，从技能匹配度、经验相关度、学历符合度三维度打分（0-100）；生成综合评分与评分依据摘要；评分耗时 ≤ 30s/份</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>候选人列表</strong></td><td>按综合评分降序展示；支持按评分区间、学历、工作年限快速筛选；列表显示关键字段（姓名、评分、学校、最近工作）</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>候选人详情</strong></td><td>完整简历预览（原始文件 + 结构化展示）；AI 评分详情与评分依据；HR 备注输入；状态标记（待复核/通过/淘汰）</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>人工复核</strong></td><td>HR 逐一确认 AI 评分结果；可修改候选人最终状态；批量操作（勾选后批量通过/淘汰）</td><td><span class="tag tag-p0">P0</span></td></tr>
+        <tr><td><strong>基础搜索</strong></td><td>在当前岗位候选人中按姓名、技能关键词搜索；支持简单条件组合（学历 + 工作年限）</td><td><span class="tag tag-p1">P1</span></td></tr>
+        <tr><td><strong>简历导出</strong></td><td>将筛选结果导出为 Excel 汇总表（含评分详情）；支持按状态分组导出</td><td><span class="tag tag-p1">P1</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">↓68%</span>
+        <span class="metric-lbl">简历初筛时间缩短</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">78%</span>
+        <span class="metric-lbl">AI与HR判断一致率</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">93%</span>
+        <span class="metric-lbl">简历解析准确率</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">16人</span>
+        <span class="metric-lbl">HR团队全员采用</span>
+      </div>
+    </div>
+
+    <h3>v2.0.0 — 增强版</h3>
+    <p><strong>背景：</strong>v1 上线一周后，HR 主管反馈两个核心问题：① 专员与主管之间缺乏审批流，专员直接操作导致偶有失误；② AI 评分偶尔出现明显偏差，但没有机制将 HR 的判断反馈给系统。同时，跨岗位的优质候选人沉淀需求强烈——上一批次校招的备选简历每次都要重新导入。v2 围绕"协同提效"与"AI 越用越准"两条主线展开迭代。</p>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>迭代重点</h4>
+        <ul>
+          <li>建立 <strong>双角色权限体系</strong>（专员/主管），规范审批流程</li>
+          <li>引入 <strong>AI 质量闭环</strong>，收集 HR 纠错反馈</li>
+          <li>构建 <strong>人才库</strong>，解决跨批次数据断裂</li>
+          <li>上线 <strong>招聘数据看板</strong>，辅助主管决策</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>版本局限（已在 v3 改进）</h4>
+        <ul>
+          <li>流程止步于"通过审批"，面试安排仍在线下</li>
+          <li>业务部门负责人无法在系统内参与招聘</li>
+          <li>Offer 发放和入职跟踪仍依赖邮件/微信</li>
+          <li>评分规则修改后无版本留存，无法回溯</li>
+        </ul>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>功能模块</th><th>功能描述（v2 新增/增强）</th><th>类型</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>双角色权限体系</strong></td><td>新增 HR 主管角色；专员负责日常操作，主管负责审批与配置；角色在团队管理页由管理员分配；权限按角色严格隔离</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>审批中心</strong></td><td>专员提交候选人后进入主管待审批队列；主管可逐一通过/驳回/待定；驳回需填写原因；支持批量审批操作；系统站内通知提醒</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>人才库</strong></td><td>长期存储历次审批通过的候选人；支持自定义标签分组；关键词 + 标签 + 岗位匹配三种搜索方式；新岗位发布时自动推荐库内高匹配候选人</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>AI 质量闭环</strong></td><td>HR 可在评分详情中对任意维度提交"应更高/应更低"纠错反馈；系统记录反馈数据；每月汇总用于模型微调；主管可查看 AI 质量报告（高频纠错项分析）</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>高级筛选器</strong></td><td>在 v1 基础搜索之上，新增多维复合条件筛选：学历范围、工作年限区间、毕业院校类型、专业匹配度、AI 各维度评分区间、复核状态、审批状态等 12 个筛选维度</td><td><span class="tag tag-enhanced">增强</span></td></tr>
+        <tr><td><strong>招聘数据看板</strong></td><td>主管专属；实时展示团队简历处理量、平均处理时长、AI 评分准确率（基于纠正率）、各专员任务完成情况、投递→初筛→审批漏斗转化率；支持按时间范围和岗位筛选；可导出 Excel</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>AI Agent 能力升级</strong></td><td>引入多步推理评分（Chain-of-Thought），评分可解释性增强；新增语义匹配模块，降低关键词误判率；增加校招专项权重模板（淡化工作年限，强化潜力评估）</td><td><span class="tag tag-enhanced">增强</span></td></tr>
+        <tr><td><strong>团队成员管理</strong></td><td>主管可在系统内邀请成员、分配角色、停用账号；成员操作日志记录（可查最近 30 天操作记录）</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>候选人去重检测</strong></td><td>通过姓名 + 手机号/邮箱自动识别跨岗位重复投递；详情页展示"历史申请记录"；存入人才库时提示已有记录可选择更新</td><td><span class="tag tag-new">新增</span></td></tr>
+        <tr><td><strong>通知偏好设置</strong></td><td>用户可自定义站内通知 + 邮件通知的触发场景（新简历上传完成、审批结果、人才库推荐等）</td><td><span class="tag tag-new">新增</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">↑22%</span>
+        <span class="metric-lbl">业务部门候选人满意度</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">↓35%</span>
+        <span class="metric-lbl">AI误判率下降</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">47人</span>
+        <span class="metric-lbl">人才库首批归档候选人</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">0次</span>
+        <span class="metric-lbl">越权操作事件</span>
+      </div>
+    </div>
+
+    <div class="callout callout-red">
+      <strong>v3.0.0 完整版 — 2026-03-28 发布</strong>
+      在 v2 全部 19 项功能基础上，打通面试 → Offer → 入职全链路，新增筛选规则版本管理与业务负责人协作角色，完整详述见以下各章节。
+    </div>
+  </section>
+
+  <!-- §01 产品概述 -->
+  <section class="sect" id="s01">
+    <span class="sect-num">§ 01</span>
+    <h2>产品概述</h2>
+
+    <p>简历筛选平台 v3.0.0 标志着产品从<strong>「简历筛选工具」</strong>正式升级为<strong>「完整招聘管理平台」</strong>。本次升级覆盖了招聘全流程的每一个环节：从简历进入系统、AI智能筛选、HR复核、面试安排与反馈、Offer发起与审批，直到入职管理闭环。</p>
+    <p>面向<strong>五十二研究所</strong> HR团队16人，年招聘120-150人（其中校招占比约40%）的业务场景，v3版本在保留v2全部19项功能的基础上，新增9项核心功能，总计<strong>28项功能</strong>，实现招聘业务的端到端数字化。</p>
+
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">28</span>
+        <span class="metric-lbl">总功能数</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">+9</span>
+        <span class="metric-lbl">v3新增功能</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">15</span>
+        <span class="metric-lbl">系统页面</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">7</span>
+        <span class="metric-lbl">招聘流程节点</span>
+      </div>
+    </div>
+
+    <h3>v3 核心定位</h3>
+    <ul>
+      <li><strong>全流程覆盖：</strong>从"筛选工具"进化为"招聘管理平台"，覆盖招聘全生命周期</li>
+      <li><strong>Inbox 待办模式：</strong>取代传统列表，让HR聚焦当下最需处理的事项</li>
+      <li><strong>面试管理闭环：</strong>约面安排、轮次管理、反馈收集一站式完成</li>
+      <li><strong>Offer与入职管理：</strong>打通后端审批流，减少线下沟通成本</li>
+      <li><strong>规则版本管理：</strong>实现AI评分策略的灰度发布与回滚</li>
+      <li><strong>多LLM模型切换：</strong>DeepSeek-V3 / 通义千问 Qwen-Max，灵活应对不同场景需求</li>
+    </ul>
+  </section>
+
+  <!-- §02 简历数据来源 -->
+  <section class="sect" id="s02">
+    <span class="sect-num">§ 02</span>
+    <h2>简历数据来源</h2>
+
+    <h3>2.1 数据来源概述</h3>
+    <p>系统支持两大数据来源渠道：<strong>本地文件上传</strong>与<strong>招聘平台直连导入</strong>，两种方式可并行使用，所有简历统一进入系统进行解析和AI评分。无论通过何种渠道进入，候选人简历均遵循统一的解析流程和评分标准，确保评估口径一致。</p>
+
+    <div class="flow">
+      <span class="flow-step">本地文件上传</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">文件解析队列</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">AI结构化提取</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">去重检测</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">AI评分</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">进入候选人库</span>
+    </div>
+    <div class="flow">
+      <span class="flow-step">招聘平台导入</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">渠道同步队列</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">AI结构化提取</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">去重检测</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">AI评分</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">进入候选人库</span>
+    </div>
+
+    <h3>2.2 方式一：本地文件上传</h3>
+    <p>HR 专员将简历文件（从任意渠道获取）上传到系统，无需依赖外部平台接口。适用于灵活处理各类来源的简历文件。</p>
+
+    <div class="info-card">
+      <h4>上传规格</h4>
+      <ul>
+        <li><strong>支持格式：</strong>PDF、Word（.doc / .docx）、图片（JPG / PNG）</li>
+        <li><strong>单次上传上限：</strong>最多 50 份，单文件大小不超过 20MB</li>
+        <li><strong>操作方式：</strong>支持拖拽批量上传，也可通过文件选择器多选</li>
+        <li><strong>上传进度：</strong>实时显示各文件解析进度，失败文件单独标红提示</li>
+        <li><strong>图片简历：</strong>自动启用 OCR 识别，识别置信度低于 80% 时提示人工核对</li>
+        <li><strong>解析失败处理：</strong>首次解析失败后自动重试（切换OCR增强模式）；重试仍失败则标记为"解析失败"状态，支持HR手动录入关键字段作为兜底；失败简历在Inbox中单独追踪，确保无遗漏</li>
+      </ul>
+    </div>
+
+    <p><strong>适用场景：</strong>小批量简历、内部推荐、特殊渠道来源的简历（如参加线下招聘会收到的纸质简历扫描件、微信/邮件接收的个人简历等）。</p>
+
+    <h3>2.3 方式二：招聘平台直连导入</h3>
+    <p>系统与主流招聘平台建立数据通道，支持一键或定时同步候选人简历，减少 HR 手动下载、整理、上传的重复劳动。</p>
+
+    <table>
+      <thead>
+        <tr><th>平台</th><th>同步方式</th><th>同步机制</th><th>状态</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Boss直聘</strong></td>
+          <td>企业端开放API</td>
+          <td>一键同步沟通中/已投递的候选人简历至系统，无需手动下载；支持按岗位ID筛选同步范围</td>
+          <td><span class="tag tag-new">已接入</span></td>
+        </tr>
+        <tr>
+          <td><strong>前程无忧（51Job）</strong></td>
+          <td>批量简历包导出</td>
+          <td>使用平台提供的批量简历包导出功能，导入压缩包后系统自动解压并逐一解析</td>
+          <td><span class="tag tag-new">已接入</span></td>
+        </tr>
+        <tr>
+          <td><strong>猎聘（LiePin）</strong></td>
+          <td>职位ID批量同步</td>
+          <td>猎头推荐的候选人简历可通过职位ID批量同步，自动关联至对应岗位</td>
+          <td><span class="tag tag-new">已接入</span></td>
+        </tr>
+        <tr>
+          <td><strong>内部推荐</strong></td>
+          <td>内推链接表单</td>
+          <td>员工通过内推链接提交的推荐简历自动进入对应岗位候选人池，同时记录推荐人信息</td>
+          <td><span class="tag tag-new">已接入</span></td>
+        </tr>
+        <tr>
+          <td><strong>智联招聘</strong></td>
+          <td>API对接（规划中）</td>
+          <td>待平台开放企业版 API 接口后接入</td>
+          <td><span class="tag tag-p1">规划中</span></td>
+        </tr>
+        <tr>
+          <td><strong>LinkedIn</strong></td>
+          <td>API对接（规划中）</td>
+          <td>面向国际招聘岗位，待业务需求明确后接入</td>
+          <td><span class="tag tag-p1">规划中</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2.4 数据清洗与去重</h3>
+    <p>多渠道并行导入时，同一候选人可能通过不同平台投递同一岗位，系统自动执行去重逻辑，避免重复评估。</p>
+
+    <div class="info-card">
+      <h4>去重规则</h4>
+      <ul>
+        <li><strong>去重匹配维度：</strong>姓名 + 手机号 OR 姓名 + 邮箱，满足任一组合即视为同一候选人</li>
+        <li><strong>同岗位去重：</strong>同一候选人在多个渠道投递同一岗位时，合并为一条记录，标注全部来源渠道</li>
+        <li><strong>历史记录保留：</strong>所有来源渠道的原始简历文件均保留，可在候选人详情中查看各渠道版本</li>
+        <li><strong>跨岗位识别：</strong>候选人投递多个岗位时，不合并记录，在各岗位下独立存在，但会在详情页提示"该候选人还投递了其他 N 个岗位"</li>
+        <li><strong>人工确认：</strong>匹配置信度低于阈值时（如仅姓名相同但联系方式不同），提示 HR 人工确认是否为同一人</li>
+      </ul>
+    </div>
+
+    <h3>2.5 数据合规说明</h3>
+
+    <div class="callout callout-info">
+      <strong>数据安全与合规承诺</strong>
+      所有简历数据仅用于招聘用途，存储在组织内网环境，不向第三方传输。系统遵循《个人信息保护法》相关要求执行数据管理。
+    </div>
+
+    <ul>
+      <li><strong>存储环境：</strong>所有候选人数据存储于五十二研究所内网服务器，不上传至任何外部云服务</li>
+      <li><strong>访问控制：</strong>仅授权 HR 团队成员可访问候选人个人信息，系统依照角色权限严格隔离</li>
+      <li><strong>数据使用目的：</strong>候选人信息仅用于本次及后续招聘评估，不用于其他商业目的</li>
+      <li><strong>保留期限：</strong>候选人信息保留期限按《个人信息保护法》要求执行，超过 3 年未被复用的数据会在系统内提示管理员执行清理确认</li>
+      <li><strong>删除权：</strong>如候选人主动要求删除个人信息，HR 管理员可在系统内执行物理删除操作，操作记录写入审计日志</li>
+    </ul>
+  </section>
+
+  <!-- §03 用户角色与权限 -->
+  <section class="sect" id="s03">
+    <span class="sect-num">§ 03</span>
+    <h2>用户角色与权限</h2>
+
+    <p>系统采用基于角色的访问控制（RBAC），共设四级角色，权限由高到低依次为：超级管理员 → 管理员 → HR主管 → HR专员。各角色职责清晰，操作边界明确。</p>
+
+    <h3>角色定义</h3>
+    <table>
+      <thead>
+        <tr><th>角色</th><th>人数（预估）</th><th>主要职责</th><th>核心权限</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>超级管理员</strong></td>
+          <td>1人（IT运维）</td>
+          <td>系统级配置与安全管控</td>
+          <td>所有权限 + 权限分配 + 审计日志</td>
+        </tr>
+        <tr>
+          <td><strong>管理员</strong></td>
+          <td>2-3人（HR负责人）</td>
+          <td>日常系统配置与数据管理</td>
+          <td>岗位监控（只读）、渠道配置、规则管理、报表、团队管理</td>
+        </tr>
+        <tr>
+          <td><strong>HR主管</strong></td>
+          <td>3-4人</td>
+          <td>审批候选人、推进流程、查看报表</td>
+          <td>全流程操作（筛选→面试→Offer→入职）+ 审批权限 + 数据看板</td>
+        </tr>
+        <tr>
+          <td><strong>HR专员</strong></td>
+          <td>8-10人</td>
+          <td>日常简历处理与候选人跟进</td>
+          <td>简历筛选、面试安排、Offer起草（需主管审批）、基础报表查看</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>权限矩阵</h3>
+    <div class="perm-matrix">
+      <div class="header-row">
+        <span>功能模块</span>
+        <span>超级管理员</span>
+        <span>管理员</span>
+        <span>HR主管</span>
+        <span>HR专员</span>
+      </div>
+      <div class="data-row">
+        <span>岗位管理（创建/编辑/归档）— HR功能</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—（仅岗位监控只读）</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+      </div>
+      <div class="data-row">
+        <span>简历筛选与评分</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+      </div>
+      <div class="data-row">
+        <span>面试管理</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+      </div>
+      <div class="data-row">
+        <span>Offer发起与审批</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+      </div>
+      <div class="data-row">
+        <span>入职管理</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+      </div>
+      <div class="data-row">
+        <span>渠道配置</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+        <span class="perm-cross">—</span>
+      </div>
+      <div class="data-row">
+        <span>规则版本管理</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+        <span class="perm-cross">—</span>
+      </div>
+      <div class="data-row">
+        <span>权限与审计</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+        <span class="perm-cross">—</span>
+        <span class="perm-cross">—</span>
+      </div>
+      <div class="data-row">
+        <span>数据报表</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓（仅查看）</span>
+      </div>
+      <div class="data-row">
+        <span>系统设置</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-check">✓</span>
+        <span class="perm-cross">—</span>
+        <span class="perm-cross">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- §04 功能清单 -->
+  <section class="sect" id="s04">
+    <span class="sect-num">§ 04</span>
+    <h2>功能清单</h2>
+
+    <p>v3.0.0 共 28 项功能，涵盖 v1 的 9 项基础功能、v2 新增的 10 项功能，以及 v3 新增的 9 项功能。</p>
+
+    <h3>v3 新增功能（9项）</h3>
+
+    <h4>待办/收件箱（Inbox）</h4>
+    <p>Inbox 是 v3 版本 HR 端的<strong>主入口</strong>，取代传统的列表模式，将所有需要 HR 处理的事项汇聚到一个统一的待办队列中。设计灵感来自现代邮件客户端，让 HR 按优先级处理待办，而非在多个页面间跳转。</p>
+    <div class="info-card">
+      <h4>四大待办队列</h4>
+      <ul>
+        <li><strong>待筛选队列</strong>：新到简历等待 HR 初筛，按 AI 评分预排序，支持批量操作</li>
+        <li><strong>AI解析中队列</strong>：正在被 AI 处理的简历，实时显示解析进度与预计完成时间</li>
+        <li><strong>面试待办队列</strong>：需要安排面试、收集反馈、推进轮次的候选人，按面试日期排序</li>
+        <li><strong>Offer/入职待办队列</strong>：待发 Offer、Offer 审批中、待入职确认的候选人</li>
+      </ul>
+    </div>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>默认排序</td><td>按紧急程度 + 到达时间排序，面试临近的排在前面</td></tr>
+        <tr><td>筛选能力</td><td>按岗位、来源渠道、AI评分区间、待办类型筛选</td></tr>
+        <tr><td>批量操作</td><td>支持全选/多选后批量通过、淘汰、安排面试</td></tr>
+        <tr><td>实时刷新</td><td>WebSocket推送，新简历到达时自动出现在队列中</td></tr>
+        <tr><td>快捷键</td><td>j/k上下导航，e展开详情，p通过，r淘汰</td></tr>
+      </tbody>
+    </table>
+
+    <h4>面试管理（Interviews）</h4>
+    <p>面试管理模块覆盖从<strong>约面安排</strong>到<strong>反馈收集</strong>的完整闭环，支持多轮面试配置。</p>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>约面安排</h4>
+        <ul>
+          <li>选择候选人 → 选择面试轮次 → 安排面试官 → 选择时间段</li>
+          <li>自动检测面试官日历冲突（预留接口）</li>
+          <li>发送面试通知（邮件/短信模板）</li>
+          <li>面试间隔最短30分钟</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>面试轮次配置</h4>
+        <ul>
+          <li>支持自定义轮次数量（默认3轮：初试/复试/终面）</li>
+          <li>每轮可指定面试类型：技术面/行为面/综合面</li>
+          <li>每轮可指定面试官数量和评分权重</li>
+          <li>轮次间可设置自动推进条件</li>
+        </ul>
+      </div>
+    </div>
+    <div class="info-card">
+      <h4>面试反馈收集</h4>
+      <ul>
+        <li>结构化反馈表：技术能力、沟通能力、团队协作、学习潜力、文化匹配（各项1-5分）</li>
+        <li>面试官文字评语（必填，最少50字）</li>
+        <li>面试结论：强烈推荐 / 推荐 / 待定 / 不推荐</li>
+        <li>反馈提交截止时间：面试后24小时内</li>
+        <li>超时未提交自动提醒面试官</li>
+      </ul>
+    </div>
+    <p><strong>面试状态流转：</strong></p>
+    <div class="state-flow">
+      <span class="state-node"><span class="dot dot-blue"></span>待安排</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-yellow"></span>已约面</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-purple"></span>面试中</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-green"></span>已反馈</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-green"></span>通过</span>
+      <span class="state-node"><span class="dot dot-red"></span>取消/爽约</span>
+      <span class="state-node"><span class="dot dot-red"></span>淘汰</span>
+    </div>
+
+    <h4>Offer管理</h4>
+    <p>Offer 模块管理从<strong>Offer发起</strong>到<strong>候选人确认</strong>的全过程，内置审批流转机制。</p>
+    <table>
+      <thead>
+        <tr><th>功能点</th><th>详细说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Offer发起</td><td>HR填写薪资方案、岗位信息、入职日期，提交审批</td></tr>
+        <tr><td>审批流转</td><td>HR主管 → 部门负责人 → HR总监（三级审批，可配置跳过）</td></tr>
+        <tr><td>Offer发送</td><td>审批通过后自动生成Offer邮件，HR确认后发送</td></tr>
+        <tr><td>候选人反馈</td><td>接受/拒绝/需要协商，系统记录反馈原因</td></tr>
+        <tr><td>Offer过期</td><td>设置有效期（默认7天），过期自动标记并提醒HR</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Offer状态流转：</strong></p>
+    <div class="state-flow">
+      <span class="state-node"><span class="dot dot-blue"></span>草稿</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-yellow"></span>审批中</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-purple"></span>已发送</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-green"></span>已接受</span>
+      <span class="state-node"><span class="dot dot-red"></span>审批拒绝</span>
+      <span class="state-node"><span class="dot dot-red"></span>候选人拒绝</span>
+      <span class="state-node"><span class="dot dot-gray"></span>已过期</span>
+    </div>
+
+    <h4>入职管理（Onboarding）</h4>
+    <p>入职管理模块在候选人接受 Offer 后启动，跟进入职前的准备工作，确保从"接受Offer"到"正式入职"无缝衔接。</p>
+    <div class="info-card">
+      <h4>入职管理核心功能</h4>
+      <ul>
+        <li><strong>入职决策：</strong>确认入职日期、分配工号、确定入职部门和导师</li>
+        <li><strong>材料收集：</strong>跟踪候选人提交的入职材料（身份证、学历证、体检报告等）</li>
+        <li><strong>入职提醒：</strong>入职前3天/1天自动提醒HR和候选人</li>
+        <li><strong>入职确认：</strong>候选人实际报到后，HR确认入职状态</li>
+        <li><strong>流程跟进：</strong>入职后30天试用期跟进提醒</li>
+      </ul>
+    </div>
+
+    <h4>渠道与导入配置（Channels）</h4>
+    <p>管理员可在 Channels 页面配置各招聘渠道的简历导入策略，包括同步频率、解析策略和失败重试机制。</p>
+    <table>
+      <thead>
+        <tr><th>渠道</th><th>同步方式</th><th>同步周期</th><th>解析策略</th><th>失败重试</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>邮箱简历</td><td>IMAP监听</td><td>实时</td><td>附件提取+正文解析</td><td>3次，间隔5min</td></tr>
+        <tr><td>招聘网站</td><td>API对接</td><td>每30分钟</td><td>结构化数据映射</td><td>3次，间隔10min</td></tr>
+        <tr><td>内部推荐</td><td>表单提交</td><td>实时</td><td>表单字段映射</td><td>即时反馈</td></tr>
+        <tr><td>校招批量</td><td>文件上传</td><td>手动触发</td><td>批量文件解析</td><td>失败文件标记</td></tr>
+        <tr><td>猎头渠道</td><td>邮件解析</td><td>每小时</td><td>邮件模板匹配</td><td>3次，间隔15min</td></tr>
+      </tbody>
+    </table>
+
+    <h4>评分规则与版本（已合并至"系统设置"Tab）</h4>
+    <p>"规则与模型"不再作为独立导航项，已合并到<strong>系统设置</strong>页面中作为"评分规则与版本"Tab。AI 评分规则支持<strong>版本化管理</strong>，每次修改评分规则会生成新的版本号，支持灰度发布和版本回滚。</p>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>版本管理机制</h4>
+        <ul>
+          <li>版本号格式：主版本.次版本.修订号（如 1.2.3）</li>
+          <li>每次修改自动递增修订号</li>
+          <li>重大调整需手动升级主/次版本号</li>
+          <li>每个版本保留完整的规则快照</li>
+          <li>版本间可视化差异对比（Diff View）</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>灰度发布</h4>
+        <ul>
+          <li>选择灰度比例（10% / 30% / 50% / 100%）</li>
+          <li>灰度期间新旧版本并行运行</li>
+          <li>实时对比新旧版本的评分分布差异</li>
+          <li>灰度效果达标后一键全量发布</li>
+          <li>异常情况下一键回滚到上一稳定版本</li>
+        </ul>
+      </div>
+    </div>
+    <p><strong>版本生命周期：</strong></p>
+    <div class="state-flow">
+      <span class="state-node"><span class="dot dot-blue"></span>草稿</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-yellow"></span>测试中</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-purple"></span>灰度发布</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-green"></span>全量生效</span>
+      <span class="state-arrow">→</span>
+      <span class="state-node"><span class="dot dot-gray"></span>已归档</span>
+    </div>
+
+    <h4>权限与审计（Permissions）</h4>
+    <p>精细化的权限控制和操作审计日志，满足内部合规要求。</p>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>权限控制</h4>
+        <ul>
+          <li>基于角色的访问控制（RBAC）</li>
+          <li>四级角色：超级管理员/管理员/HR主管/HR专员</li>
+          <li>支持自定义角色和权限组合</li>
+          <li>数据隔离：HR只能查看自己负责的岗位数据</li>
+          <li>敏感操作二次确认</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>审计日志</h4>
+        <ul>
+          <li>记录所有用户操作（时间、人员、动作、对象）</li>
+          <li>日志保留周期：365天</li>
+          <li>支持按时间/人员/操作类型筛选</li>
+          <li>关键操作（删除、权限变更）高亮标记</li>
+          <li>日志导出（CSV格式）</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>业务方填报链接</h4>
+    <p>管理员可生成<strong>业务方填报链接</strong>，邀请用人部门通过在线表单填写岗位的用人标准和要求，无需登录系统即可使用。</p>
+    <div class="info-card">
+      <h4>填报表单内容</h4>
+      <ul>
+        <li>岗位基本信息（名称、部门、级别、汇报对象）</li>
+        <li>核心技能要求（必须/优先/加分项）</li>
+        <li>学历与经验要求</li>
+        <li>期望到岗时间</li>
+        <li>团队文化与软性要求</li>
+        <li>薪资预算范围（可选）</li>
+      </ul>
+    </div>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>链接有效期</td><td>默认7天，可自定义</td></tr>
+        <tr><td>访问权限</td><td>无需登录，通过唯一 token 鉴权</td></tr>
+        <tr><td>提交后处理</td><td>自动生成岗位草稿，通知管理员审核</td></tr>
+        <tr><td>重复提交</td><td>同一链接只能提交一次</td></tr>
+      </tbody>
+    </table>
+
+    <h4>多LLM模型切换</h4>
+    <p>v3 版本支持在 <strong>DeepSeek-V3</strong> 和 <strong>通义千问 Qwen-Max</strong> 之间灵活切换，并提供延迟与成本对比数据辅助决策。</p>
+    <table>
+      <thead>
+        <tr><th>对比维度</th><th>DeepSeek-V3</th><th>通义千问 Qwen-Max</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>平均延迟</td><td><code>1.2s</code></td><td><code>~900ms</code></td></tr>
+        <tr><td>单次成本</td><td><code>~0.02 CNY</code></td><td><code>~0.03 CNY</code></td></tr>
+        <tr><td>中文理解</td><td>优秀（原生中文训练）</td><td>优秀（阿里云原生中文大模型）</td></tr>
+        <tr><td>复杂推理</td><td>良好</td><td>优秀</td></tr>
+        <tr><td>推荐场景</td><td>日常筛选、大批量处理</td><td>高级别岗位/复杂语义评估</td></tr>
+      </tbody>
+    </table>
+    <div class="info-card">
+      <h4>切换策略</h4>
+      <ul>
+        <li>按岗位级别自动选择：P5及以下使用DeepSeek-V3，P6及以上使用通义千问 Qwen-Max</li>
+        <li>管理员可手动为特定岗位指定模型</li>
+        <li>全局默认模型可在 Settings 中配置</li>
+        <li>切换后历史评分不受影响，新评分标记模型来源</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- §05 系统架构 -->
+  <section class="sect" id="s05">
+    <span class="sect-num">§ 05</span>
+    <h2>系统架构</h2>
+
+    <p>v3 版本对系统页面结构进行了全面扩展。HR端从 v2 的 3 个核心页面扩展到 <strong>6 个页面</strong>，管理员端从 v2 的 6 个页面扩展到 <strong>9 个页面</strong>，总计 15 个系统页面。</p>
+
+    <h3>页面结构</h3>
+    <div class="sitemap">
+      <strong>HR 端（6页）</strong><br>
+      ├── 📥 Inbox 待办 <span class="tag tag-new" style="vertical-align:middle;">NEW</span><br>
+      ├── ⚙ Workbench 筛选台<br>
+      ├── 📅 Interviews 面试管理 <span class="tag tag-new" style="vertical-align:middle;">NEW</span><br>
+      ├── ✅ Offers <span class="tag tag-new" style="vertical-align:middle;">NEW</span><br>
+      ├── 👥 Onboarding 入职管理 <span class="tag tag-new" style="vertical-align:middle;">NEW</span><br>
+      └── 🗂 Pool 候选人库<br>
+      <br>
+      <strong>管理员端（9页）</strong><br>
+      ├── 📊 Dashboard 仪表盘<br>
+      ├── 💼 Jobs 岗位监控（只读） <span class="tag tag-enhanced" style="vertical-align:middle;">变更</span><br>
+      ├── 🔗 Channels 渠道配置 <span class="tag tag-new" style="vertical-align:middle;">NEW</span><br>
+      ├── 📈 Analytics 报表<br>
+      ├── 🔒 Permissions 权限与审计 <span class="tag tag-new" style="vertical-align:middle;">NEW</span><br>
+      ├── ⚙ Settings 系统设置（含3个Tab：AI模型与策略 / 评分规则与版本 / 通知与工作流） <span class="tag tag-enhanced" style="vertical-align:middle;">变更</span><br>
+      └── ✔ Approved 已通过库<br>
+      <br>
+      <strong>HR 端新增</strong><br>
+      └── 💼 Jobs 岗位管理（创建/编辑/归档）<span class="tag tag-enhanced" style="vertical-align:middle;">变更：由管理员端移至HR端</span>
+    </div>
+
+    <h3>技术架构要点</h3>
+    <table>
+      <thead>
+        <tr><th>层次</th><th>技术选型</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>前端</td><td>React + TypeScript</td><td>SPA，支持 Chrome/Edge/Firefox 最近2个主要版本</td></tr>
+        <tr><td>后端</td><td>Node.js / Python FastAPI</td><td>RESTful API + WebSocket（实时推送）</td></tr>
+        <tr><td>AI引擎</td><td>DeepSeek-V3 / 通义千问 Qwen-Max</td><td>多模型调度，支持降级策略</td></tr>
+        <tr><td>存储</td><td>PostgreSQL + 对象存储</td><td>结构化数据 + 原始文件，均部署于内网</td></tr>
+        <tr><td>队列</td><td>Redis + 消息队列</td><td>简历解析任务异步处理</td></tr>
+        <tr><td>认证</td><td>JWT + RBAC</td><td>基于角色的访问控制</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §06 完整招聘流程 -->
+  <section class="sect" id="s06">
+    <span class="sect-num">§ 06</span>
+    <h2>完整招聘流程</h2>
+
+    <p>v3 版本实现了从简历进入到入职确认的 <strong>7步完整招聘流程</strong>，每一步都有清晰的状态流转和操作指引。</p>
+
+    <div class="flow">
+      <span class="flow-step">① 简历投递<br><small style="color:var(--mid);font-size:11px;">多渠道汇聚</small></span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">② AI筛选<br><small style="color:var(--mid);font-size:11px;">自动评分</small></span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">③ HR复核<br><small style="color:var(--mid);font-size:11px;">人工确认</small></span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">④ 面试安排<br><small style="color:var(--mid);font-size:11px;">多轮面试</small></span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">⑤ 面试反馈<br><small style="color:var(--mid);font-size:11px;">结构化评估</small></span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">⑥ Offer<br><small style="color:var(--mid);font-size:11px;">审批发放</small></span>
+      <span class="flow-arr">→</span>
+      <span class="flow-step">⑦ 入职<br><small style="color:var(--mid);font-size:11px;">报到确认</small></span>
+    </div>
+
+    <div class="info-card">
+      <h4>流程关键SLA指标</h4>
+      <ul>
+        <li><strong>简历投递 → AI筛选：</strong>自动触发，平均处理时间 &lt; 30秒/份</li>
+        <li><strong>AI筛选 → HR复核：</strong>进入 Inbox 待办队列，SLA目标 ≤ 2个工作日</li>
+        <li><strong>HR复核 → 面试安排：</strong>通过筛选后 ≤ 3个工作日安排首轮面试</li>
+        <li><strong>面试安排 → 面试反馈：</strong>面试后24小时内收集完反馈</li>
+        <li><strong>面试反馈 → Offer：</strong>终面通过后 ≤ 2个工作日发出 Offer</li>
+        <li><strong>Offer → 入职：</strong>接受 Offer 后进入入职准备流程</li>
+      </ul>
+    </div>
+
+    <h3>候选人状态全流程</h3>
+    <table>
+      <thead>
+        <tr><th>阶段</th><th>候选人状态</th><th>操作人</th><th>触发条件</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>简历阶段</td><td>待解析 → 待复核 → 通过/淘汰</td><td>AI自动 + HR专员</td><td>简历上传/导入后</td></tr>
+        <tr><td>审批阶段</td><td>待审批 → 审批通过/驳回</td><td>HR主管</td><td>HR专员提交推荐</td></tr>
+        <tr><td>面试阶段</td><td>待安排 → 已约面 → 面试中 → 已反馈</td><td>HR专员 + 面试官</td><td>审批通过后</td></tr>
+        <tr><td>Offer阶段</td><td>草稿 → 审批中 → 已发送 → 已接受/拒绝</td><td>HR主管 + 审批链</td><td>终面通过后</td></tr>
+        <tr><td>入职阶段</td><td>待入职 → 材料收集中 → 已入职/放弃入职</td><td>HR专员</td><td>接受Offer后</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §07 AI评分机制 -->
+  <section class="sect" id="s07">
+    <span class="sect-num">§ 07</span>
+    <h2>AI 评分机制</h2>
+
+    <p>AI 评分是系统的核心能力，贯穿于简历筛选的全流程。v3 版本在 v2 的基础上引入了规则版本感知和多模型调度能力，进一步提升了评分的稳定性和可维护性。</p>
+
+    <h3>评分维度</h3>
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">技能</span>
+        <span class="metric-lbl">匹配度（默认权重40%）</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">经验</span>
+        <span class="metric-lbl">相关度（默认权重35%）</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">学历</span>
+        <span class="metric-lbl">符合度（默认权重25%）</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>维度</th><th>评分逻辑</th><th>可调范围</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>技能匹配度</strong></td><td>将候选人技能标签与岗位 JD 要求技能做语义相似度匹配，区分"必须具备"与"优先具备"两级权重</td><td>20%-60%</td></tr>
+        <tr><td><strong>经验相关度</strong></td><td>分析工作经历与目标岗位的行业、职能、项目类型匹配程度；使用 Chain-of-Thought 多步推理防止关键词误判</td><td>20%-60%</td></tr>
+        <tr><td><strong>学历符合度</strong></td><td>比对候选人学历、院校、专业与岗位硬性要求；校招模式下此维度权重自动降低，潜力评估权重上升</td><td>10%-40%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>AI Agent 核心能力（v3更新）</h3>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>规则版本感知</h4>
+        <ul>
+          <li>AI Agent 自动加载当前生效版本的评分规则</li>
+          <li>灰度期间按配置比例分流到不同版本</li>
+          <li>评分结果记录使用的规则版本号</li>
+          <li>版本切换时无缝过渡，不影响正在处理的简历</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>多模型调度</h4>
+        <ul>
+          <li>根据岗位配置自动选择 LLM 模型</li>
+          <li>模型不可用时自动降级到备选模型</li>
+          <li>记录每次评分使用的模型和延迟数据</li>
+          <li>支持 A/B 测试模式对比不同模型效果</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>AI质量闭环（v2引入，v3持续优化）</h3>
+    <p>HR 可在评分详情中对任意维度提交"应更高/应更低"纠错反馈。系统记录反馈数据，每月汇总用于模型微调。主管可查看 AI 质量报告，分析高频纠错项，持续提升评分准确率。</p>
+
+    <div class="callout callout-info">
+      <strong>评分透明度原则</strong>
+      每份简历的 AI 评分均附有评分依据说明，HR 可查看各维度得分及具体原因描述，确保评分结果可解释、可验证。
+    </div>
+  </section>
+
+  <!-- §08 非功能需求 -->
+  <section class="sect" id="s08">
+    <span class="sect-num">§ 08</span>
+    <h2>非功能需求</h2>
+
+    <table>
+      <thead>
+        <tr><th>指标</th><th>目标</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>页面加载时间</td><td><code>≤ 2s</code></td><td>首屏加载（含数据请求）</td></tr>
+        <tr><td>API响应时间</td><td><code>≤ 500ms</code></td><td>P95分位</td></tr>
+        <tr><td>AI评分延迟</td><td><code>≤ 30s</code></td><td>单份简历端到端</td></tr>
+        <tr><td>系统可用性</td><td><code>99.5%</code></td><td>月度 SLA</td></tr>
+        <tr><td>并发用户</td><td><code>≥ 20</code></td><td>同时在线用户</td></tr>
+        <tr><td>数据备份</td><td><code>每日</code></td><td>全量备份，保留30天</td></tr>
+        <tr><td>浏览器兼容</td><td>Chrome / Edge / Firefox</td><td>最近2个主要版本</td></tr>
+        <tr><td>审计日志留存</td><td><code>365天</code></td><td>所有操作日志</td></tr>
+        <tr><td>文件存储安全</td><td>内网部署</td><td>不上传至外部云服务</td></tr>
+        <tr><td>数据加密</td><td>传输+存储加密</td><td>HTTPS传输，AES-256存储加密</td></tr>
+      </tbody>
+    </table>
+
+    <h3>埋点事件（v3新增）</h3>
+    <p>v3 版本在 v2 已有埋点基础上，新增以下埋点事件以覆盖新功能的数据采集需求。</p>
+    <table>
+      <thead>
+        <tr><th>事件名称</th><th>触发时机</th><th>关键参数</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>inbox_view</code></td><td>进入Inbox页面</td><td>queue_type, pending_count</td></tr>
+        <tr><td><code>inbox_action</code></td><td>在Inbox中执行操作</td><td>action_type, candidate_id, batch_size</td></tr>
+        <tr><td><code>interview_schedule</code></td><td>安排面试</td><td>round, interviewer_count, candidate_id</td></tr>
+        <tr><td><code>interview_feedback</code></td><td>提交面试反馈</td><td>round, conclusion, scores, latency</td></tr>
+        <tr><td><code>offer_create</code></td><td>发起Offer</td><td>job_id, candidate_id, salary_range</td></tr>
+        <tr><td><code>offer_approve</code></td><td>Offer审批操作</td><td>action(approve/reject), approver_role</td></tr>
+        <tr><td><code>onboarding_confirm</code></td><td>确认入职</td><td>candidate_id, onboard_date</td></tr>
+        <tr><td><code>channel_config</code></td><td>修改渠道配置</td><td>channel_type, sync_interval</td></tr>
+        <tr><td><code>rule_version_publish</code></td><td>发布规则版本</td><td>version, publish_type(gray/full)</td></tr>
+        <tr><td><code>llm_switch</code></td><td>切换LLM模型</td><td>from_model, to_model, scope</td></tr>
+        <tr><td><code>biz_form_submit</code></td><td>业务方提交填报</td><td>form_id, job_draft_id</td></tr>
+        <tr><td><code>audit_log_export</code></td><td>导出审计日志</td><td>filter_params, record_count</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §09 视觉设计规范 -->
+  <section class="sect" id="s09">
+    <span class="sect-num">§ 09</span>
+    <h2>视觉设计规范</h2>
+
+    <div class="callout callout-info">
+      <strong>原型优先原则</strong>
+      所有视觉细节以项目原型文件（<code>项目原型.html</code>）为准，本规范为原型的文字描述版本，两者有差异时以原型为准。
+    </div>
+
+    <h3>9.1 设计理念</h3>
+    <p>系统视觉遵循<strong>「效率优先、信息清晰」</strong>原则。界面采用浅色系（<code>#f4f6f8</code> 背景），降低长时间使用的视觉疲劳；主色采用组织标准色（中电科红/蓝）；信息层级清晰，重要操作突出，辅助信息弱化，减少视觉干扰。</p>
+    <p>整体风格追求<strong>专业、克制、高效</strong>，避免过度装饰。HR 使用场景以信息处理为主，设计应服务于工作流而非自我展示。</p>
+
+    <h3>9.2 色彩规范</h3>
+
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#e60012;"></div>
+        <div class="swatch-info">#e60012<br>品牌主色（中电科红）</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#005bac;"></div>
+        <div class="swatch-info">#005bac<br>品牌辅色（中电科蓝）</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#22c55e;"></div>
+        <div class="swatch-info">#22c55e<br>成功色</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#f59e0b;"></div>
+        <div class="swatch-info">#f59e0b<br>警告色</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#b91c1c;"></div>
+        <div class="swatch-info">#b91c1c<br>危险色</div>
+      </div>
+    </div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#f4f6f8; border:1px solid #ddd;"></div>
+        <div class="swatch-info">#f4f6f8<br>页面背景</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:rgba(255,255,255,0.85); border:1px solid #ddd;"></div>
+        <div class="swatch-info">rgba(255,255,255,0.85)<br>卡片背景</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#111827;"></div>
+        <div class="swatch-info">#111827<br>主文字</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#374151;"></div>
+        <div class="swatch-info">#374151<br>次要文字</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#6b7280;"></div>
+        <div class="swatch-info">#6b7280<br>辅助文字</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>色彩用途</th><th>色值</th><th>使用场景</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>品牌主色</strong></td><td><code>#e60012</code>（中电科红）</td><td>主按钮、激活状态、重要标签、高亮元素</td></tr>
+        <tr><td><strong>品牌辅色</strong></td><td><code>#005bac</code>（中电科蓝）</td><td>链接、次要强调、信息提示框</td></tr>
+        <tr><td><strong>成功色</strong></td><td><code>#22c55e</code></td><td>通过/成功/已入职状态</td></tr>
+        <tr><td><strong>警告色</strong></td><td><code>#f59e0b</code></td><td>待处理/即将超时/警告状态</td></tr>
+        <tr><td><strong>危险色</strong></td><td><code>#b91c1c</code></td><td>淘汰/删除/错误/拒绝状态</td></tr>
+        <tr><td><strong>页面背景</strong></td><td><code>#f4f6f8</code></td><td>整体页面背景色</td></tr>
+        <tr><td><strong>卡片背景</strong></td><td><code>rgba(255,255,255,0.85)</code></td><td>内容卡片、模态框、侧边栏</td></tr>
+        <tr><td><strong>主文字</strong></td><td><code>#111827</code></td><td>标题、重要字段值</td></tr>
+        <tr><td><strong>次要文字</strong></td><td><code>#374151</code></td><td>正文内容、表格数据</td></tr>
+        <tr><td><strong>辅助文字</strong></td><td><code>#6b7280</code></td><td>提示文字、占位符、时间戳</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9.3 字体规范</h3>
+    <p>系统字体栈：<code>-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif</code>，优先使用系统字体以保证渲染一致性和加载速度。</p>
+    <table>
+      <thead>
+        <tr><th>用途</th><th>字号</th><th>字重</th><th>行高</th><th>示例场景</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>页面主标题</td><td>24px</td><td>700</td><td>1.3</td><td>页面 H1 标题</td></tr>
+        <tr><td>区块标题</td><td>18px</td><td>600</td><td>1.4</td><td>卡片标题、模块标题</td></tr>
+        <tr><td>列表标题</td><td>15px</td><td>600</td><td>1.5</td><td>表格列名、标签文字</td></tr>
+        <tr><td>正文内容</td><td>14px</td><td>400</td><td>1.6</td><td>候选人信息、评分说明</td></tr>
+        <tr><td>辅助信息</td><td>12px</td><td>400</td><td>1.5</td><td>时间戳、提示文字、角标</td></tr>
+        <tr><td>数字/代码</td><td>13px</td><td>500</td><td>1.4</td><td>分数、版本号、ID等</td></tr>
+      </tbody>
+    </table>
+    <p>数字与代码内容使用等宽字体：<code>JetBrains Mono, 'SF Mono', Consolas, monospace</code>，确保数字对齐和代码可读性。</p>
+
+    <h3>9.4 间距与圆角</h3>
+    <p>基础间距单位 <strong>4px</strong>，所有间距值均为4的倍数，常用值序列：<code>4 / 8 / 12 / 16 / 20 / 24 / 32 / 48px</code>。</p>
+
+    <table>
+      <thead>
+        <tr><th>圆角用途</th><th>值</th><th>使用场景</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>大卡片</td><td><code>16px</code></td><td>候选人卡片、岗位卡片、主要内容容器</td></tr>
+        <tr><td>小组件</td><td><code>10px</code></td><td>标签、徽章、小型卡片</td></tr>
+        <tr><td>按钮/输入框</td><td><code>6px</code></td><td>操作按钮、文本输入框、选择器</td></tr>
+        <tr><td>图标按钮</td><td><code>8px</code></td><td>图标型操作按钮</td></tr>
+        <tr><td>弹窗/抽屉</td><td><code>12px（顶部）</code></td><td>模态弹窗、右侧抽屉面板</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9.5 核心组件规范</h3>
+
+    <table>
+      <thead>
+        <tr><th>组件</th><th>背景色</th><th>圆角</th><th>阴影</th><th>文字样式</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>主操作按钮</strong></td>
+          <td><code>#e60012</code></td>
+          <td>6px</td>
+          <td>无</td>
+          <td>14px / 600 / #fff</td>
+        </tr>
+        <tr>
+          <td><strong>次要按钮</strong></td>
+          <td><code>#fff</code>，边框 <code>#e5e7eb</code></td>
+          <td>6px</td>
+          <td>无</td>
+          <td>14px / 500 / #374151</td>
+        </tr>
+        <tr>
+          <td><strong>文本输入框</strong></td>
+          <td><code>#fff</code>，边框 <code>#d1d5db</code>（聚焦时 <code>#e60012</code>）</td>
+          <td>6px</td>
+          <td>聚焦时 0 0 0 3px rgba(230,0,18,0.15)</td>
+          <td>14px / 400 / #111827</td>
+        </tr>
+        <tr>
+          <td><strong>候选人卡片</strong></td>
+          <td><code>rgba(255,255,255,0.85)</code></td>
+          <td>16px</td>
+          <td>0 1px 3px rgba(0,0,0,0.08)</td>
+          <td>标题15px/600，正文14px/400</td>
+        </tr>
+        <tr>
+          <td><strong>状态标签（通过）</strong></td>
+          <td><code>#dcfce7</code></td>
+          <td>10px</td>
+          <td>无</td>
+          <td>12px / 600 / #166534</td>
+        </tr>
+        <tr>
+          <td><strong>状态标签（待处理）</strong></td>
+          <td><code>#fef9c3</code></td>
+          <td>10px</td>
+          <td>无</td>
+          <td>12px / 600 / #854d0e</td>
+        </tr>
+        <tr>
+          <td><strong>状态标签（淘汰）</strong></td>
+          <td><code>#fee2e2</code></td>
+          <td>10px</td>
+          <td>无</td>
+          <td>12px / 600 / #991b1b</td>
+        </tr>
+        <tr>
+          <td><strong>评分环</strong></td>
+          <td>透明，SVG圆环</td>
+          <td>—</td>
+          <td>无</td>
+          <td>评分数字 24px / 700 / #111827</td>
+        </tr>
+        <tr>
+          <td><strong>数据表格</strong></td>
+          <td>表头 <code>#f9fafb</code>，行 <code>#fff</code>，悬停 <code>#f9fafb</code></td>
+          <td>0</td>
+          <td>边框 1px <code>#e5e7eb</code></td>
+          <td>表头12px/600/mid，行14px/400</td>
+        </tr>
+        <tr>
+          <td><strong>右侧抽屉面板</strong></td>
+          <td><code>#fff</code></td>
+          <td>12px（左上/左下）</td>
+          <td>-4px 0 24px rgba(0,0,0,0.12)</td>
+          <td>宽度480px，覆盖遮罩层</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>9.6 原型参考</h3>
+    <p>所有视觉细节以项目原型文件（<code>项目原型.html</code>）为准，本规范为原型的文字描述版本，两者有差异时以原型为准。</p>
+    <p>原型文件涵盖以下页面的完整交互设计：Inbox 待办、Workbench 筛选台、候选人详情抽屉、面试管理、Offer管理、入职管理、Dashboard 仪表盘、岗位管理、规则版本管理、权限管理。</p>
+    <div class="callout callout-warn">
+      <strong>设计变更流程</strong>
+      如需对视觉规范进行调整，须先更新原型文件，经 HR 团队负责人确认后，再同步修改本规范文档，确保两者始终保持一致。
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- FOOTER -->
+  <footer style="text-align:center; padding:40px 0; border-top:1px solid var(--light); font-family:var(--font-mono); font-size:11px; color:var(--mid); letter-spacing:1px; text-transform:uppercase;">
+    简历筛选平台 PRD v3.0.0 &nbsp;&middot;&nbsp; 五十二研究所 HR团队 &nbsp;&middot;&nbsp; 2026-03-28 &nbsp;&middot;&nbsp; 内部文档
+  </footer>
+</div>
+
+</body>
+</html>

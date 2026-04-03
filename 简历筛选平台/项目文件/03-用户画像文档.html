@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户画像分析 — 简历筛选平台 · 五十二研究所</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --ink: #1c1a18; --paper: #faf8f5; --mid: #57534e; --light: #e7e5e0; --faint: #f4f0eb;
+  --red: #e60012; --red-soft: #fce8ea; --blue: #005bac; --blue-soft: #e5effa;
+  --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--font-body); color:var(--ink); background:var(--paper); line-height:1.72; font-size:15px; -webkit-font-smoothing:antialiased; }
+
+.cover { min-height:100vh; display:grid; grid-template-rows:1fr auto; padding:clamp(40px,8vw,120px) clamp(24px,6vw,80px); background:#1a1410; color:var(--paper); position:relative; overflow:hidden; }
+.cover::before { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 65% 55% at 82% 22%, rgba(124,58,237,0.45), transparent), radial-gradient(ellipse 45% 50% at 12% 78%, rgba(219,39,119,0.28), transparent); }
+.cover-inner { position:relative; z-index:1; max-width:800px; }
+.cover-label { font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:0.5; margin-bottom:32px; }
+.cover h1 { font-family:var(--font-display); font-size:clamp(40px,7vw,80px); font-weight:700; line-height:1.05; letter-spacing:-0.02em; margin-bottom:20px; }
+.cover h1 em { font-style:italic; color:#c084fc; }
+.cover-sub { font-size:clamp(16px,2.5vw,22px); font-weight:300; opacity:0.65; max-width:560px; margin-bottom:48px; }
+.cover-meta { display:flex; gap:40px; flex-wrap:wrap; opacity:0.55; position:relative; z-index:1; align-self:end; }
+.cover-meta dt { font-family:var(--font-mono); text-transform:uppercase; letter-spacing:2px; font-size:10px; margin-bottom:4px; }
+.cover-meta dd { font-weight:500; font-size:14px; color:rgba(255,255,255,0.9); }
+
+.doc { max-width:820px; margin:0 auto; padding:0 clamp(20px,4vw,48px); }
+.toc-wrap { padding:48px 0; border-bottom:1px solid var(--light); }
+.toc-title { font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); margin-bottom:24px; }
+.toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 48px; }
+.toc-grid a { display:flex; align-items:baseline; gap:8px; text-decoration:none; color:var(--ink); padding:6px 0; font-size:14px; transition:color 0.2s; }
+.toc-grid a:hover { color:var(--red); }
+.toc-grid a .num { font-family:var(--font-mono); font-size:11px; color:var(--mid); min-width:28px; }
+
+.sect { padding:56px 0 40px; }
+.sect + .sect { border-top:1px solid var(--light); }
+.sect-num { font-family:var(--font-mono); font-size:11px; color:var(--red); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; display:block; }
+.sect h2 { font-family:var(--font-display); font-size:clamp(28px,4vw,36px); font-weight:700; line-height:1.2; letter-spacing:-0.01em; margin-bottom:28px; }
+.sect h3 { font-size:17px; font-weight:600; color:var(--ink); margin:32px 0 12px; padding-left:12px; border-left:3px solid var(--red); }
+.sect h4 { font-size:13px; font-weight:600; color:var(--mid); text-transform:uppercase; letter-spacing:1px; margin:24px 0 10px; font-family:var(--font-mono); }
+.sect p { color:var(--mid); margin-bottom:14px; }
+.sect ul, .sect ol { padding-left:20px; margin-bottom:14px; color:var(--mid); }
+.sect li { margin-bottom:6px; }
+.sect li strong { color:var(--ink); }
+
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+thead th { text-align:left; font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--mid); padding:10px 16px; border-bottom:2px solid var(--ink); font-weight:500; }
+td { padding:12px 16px; border-bottom:1px solid #e7e5e4; color:var(--mid); vertical-align:top; }
+td strong { color:var(--ink); }
+tbody tr:hover td { background:var(--faint); }
+
+.callout { padding:20px 24px; margin:20px 0; font-size:14px; border-left:3px solid; }
+.callout-info { border-color:var(--blue); background:var(--blue-soft); color:#1e3a5f; }
+.callout-warn { border-color:#d97706; background:#fffbeb; color:#92400e; }
+.callout strong { display:block; margin-bottom:4px; }
+
+/* 用户画像卡片 — 9人网格 */
+.persona-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid var(--light); margin:20px 0; }
+.persona-card { padding:24px; border-right:1px solid var(--light); border-bottom:1px solid var(--light); }
+.persona-card:nth-child(3n) { border-right:none; }
+.persona-name { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+.persona-role { font-family:var(--font-mono); font-size:11px; color:var(--red); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.persona-card p { font-size:13px; color:var(--mid); margin-bottom:8px; }
+.persona-card .p-label { font-family:var(--font-mono); font-size:10px; color:var(--mid); opacity:0.6; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
+
+/* 引语块 */
+.quote-block { border-left:3px solid var(--red); padding:16px 20px; margin:16px 0; background:var(--faint); }
+.quote-text { font-family:var(--font-display); font-size:16px; font-style:italic; color:var(--ink); margin-bottom:8px; }
+.quote-attr { font-family:var(--font-mono); font-size:11px; color:var(--mid); text-transform:uppercase; letter-spacing:1px; }
+
+/* 画像详情区 */
+.persona-detail { border:1px solid var(--light); margin:24px 0; }
+.persona-detail-head { padding:28px 28px 20px; border-bottom:1px solid var(--light); display:flex; gap:20px; align-items:flex-start; }
+.persona-initial { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:28px; font-weight:700; color:#fff; flex-shrink:0; }
+.persona-initial.red { background:linear-gradient(135deg, var(--red), #c00010); }
+.persona-initial.blue { background:linear-gradient(135deg, var(--blue), #003d7a); }
+.persona-initial.slate { background:linear-gradient(135deg, #64748b, #475569); }
+.persona-detail-head .ph-name { font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+.persona-detail-head .ph-role { font-family:var(--font-mono); font-size:11px; color:var(--red); text-transform:uppercase; letter-spacing:1px; }
+.persona-detail-body { padding:28px; }
+.persona-meta-row { display:flex; gap:0; border:1px solid var(--light); margin-bottom:24px; }
+.persona-meta-item { flex:1; padding:16px; border-right:1px solid var(--light); }
+.persona-meta-item:last-child { border-right:none; }
+.persona-meta-item .pm-label { font-family:var(--font-mono); font-size:10px; color:var(--mid); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+.persona-meta-item .pm-val { font-size:15px; font-weight:600; color:var(--ink); }
+
+/* 时间线 */
+.timeline { padding-left:20px; margin:12px 0; border-left:2px solid var(--light); }
+.tl-item { position:relative; padding:6px 0 6px 16px; font-size:13px; color:var(--mid); }
+.tl-item::before { content:''; position:absolute; left:-5px; top:14px; width:8px; height:8px; background:var(--red); border-radius:50%; border:2px solid var(--paper); }
+.tl-time { font-family:var(--font-mono); font-size:11px; color:var(--red); font-weight:600; margin-right:6px; }
+
+/* 工具标签 */
+.tool-strip { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+.tool-tag { font-family:var(--font-mono); font-size:11px; color:var(--mid); border:1px solid var(--light); padding:4px 10px; }
+
+/* 态度标签 */
+.attitude-tag { display:inline-block; font-family:var(--font-mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; padding:5px 12px; border:1px solid; margin-bottom:12px; }
+.attitude-positive { border-color:#16a34a; color:#15803d; background:#f0fdf4; }
+.attitude-cautious { border-color:#d97706; color:#92400e; background:#fffbeb; }
+.attitude-conditional { border-color:var(--blue); color:var(--blue); background:var(--blue-soft); }
+
+/* 关系图 */
+.relation-wrap { display:flex; gap:0; border:1px solid var(--light); margin:20px 0; }
+.rel-node { flex:1; padding:24px; text-align:center; border-right:1px solid var(--light); }
+.rel-node:last-child { border-right:none; }
+.rel-node-title { font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+.rel-node-desc { font-family:var(--font-mono); font-size:11px; color:var(--mid); }
+
+/* 洞察卡片 */
+.insight-block { border-left:3px solid var(--red); padding:20px 24px; margin:20px 0; background:var(--faint); }
+.insight-num { font-family:var(--font-mono); font-size:11px; color:var(--red); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.insight-title { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--ink); margin-bottom:8px; }
+.insight-desc { font-size:14px; color:var(--mid); line-height:1.75; }
+
+@media (max-width:700px) { .toc-grid, .persona-grid { grid-template-columns:1fr; } .persona-meta-row { flex-direction:column; } .relation-wrap { flex-direction:column; } }
+.sect { animation:fadeUp 0.5s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<section class="cover">
+  <div class="cover-inner">
+    <p class="cover-label">五十二研究所 · 智能招聘研究 · 内部报告</p>
+    <h1>用户<br><em>画像分析</em></h1>
+    <p class="cover-sub">简历筛选平台 — <em>用户画像分析</em></p>
+  </div>
+  <dl class="cover-meta">
+    <div>
+      <dt>版本</dt>
+      <dd>v1.0.0</dd>
+    </div>
+    <div>
+      <dt>日期</dt>
+      <dd>2026-03-08</dd>
+    </div>
+    <div>
+      <dt>出品方</dt>
+      <dd>五十二研究所</dd>
+    </div>
+    <div>
+      <dt>数据来源</dt>
+      <dd>9人深度访谈 + 16人全员问卷</dd>
+    </div>
+  </dl>
+</section>
+
+<main class="doc">
+
+  <!-- 目录 -->
+  <div class="toc-wrap">
+    <p class="toc-title">目录 Contents</p>
+    <div class="toc-grid">
+      <a href="#s1"><span class="num">01</span>用户画像总览</a>
+      <a href="#s2"><span class="num">02</span>9位受访者速览</a>
+      <a href="#s3"><span class="num">03</span>画像一：HR专员「小李」</a>
+      <a href="#s4"><span class="num">04</span>画像二：HR主管「刘姐」</a>
+      <a href="#s5"><span class="num">05</span>画像三：业务负责人「孙工」</a>
+      <a href="#s6"><span class="num">06</span>用户关系图</a>
+      <a href="#s7"><span class="num">07</span>核心发现总结</a>
+    </div>
+  </div>
+
+  <!-- ==================== 1. 用户画像总览 ==================== -->
+  <section class="sect" id="s1">
+    <span class="sect-num">01 — Overview</span>
+    <h2>用户画像总览</h2>
+    <p>基于对五十二研究所HR团队16人全员问卷及9位关键角色深度访谈，提炼出3类核心用户画像，覆盖招聘全流程的主要参与者。</p>
+
+    <div class="relation-wrap">
+      <div class="rel-node">
+        <div class="rel-node-title">画像一<br>HR专员「小李」</div>
+        <div class="rel-node-desc" style="margin-top:8px;">招聘流程的一线执行者<br>代表10人 · 占62.5%</div>
+      </div>
+      <div class="rel-node">
+        <div class="rel-node-title">画像二<br>HR主管「刘姐」</div>
+        <div class="rel-node-desc" style="margin-top:8px;">招聘策略的统筹管理者<br>代表3人 · 占18.75%</div>
+      </div>
+      <div class="rel-node">
+        <div class="rel-node-title">画像三<br>业务负责人「孙工」</div>
+        <div class="rel-node-desc" style="margin-top:8px;">招聘需求的发起与决策者<br>代表10+位业务部门负责人</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. 9位受访者速览 ==================== -->
+  <section class="sect" id="s2">
+    <span class="sect-num">02 — Respondents</span>
+    <h2>9位受访者速览</h2>
+    <p>深度访谈涵盖HR专员4人、HR主管2人、业务部门负责人3人，每行3位，完整呈现受访群体结构。</p>
+
+    <div class="persona-grid">
+      <!-- P01 -->
+      <div class="persona-card">
+        <div class="p-label">P01 · HR专员 · 3年</div>
+        <div class="persona-name">李敏</div>
+        <div class="persona-role">校招主力</div>
+        <p><strong>工作特点：</strong>每年处理400+简历，校招旺季同时跟进3个以上岗位，加班至晚9点为常态。</p>
+        <p><strong>核心痛点：</strong>简历量大、筛选耗时，校招简历高度同质化难以区分。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"一个岗位180份，我得花两天半才能看完。"</p>
+          <p class="quote-attr">P01 李敏</p>
+        </div>
+      </div>
+      <!-- P02 -->
+      <div class="persona-card">
+        <div class="p-label">P02 · HR专员 · 5年</div>
+        <div class="persona-name">张薇</div>
+        <div class="persona-role">社招 / 研发岗</div>
+        <p><strong>工作特点：</strong>社招为主，负责研发类岗位，对技术能力判断有一定积累，但语义搜索局限明显。</p>
+        <p><strong>核心痛点：</strong>关键词搜索无法识别技术深度差异，推荐精准度低。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"搜'数据分析'出来一堆做Excel的，会Python建模的反而搜不到。"</p>
+          <p class="quote-attr">P02 张薇</p>
+        </div>
+      </div>
+      <!-- P03 -->
+      <div class="persona-card">
+        <div class="p-label">P03 · HR专员 · 2年</div>
+        <div class="persona-name">陈佳</div>
+        <div class="persona-role">新人 / 多平台</div>
+        <p><strong>工作特点：</strong>入职年限最短，对多平台操作流程尚不熟悉，每天切换6个平台耗时最长。</p>
+        <p><strong>核心痛点：</strong>多平台切换浪费大量时间，信息碎片化严重。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"每天早上登6个平台，光这个就要40分钟。"</p>
+          <p class="quote-attr">P03 陈佳</p>
+        </div>
+      </div>
+      <!-- P04 -->
+      <div class="persona-card">
+        <div class="p-label">P04 · HR专员 · 4年</div>
+        <div class="persona-name">王晓琳</div>
+        <div class="persona-role">行政 / 管理岗</div>
+        <p><strong>工作特点：</strong>负责行政及综合管理岗招聘，岗位要求模糊，难以建立精准筛选条件。</p>
+        <p><strong>核心痛点：</strong>软性岗位标准难以量化，历史评价记录无法查询。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"平台只能筛年限、学历，但我们更看重项目经验的质量。"</p>
+          <p class="quote-attr">P04 王晓琳</p>
+        </div>
+      </div>
+      <!-- P05 -->
+      <div class="persona-card">
+        <div class="p-label">P05 · HR主管 · 8年</div>
+        <div class="persona-name">刘洋</div>
+        <div class="persona-role">统筹全所招聘</div>
+        <p><strong>工作特点：</strong>统筹全所招聘工作，关注效率指标，需定期向高层汇报数据，但数据全靠手工拼凑。</p>
+        <p><strong>核心痛点：</strong>缺乏数据看板，招聘漏斗不可见，管理优化无依据。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"我知道效率不高，但说不出具体卡在哪个环节。"</p>
+          <p class="quote-attr">P05 刘洋</p>
+        </div>
+      </div>
+      <!-- P06 -->
+      <div class="persona-card">
+        <div class="p-label">P06 · HR主管 · 6年</div>
+        <div class="persona-name">赵颖</div>
+        <div class="persona-role">分管校招</div>
+        <p><strong>工作特点：</strong>分管校招工作，关注用人部门满意度，秋招旺季处理600+份简历压力巨大。</p>
+        <p><strong>核心痛点：</strong>校招简历差异化极小，历史校招数据无法复用。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"秋招两周600多份，差异化很小，筛选全靠直觉。"</p>
+          <p class="quote-attr">P06 赵颖</p>
+        </div>
+      </div>
+      <!-- P07 -->
+      <div class="persona-card">
+        <div class="p-label">P07 · 研发部负责人 · 10年</div>
+        <div class="persona-name">孙伟</div>
+        <div class="persona-role">技术岗用人方</div>
+        <p><strong>工作特点：</strong>技术背景深厚，对候选人能力判断标准明确，但难以将技术标准准确传达给HR。</p>
+        <p><strong>核心痛点：</strong>面试通过率仅10%，大量无效面试浪费时间精力。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"HR推10个人，面完只有1个靠谱，效率太低了。"</p>
+          <p class="quote-attr">P07 孙伟</p>
+        </div>
+      </div>
+      <!-- P08 -->
+      <div class="persona-card">
+        <div class="p-label">P08 · 项目管理部负责人 · 7年</div>
+        <div class="persona-name">马强</div>
+        <div class="persona-role">项目制用人方</div>
+        <p><strong>工作特点：</strong>项目制用人节奏快，对招聘时效性要求高，难以将"复杂项目经验"标准显式化。</p>
+        <p><strong>核心痛点：</strong>隐性用人标准难以结构化传达，标准沉淀机制缺失。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"'做过复杂项目'到底多复杂算复杂？总觉得隔了一层。"</p>
+          <p class="quote-attr">P08 马强</p>
+        </div>
+      </div>
+      <!-- P09 -->
+      <div class="persona-card">
+        <div class="p-label">P09 · 综合管理部负责人 · 5年</div>
+        <div class="persona-name">周琳</div>
+        <div class="persona-role">行政岗用人方</div>
+        <p><strong>工作特点：</strong>行政岗用人，岗位要求天然模糊，每次招聘都要重新与HR对齐标准，缺少沉淀机制。</p>
+        <p><strong>核心痛点：</strong>软性标准难以固化，上次确立的规则下次又要从头来过。</p>
+        <div class="quote-block" style="margin-top:10px;">
+          <p class="quote-text">"每次都得重新跟HR对齐标准，上次定的规则这次又忘了。"</p>
+          <p class="quote-attr">P09 周琳</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. 画像一：HR专员「小李」 ==================== -->
+  <section class="sect" id="s3">
+    <span class="sect-num">03 — Persona A</span>
+    <h2>画像一：HR专员「小李」</h2>
+
+    <div class="persona-detail">
+      <div class="persona-detail-head">
+        <div class="persona-initial red">李</div>
+        <div>
+          <div class="ph-name">李敏</div>
+          <div class="ph-role">HR专员 · 校招主力 · 3年经验</div>
+        </div>
+      </div>
+      <div class="persona-detail-body">
+        <div class="persona-meta-row">
+          <div class="persona-meta-item">
+            <div class="pm-label">年龄</div>
+            <div class="pm-val">28岁</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">工龄</div>
+            <div class="pm-val">3年</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">日均工时</div>
+            <div class="pm-val">9小时</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">代表人数</div>
+            <div class="pm-val">10人</div>
+          </div>
+        </div>
+
+        <h4>核心职责</h4>
+        <ul>
+          <li><strong>简历筛选</strong> — 从多个招聘平台下载、阅读、评估候选人简历</li>
+          <li><strong>电话初筛</strong> — 对初步符合条件的候选人进行电话沟通确认基本情况</li>
+          <li><strong>面试安排</strong> — 协调业务面试官与候选人时间，安排面试流程</li>
+          <li><strong>候选人跟进</strong> — 全流程跟踪候选人状态，维护候选人关系</li>
+        </ul>
+
+        <h4>典型工作日时间线</h4>
+        <div class="timeline">
+          <div class="tl-item"><span class="tl-time">09:00</span>登录BOSS直聘、猎聘、前程无忧、智联招聘、学校就业网、内部推荐系统，刷新各平台新投递简历</div>
+          <div class="tl-item"><span class="tl-time">10:00</span>开始逐份阅读筛选简历，对照岗位要求逐条比对</div>
+          <div class="tl-item"><span class="tl-time">12:00</span>午休</div>
+          <div class="tl-item"><span class="tl-time">13:30</span>继续筛选简历，整理初步通过名单</div>
+          <div class="tl-item"><span class="tl-time">15:00</span>电话初筛候选人，确认基本信息与求职意向</div>
+          <div class="tl-item"><span class="tl-time">17:00</span>整理候选人资料，通过微信/邮件发给业务部门负责人</div>
+          <div class="tl-item"><span class="tl-time">18:00</span>处理当天新投递的简历，更新Excel跟踪表</div>
+        </div>
+
+        <h4>核心痛点</h4>
+        <div class="quote-block">
+          <p class="quote-text">"一个研发岗收到180份简历，我得花两天半才能看完，校招旺季3个岗位同时开就完全忙不过来。"</p>
+          <p class="quote-attr">P01 李敏 · HR专员 · 3年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"每天早上第一件事就是登6个平台刷一遍，光这个就要40分钟。"</p>
+          <p class="quote-attr">P03 陈佳 · HR专员 · 2年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"校招的时候简历都长一个样，211学生的简历模板都差不多，根本分不出谁更好。"</p>
+          <p class="quote-attr">P01 李敏 · HR专员 · 3年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"有时候搜'数据分析'出来一堆做Excel报表的，真正会Python建模的反而搜不到。"</p>
+          <p class="quote-attr">P02 张薇 · HR专员 · 5年经验</p>
+        </div>
+
+        <h4>当前使用工具</h4>
+        <div class="tool-strip">
+          <span class="tool-tag">Excel — 简历跟踪表</span>
+          <span class="tool-tag">BOSS直聘 — 自带筛选</span>
+          <span class="tool-tag">猎聘 — 平台内搜索</span>
+          <span class="tool-tag">前程无忧 — 关键词筛选</span>
+          <span class="tool-tag">智联招聘 — 简历下载</span>
+          <span class="tool-tag">微信群 — 与业务沟通</span>
+        </div>
+
+        <h4>核心期望</h4>
+        <ul>
+          <li>能<strong>自动读懂简历内容</strong>，理解项目经验与技能的实际含义</li>
+          <li>按<strong>匹配度排序</strong>呈现候选人，优先看最合适的</li>
+          <li>减少重复劳动，<strong>一个平台完成多渠道简历汇总</strong></li>
+          <li>校招场景能<strong>区分同质化简历</strong>中的真正优秀候选人</li>
+        </ul>
+
+        <h4>对AI辅助筛选的态度</h4>
+        <div class="attitude-tag attitude-cautious">期待但谨慎</div>
+        <p>HR专员群体整体对AI辅助筛选持期待态度，认为可以大幅减少重复劳动。但同时存在顾虑：担心"机器会不会漏掉好的人"，特别是对于简历写得不好但实际能力强的候选人。希望AI是辅助而非替代，最终决策权仍在人手中。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. 画像二：HR主管「刘姐」 ==================== -->
+  <section class="sect" id="s4">
+    <span class="sect-num">04 — Persona B</span>
+    <h2>画像二：HR主管「刘姐」</h2>
+
+    <div class="persona-detail">
+      <div class="persona-detail-head">
+        <div class="persona-initial blue">刘</div>
+        <div>
+          <div class="ph-name">刘洋</div>
+          <div class="ph-role">HR主管 · 统筹全所招聘 · 8年经验</div>
+        </div>
+      </div>
+      <div class="persona-detail-body">
+        <div class="persona-meta-row">
+          <div class="persona-meta-item">
+            <div class="pm-label">年龄</div>
+            <div class="pm-val">35岁</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">工龄</div>
+            <div class="pm-val">8年</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">关注指标</div>
+            <div class="pm-val">效率 / ROI</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">代表人数</div>
+            <div class="pm-val">3人</div>
+          </div>
+        </div>
+
+        <h4>核心职责</h4>
+        <ul>
+          <li><strong>招聘策略制定</strong> — 根据年度人力规划制定招聘方案与渠道策略</li>
+          <li><strong>团队管理</strong> — 管理HR专员团队，分配招聘任务，把控工作质量</li>
+          <li><strong>数据汇报</strong> — 定期向HR总监和高层汇报招聘进度、完成率、效率指标</li>
+          <li><strong>高层沟通</strong> — 对接各业务部门负责人，协调招聘需求与资源</li>
+        </ul>
+
+        <h4>核心痛点</h4>
+        <div class="quote-block">
+          <p class="quote-text">"每个月要给领导汇报招聘进度，数据全靠手工从各平台拼Excel，经常对不上。"</p>
+          <p class="quote-attr">P05 刘洋 · HR主管 · 8年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"我知道团队效率不高，但我说不出来具体卡在哪个环节。"</p>
+          <p class="quote-attr">P05 刘洋 · HR主管 · 8年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"去年招过几乎一样的岗位，但当时的数据散落在各个平台，根本没法复用。"</p>
+          <p class="quote-attr">P06 赵颖 · HR主管 · 6年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"业务部门说我们推的人不行，但他们自己的用人标准也说不清楚。"</p>
+          <p class="quote-attr">P05 刘洋 · HR主管 · 8年经验</p>
+        </div>
+
+        <h4>管理层面痛点</h4>
+        <table>
+          <thead>
+            <tr><th>痛点维度</th><th>具体表现</th><th>影响</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>无法量化团队效率</strong></td>
+              <td>不知道每位专员筛选效率、各环节耗时分布</td>
+              <td>无法针对性优化流程</td>
+            </tr>
+            <tr>
+              <td><strong>渠道ROI不可见</strong></td>
+              <td>6个招聘渠道的投入产出比无法对比</td>
+              <td>资源分配凭经验，可能浪费预算</td>
+            </tr>
+            <tr>
+              <td><strong>历史数据无沉淀</strong></td>
+              <td>过往招聘的标准、简历、评价散落各处</td>
+              <td>同类岗位反复从零开始</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>核心期望</h4>
+        <ul>
+          <li><strong>数据看板</strong> — 实时查看招聘全流程数据，不再手工拼Excel</li>
+          <li><strong>效率度量</strong> — 量化每个环节的耗时与转化率，发现瓶颈</li>
+          <li><strong>招聘漏斗可视化</strong> — 从简历投递到最终录用的全链路转化</li>
+          <li><strong>渠道效果对比</strong> — 各平台的简历质量与转化效率排名</li>
+        </ul>
+
+        <h4>对AI辅助筛选的态度</h4>
+        <div class="attitude-tag attitude-positive">积极推动</div>
+        <p>HR主管群体是AI辅助筛选的积极推动者，认为这是提升团队整体效率的关键手段。刘洋明确表示"只要能让团队少加班，什么工具我都愿意试"。主管层更关注系统能否提供管理视角的数据分析能力。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 5. 画像三：业务负责人「孙工」 ==================== -->
+  <section class="sect" id="s5">
+    <span class="sect-num">05 — Persona C</span>
+    <h2>画像三：业务负责人「孙工」</h2>
+
+    <div class="persona-detail">
+      <div class="persona-detail-head">
+        <div class="persona-initial slate">孙</div>
+        <div>
+          <div class="ph-name">孙伟</div>
+          <div class="ph-role">研发部负责人 · 技术岗用人方 · 10年经验</div>
+        </div>
+      </div>
+      <div class="persona-detail-body">
+        <div class="persona-meta-row">
+          <div class="persona-meta-item">
+            <div class="pm-label">年龄</div>
+            <div class="pm-val">38岁</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">工龄</div>
+            <div class="pm-val">10年</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">面试通过率</div>
+            <div class="pm-val">10%–20%</div>
+          </div>
+          <div class="persona-meta-item">
+            <div class="pm-label">代表人数</div>
+            <div class="pm-val">10+位</div>
+          </div>
+        </div>
+
+        <h4>核心职责</h4>
+        <ul>
+          <li><strong>提出招聘需求</strong> — 向HR提交岗位需求，描述期望的候选人画像</li>
+          <li><strong>面试候选人</strong> — 对HR推荐的候选人进行技术/业务面试</li>
+          <li><strong>做录用决策</strong> — 综合评估后决定是否录用</li>
+        </ul>
+
+        <h4>核心痛点</h4>
+        <div class="quote-block">
+          <p class="quote-text">"HR推过来10个人，我面完发现只有1个靠谱，效率太低了。"</p>
+          <p class="quote-attr">P07 孙伟 · 研发部负责人 · 10年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"我要的是做过高并发系统的人，HR搜'Java开发'推了一堆CRUD的过来。"</p>
+          <p class="quote-attr">P07 孙伟 · 研发部负责人 · 10年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"我很难把用人标准精确传达给HR，总觉得隔了一层。"</p>
+          <p class="quote-attr">P08 马强 · 项目管理部负责人 · 7年经验</p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text">"每次招人都得重新跟HR对齐标准，上次定的规则这次又忘了。"</p>
+          <p class="quote-attr">P09 周琳 · 综合管理部负责人 · 5年经验</p>
+        </div>
+
+        <h4>使用习惯</h4>
+        <p>业务负责人<strong>只看HR推荐的简历</strong>，不主动参与简历筛选环节。通常通过微信或邮件接收HR整理好的候选人资料包，然后安排面试。对招聘平台和筛选工具几乎不直接使用，所有交互都通过HR中转。</p>
+
+        <h4>核心期望</h4>
+        <ul>
+          <li>看到<strong>AI匹配度评分</strong>，快速判断候选人与岗位的契合程度</li>
+          <li>查看<strong>关键维度评价</strong>（技术深度、项目复杂度、行业匹配等）</li>
+          <li>减少<strong>无效面试</strong>，提高推荐到面试的通过率</li>
+          <li>能<strong>自定义筛选维度和权重</strong>，让系统理解真实用人标准</li>
+        </ul>
+
+        <h4>对AI辅助筛选的态度</h4>
+        <div class="attitude-tag attitude-conditional">欢迎，但有条件</div>
+        <p>业务负责人群体欢迎AI参与简历筛选，但有一个核心条件："得让我能调整筛选标准"。他们不接受黑箱式的推荐，要求能看到匹配依据，并能根据实际招聘经验调整评价维度和权重。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. 用户关系图 ==================== -->
+  <section class="sect" id="s6">
+    <span class="sect-num">06 — Relations</span>
+    <h2>用户关系图</h2>
+    <p>三类用户在招聘流程中的协作关系与信息流向。</p>
+
+    <div class="relation-wrap" style="margin-bottom:24px;">
+      <div class="rel-node">
+        <div class="rel-node-title">业务负责人</div>
+        <div class="rel-node-desc" style="margin-top:6px;">提出需求 / 面试决策</div>
+      </div>
+      <div class="rel-node" style="background:var(--faint);">
+        <div class="rel-node-title" style="color:var(--mid); font-size:13px;">提交用人需求 →<br>← 推荐候选人</div>
+      </div>
+      <div class="rel-node">
+        <div class="rel-node-title">HR主管</div>
+        <div class="rel-node-desc" style="margin-top:6px;">统筹策略 / 质量把控</div>
+      </div>
+      <div class="rel-node" style="background:var(--faint);">
+        <div class="rel-node-title" style="color:var(--mid); font-size:13px;">分配任务 →<br>← 汇报进度</div>
+      </div>
+      <div class="rel-node">
+        <div class="rel-node-title">HR专员</div>
+        <div class="rel-node-desc" style="margin-top:6px;">执行筛选 / 流程推进</div>
+      </div>
+    </div>
+
+    <h3>核心协作流程</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>阶段</th>
+          <th>业务负责人</th>
+          <th>HR主管</th>
+          <th>HR专员</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>需求提出</strong></td>
+          <td>提交岗位JD和用人标准</td>
+          <td>审核需求合理性</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>简历筛选</strong></td>
+          <td>—</td>
+          <td>分配任务，质量抽查</td>
+          <td>多平台搜索、逐份筛选</td>
+        </tr>
+        <tr>
+          <td><strong>初筛推荐</strong></td>
+          <td>审阅推荐简历</td>
+          <td>汇总审核推荐名单</td>
+          <td>整理候选人资料包</td>
+        </tr>
+        <tr>
+          <td><strong>面试评估</strong></td>
+          <td>技术/业务面试</td>
+          <td>跟进面试进度</td>
+          <td>协调面试时间</td>
+        </tr>
+        <tr>
+          <td><strong>录用决策</strong></td>
+          <td>做出录用决定</td>
+          <td>审批流程推进</td>
+          <td>发放offer，入职跟进</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ==================== 7. 核心发现总结 ==================== -->
+  <section class="sect" id="s7">
+    <span class="sect-num">07 — Insights</span>
+    <h2>核心发现总结</h2>
+
+    <div class="insight-block">
+      <div class="insight-num">洞察一</div>
+      <div class="insight-title">语义理解鸿沟是最大痛点</div>
+      <p class="insight-desc">
+        三类用户均反映当前招聘平台的关键词搜索无法理解真实意图。HR专员搜不到真正匹配的候选人，业务负责人收到大量不符合深层需求的推荐。问题根源在于现有系统只做字面匹配，无法理解"高并发系统经验"与"CRUD开发"的本质差异。痛点量表中"简历关键词搜索不精准"以4.2分（满分5分）位居所有痛点之首。
+      </p>
+    </div>
+
+    <div class="insight-block" style="border-color:var(--blue);">
+      <div class="insight-num" style="color:var(--blue);">洞察二</div>
+      <div class="insight-title">数据断裂导致管理决策无依据</div>
+      <p class="insight-desc">
+        HR主管在团队效率优化、渠道策略调整、向高层汇报等核心管理场景中，完全依赖手工拼凑数据。招聘数据分散在6个平台和多个Excel中，无法形成完整的招聘漏斗视图。历史招聘数据无法沉淀复用，导致同类岗位每次招聘都要从零开始。这不仅降低了管理效率，也使得团队优化缺乏数据支撑。
+      </p>
+    </div>
+
+    <div class="insight-block" style="border-color:#6b7280;">
+      <div class="insight-num" style="color:#6b7280;">洞察三</div>
+      <div class="insight-title">HR与业务部门之间存在系统性认知错位</div>
+      <p class="insight-desc">
+        业务负责人面试通过率仅为10%–20%（推荐10人通过1–2人），核心原因是HR对技术岗位深层要求的理解不足。业务部门自身也难以将隐性用人标准显式化，双方在"什么样的人才算合适"上存在根本性沟通障碍。这一问题靠增加沟通频次无法解决，需要通过结构化的需求模板和AI辅助匹配来弥合认知差距。痛点量表中该项得分4.0分，仅次于搜索精准度。
+      </p>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

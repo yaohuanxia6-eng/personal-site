@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历筛选平台 · 调研数据汇总</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --ink: #1c1917;
+  --paper: #fdfcfa;
+  --mid: #57534e;
+  --light: #e7e5e0;
+  --faint: #f5f3ef;
+  --accent: #b45309;
+  --accent-soft: #fef3c7;
+  --accent-rgb: 180, 83, 9;
+  --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  --font-body: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--ink); background: var(--paper); line-height: 1.75; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+/* 封面 - 暗色 */
+.cover { min-height: 100vh; background: #1a1410; color: var(--paper); padding: clamp(64px,10vw,140px) clamp(24px,6vw,80px) clamp(48px,6vw,80px); display: grid; grid-template-rows: 1fr auto; position: relative; overflow: hidden; }
+.cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 80% 20%, rgba(180,83,9,0.35) 0%, transparent 65%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(180,83,9,0.15) 0%, transparent 60%); pointer-events: none; }
+.cover::after { content: none; }
+.cover-inner { position: relative; z-index: 1; max-width: 640px; }
+.cover-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+.cover-eyebrow::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); }
+.cover h1 { font-family: var(--font-display); font-size: clamp(44px,7vw,80px); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; color: var(--paper); margin-bottom: 16px; }
+.cover h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.cover-sub { font-size: 17px; color: rgba(253,252,250,0.6); font-weight: 300; max-width: 480px; line-height: 1.7; margin-bottom: 48px; }
+.cover-meta { display: flex; gap: 24px; align-self: end; position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 24px; flex-wrap: wrap; }
+.cover-meta-item dt { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(253,252,250,0.45); margin-bottom: 4px; }
+.cover-meta-item dd { font-size: 14px; font-weight: 500; color: var(--paper); }
+
+.doc { max-width: 840px; margin: 0 auto; padding: 0 clamp(20px,4vw,48px); }
+.toc-wrap { padding: 56px 0 48px; border-bottom: 1px solid var(--light); }
+.toc-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+.toc-label::after { content: ''; flex: 1; height: 1px; background: var(--light); }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 40px; }
+.toc-grid a { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: var(--ink); padding: 8px 0; font-size: 14px; border-bottom: 1px solid transparent; transition: all 0.2s; }
+.toc-grid a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.toc-grid a .num { font-family: var(--font-mono); font-size: 11px; color: var(--mid); min-width: 32px; }
+
+.sect { padding: 64px 0 48px; }
+.sect + .sect { border-top: 1px solid var(--light); }
+.sect-num { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.sect h2 { font-family: var(--font-display); font-size: clamp(28px,4vw,40px); font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 32px; }
+.sect h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin: 36px 0 12px; display: flex; align-items: center; gap: 10px; }
+.sect h3::before { content: ''; display: inline-block; width: 3px; height: 17px; background: var(--accent); flex-shrink: 0; }
+.sect h4 { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--mid); text-transform: uppercase; letter-spacing: 1.5px; margin: 28px 0 10px; }
+.sect p { color: var(--mid); margin-bottom: 14px; }
+.sect ul, .sect ol { padding-left: 20px; margin-bottom: 16px; color: var(--mid); }
+.sect li { margin-bottom: 6px; }
+.sect li strong { color: var(--ink); }
+
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+thead th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); padding: 12px 16px; border-bottom: 2px solid var(--ink); font-weight: 500; }
+td { padding: 13px 16px; border-bottom: 1px solid var(--light); color: var(--mid); vertical-align: top; }
+td strong { color: var(--ink); }
+tbody tr:hover td { background: var(--faint); }
+
+/* 引语块 */
+.quote-block { border-left: 3px solid var(--accent); padding: 20px 24px; margin: 16px 0; background: var(--faint); }
+.quote-text { font-family: var(--font-display); font-size: 17px; font-style: italic; color: var(--ink); margin-bottom: 10px; line-height: 1.6; }
+.quote-attr { font-family: var(--font-mono); font-size: 11px; color: var(--mid); text-transform: uppercase; letter-spacing: 1px; }
+
+/* 数据条 */
+.bar-chart { margin: 20px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.bar-label { font-size: 13px; color: var(--mid); width: 180px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 6px; background: var(--light); }
+.bar-fill { height: 100%; background: var(--accent); transition: width 0.6s ease; }
+.bar-pct { font-family: var(--font-mono); font-size: 12px; color: var(--mid); width: 56px; text-align: right; flex-shrink: 0; }
+
+/* 指标条 */
+.metric-strip { display: grid; grid-template-columns: repeat(4,1fr); margin: 32px 0; }
+.metric-item { padding: 28px 20px; text-align: center; border: 1px solid var(--light); border-right: none; }
+.metric-item:last-child { border-right: 1px solid var(--light); }
+.metric-val { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--accent); line-height: 1; display: block; margin-bottom: 8px; }
+.metric-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--mid); letter-spacing: 1px; text-transform: uppercase; line-height: 1.5; }
+
+/* 分布标签 */
+.dist-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+.dist-item { border: 1px solid var(--light); padding: 16px 20px; text-align: center; min-width: 130px; }
+.dist-val { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--accent); }
+.dist-lbl { font-family: var(--font-mono); font-size: 11px; color: var(--mid); margin-top: 4px; }
+
+/* AI 意愿 */
+.ai-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+.ai-seg { flex: 1; min-width: 130px; text-align: center; padding: 24px 16px; border: 1px solid var(--light); }
+.ai-pct { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--accent); }
+.ai-lbl { font-family: var(--font-mono); font-size: 11px; color: var(--mid); margin-top: 6px; }
+
+/* 开放题 */
+.open-answer { border: 1px solid var(--light); padding: 18px 22px; margin: 10px 0; background: var(--faint); font-size: 14px; color: var(--mid); }
+.open-answer .oa-src { font-family: var(--font-mono); font-size: 11px; color: var(--mid); margin-top: 8px; opacity: 0.7; }
+
+/* 高亮数值 */
+.hi { color: var(--accent); font-weight: 600; }
+
+/* 注释 */
+.note { font-family: var(--font-mono); font-size: 11px; color: var(--mid); margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--light); letter-spacing: 0.3px; line-height: 1.7; }
+
+/* 洞察卡片 */
+.insight { border-left: 3px solid var(--accent); padding: 24px 28px; margin: 24px 0; background: var(--faint); }
+.insight-num { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.insight-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.insight-desc { font-size: 14px; color: var(--mid); line-height: 1.8; }
+
+.doc-footer { border-top: 2px solid var(--light); padding: 32px 0 48px; margin-top: 64px; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--mid); letter-spacing: 1px; text-transform: uppercase; }
+
+@media (max-width: 700px) {
+  .toc-grid { grid-template-columns: 1fr; }
+  .metric-strip { grid-template-columns: 1fr 1fr; }
+  .metric-item { border-right: 1px solid var(--light); }
+}
+.sect { animation: fadeUp 0.5s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover" data-doc-num="02">
+  <div class="cover-inner">
+    <div class="cover-eyebrow">用户调研 · 数据报告</div>
+    <h1>调研数据<br><em>汇总</em></h1>
+    <p class="cover-sub">基于五十二研究所 HR 团队 16 人全员问卷与 9 人深度访谈，系统梳理简历筛选场景下的核心痛点、效率现状与 AI 使用意愿。</p>
+  </div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><dt>版本</dt><dd>v1.0.0</dd></div>
+    <div class="cover-meta-item"><dt>日期</dt><dd>2026-03-08</dd></div>
+    <div class="cover-meta-item"><dt>数据来源</dt><dd>16 人问卷 + 9 人深访</dd></div>
+    <div class="cover-meta-item"><dt>调研周期</dt><dd>2026.03.03 – 03.07</dd></div>
+  </div>
+</div>
+
+<div class="doc">
+
+  <!-- 目录 -->
+  <div class="toc-wrap">
+    <div class="toc-label">目录</div>
+    <div class="toc-grid">
+      <a href="#s1"><span class="num">01</span>调研概况</a>
+      <a href="#s5"><span class="num">05</span>工具使用现状</a>
+      <a href="#s2"><span class="num">02</span>问卷定量数据</a>
+      <a href="#s6"><span class="num">06</span>开放题回答精选</a>
+      <a href="#s3"><span class="num">03</span>痛点量表评分</a>
+      <a href="#s7"><span class="num">07</span>数据交叉分析</a>
+      <a href="#s4"><span class="num">04</span>深访定性数据汇总</a>
+      <a href="#s8"><span class="num">08</span>核心发现</a>
+    </div>
+  </div>
+
+  <!-- 1. 调研概况 -->
+  <section class="sect" id="s1">
+    <span class="sect-num">01 — 调研概况</span>
+    <h2>调研概况</h2>
+
+    <div class="metric-strip">
+      <div class="metric-item">
+        <span class="metric-val">16</span>
+        <span class="metric-lbl">问卷发放<br>回收率 100%</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">9</span>
+        <span class="metric-lbl">深度访谈<br>人数</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">~8h</span>
+        <span class="metric-lbl">深访总<br>时长</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-val">5天</span>
+        <span class="metric-lbl">调研周期<br>03.03–03.07</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>调研方式</th><th>对象</th><th>样本量</th><th>时间</th><th>备注</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>全员问卷</strong></td><td>HR 团队全员</td><td>16 人</td><td>2026.03.03–03.05</td><td>回收率 100%，含定量量表 + 开放题</td></tr>
+        <tr><td><strong>深度访谈</strong></td><td>关键角色</td><td>9 人</td><td>2026.03.04–03.07</td><td>HR 专员 4 人、主管 2 人、业务负责人 3 人</td></tr>
+      </tbody>
+    </table>
+
+    <h3>深度访谈受访者名单</h3>
+    <table>
+      <thead>
+        <tr><th>编号</th><th>姓名</th><th>角色</th><th>工龄</th><th>特征描述</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>P01</td><td><strong>李敏</strong></td><td>HR 专员</td><td>3 年</td><td>校招主力，每年处理 400+ 简历</td></tr>
+        <tr><td>P02</td><td><strong>张薇</strong></td><td>HR 专员</td><td>5 年</td><td>社招为主，负责研发岗</td></tr>
+        <tr><td>P03</td><td><strong>陈佳</strong></td><td>HR 专员</td><td>2 年</td><td>新人，对多平台切换最痛苦</td></tr>
+        <tr><td>P04</td><td><strong>王晓琳</strong></td><td>HR 专员</td><td>4 年</td><td>负责行政 / 管理岗招聘</td></tr>
+        <tr><td>P05</td><td><strong>刘洋</strong></td><td>HR 主管</td><td>8 年</td><td>统筹全所招聘，关注效率指标</td></tr>
+        <tr><td>P06</td><td><strong>赵颖</strong></td><td>HR 主管</td><td>6 年</td><td>分管校招，关注用人部门满意度</td></tr>
+        <tr><td>P07</td><td><strong>孙伟</strong></td><td>研发部负责人</td><td>10 年</td><td>技术岗用人方，对 HR 推荐质量不满</td></tr>
+        <tr><td>P08</td><td><strong>马强</strong></td><td>项目管理部负责人</td><td>7 年</td><td>项目制用人，招聘时效性要求高</td></tr>
+        <tr><td>P09</td><td><strong>周琳</strong></td><td>综合管理部负责人</td><td>5 年</td><td>行政岗用人，岗位要求较模糊</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 2. 问卷定量数据 -->
+  <section class="sect" id="s2">
+    <span class="sect-num">02 — 问卷定量数据</span>
+    <h2>问卷定量数据</h2>
+
+    <h3>受访者画像分布</h3>
+
+    <h4>角色分布（n=16）</h4>
+    <div class="dist-row">
+      <div class="dist-item"><div class="dist-val">62.5%</div><div class="dist-lbl">HR 专员（10 人）</div></div>
+      <div class="dist-item"><div class="dist-val">18.75%</div><div class="dist-lbl">HR 主管（3 人）</div></div>
+      <div class="dist-item"><div class="dist-val">12.5%</div><div class="dist-lbl">HRBP（2 人）</div></div>
+      <div class="dist-item"><div class="dist-val">6.25%</div><div class="dist-lbl">HR 总监（1 人）</div></div>
+    </div>
+
+    <h4>工龄分布（n=16）</h4>
+    <table>
+      <thead><tr><th>工龄区间</th><th>人数</th><th>占比</th></tr></thead>
+      <tbody>
+        <tr><td>1–3 年</td><td>5 人</td><td>31.25%</td></tr>
+        <tr><td>3–5 年</td><td>5 人</td><td>31.25%</td></tr>
+        <tr><td>5–8 年</td><td>4 人</td><td>25.00%</td></tr>
+        <tr><td>8 年以上</td><td>2 人</td><td>12.50%</td></tr>
+      </tbody>
+    </table>
+
+    <h4>招聘类型分布（n=16，多选）</h4>
+    <table>
+      <thead><tr><th>招聘类型</th><th>涉及人数</th><th>占比</th></tr></thead>
+      <tbody>
+        <tr><td>社招</td><td>13 人</td><td>81.25%</td></tr>
+        <tr><td>校招</td><td>9 人</td><td>56.25%</td></tr>
+        <tr><td>内部推荐</td><td>7 人</td><td>43.75%</td></tr>
+        <tr><td>猎头合作</td><td>4 人</td><td>25.00%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>简历处理效率</h3>
+
+    <h4>平均每岗位收到简历数（n=16）</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">100–200 份</div>
+        <div class="bar-track"><div class="bar-fill" style="width:62.5%"></div></div>
+        <div class="bar-pct">62.5%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">200 份以上</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
+        <div class="bar-pct">25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">50–100 份</div>
+        <div class="bar-track"><div class="bar-fill" style="width:12.5%"></div></div>
+        <div class="bar-pct">12.5%</div>
+      </div>
+    </div>
+
+    <h4>筛选单岗位简历耗时（n=16）</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">2–3 天</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+        <div class="bar-pct">50%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">1–2 天</div>
+        <div class="bar-track"><div class="bar-fill" style="width:31.25%"></div></div>
+        <div class="bar-pct">31.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">3 天以上</div>
+        <div class="bar-track"><div class="bar-fill" style="width:18.75%"></div></div>
+        <div class="bar-pct">18.75%</div>
+      </div>
+    </div>
+
+    <h4>日均多平台切换时间（n=16）</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">30–60 分钟</div>
+        <div class="bar-track"><div class="bar-fill" style="width:56.25%"></div></div>
+        <div class="bar-pct">56.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">60 分钟以上</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
+        <div class="bar-pct">25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">30 分钟以内</div>
+        <div class="bar-track"><div class="bar-fill" style="width:18.75%"></div></div>
+        <div class="bar-pct">18.75%</div>
+      </div>
+    </div>
+
+    <h3>面试转化率</h3>
+
+    <h4>推荐 10 人平均通过面试人数（n=16）</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">1–2 人</div>
+        <div class="bar-track"><div class="bar-fill" style="width:56.25%"></div></div>
+        <div class="bar-pct">56.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">3–4 人</div>
+        <div class="bar-track"><div class="bar-fill" style="width:31.25%"></div></div>
+        <div class="bar-pct">31.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">5 人以上</div>
+        <div class="bar-track"><div class="bar-fill" style="width:12.5%"></div></div>
+        <div class="bar-pct">12.5%</div>
+      </div>
+    </div>
+    <p class="note">超过半数受访者表示推荐 10 人中仅 1–2 人通过面试，面试通过率约 10%–20%，反映推荐精准度严重不足。</p>
+
+    <h3>招聘周期</h3>
+
+    <h4>从发布岗位到候选人入职的平均周期（n=16）</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">30–45 天</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+        <div class="bar-pct">50%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">45 天以上</div>
+        <div class="bar-track"><div class="bar-fill" style="width:31.25%"></div></div>
+        <div class="bar-pct">31.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">30 天以内</div>
+        <div class="bar-track"><div class="bar-fill" style="width:18.75%"></div></div>
+        <div class="bar-pct">18.75%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 痛点量表评分 -->
+  <section class="sect" id="s3">
+    <span class="sect-num">03 — 痛点量表评分</span>
+    <h2>痛点量表评分</h2>
+    <p>1–5 分量表，5 分表示"非常痛"。以下为全员 16 人平均评分。</p>
+
+    <div class="bar-chart" style="margin-top:28px">
+      <div class="bar-row">
+        <div class="bar-label">简历关键词搜索不精准</div>
+        <div class="bar-track"><div class="bar-fill" style="width:84%"></div></div>
+        <div class="bar-pct">4.2 / 5</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">与业务部门认知错位</div>
+        <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+        <div class="bar-pct">4.0 / 5</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">校招简历同质化</div>
+        <div class="bar-track"><div class="bar-fill" style="width:76%"></div></div>
+        <div class="bar-pct">3.8 / 5</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">多平台切换低效</div>
+        <div class="bar-track"><div class="bar-fill" style="width:74%"></div></div>
+        <div class="bar-pct">3.7 / 5</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">历史数据无法复用</div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%"></div></div>
+        <div class="bar-pct">3.5 / 5</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">简历格式多样化</div>
+        <div class="bar-track"><div class="bar-fill" style="width:66%"></div></div>
+        <div class="bar-pct">3.3 / 5</div>
+      </div>
+    </div>
+    <p class="note">"校招简历同质化"在仅统计校招 HR（n=9）时评分高达 <span class="hi">4.5 分</span>，远高于全员均值 3.8 分，说明该痛点在校招场景下尤为突出。</p>
+  </section>
+
+  <!-- 4. 深访定性数据汇总 -->
+  <section class="sect" id="s4">
+    <span class="sect-num">04 — 深访定性数据汇总</span>
+    <h2>深访定性数据汇总</h2>
+    <p>按痛点主题归类，整合 9 位受访者的用户原声。</p>
+
+    <h3>痛点一 — 语义匹配不精准（6 条原声）</h3>
+
+    <div class="quote-block">
+      <div class="quote-text">"搜'数据分析'出来一堆做 Excel 报表的，真正会 Python 建模的反而搜不到，关键词搜索太粗了。"</div>
+      <div class="quote-attr">P02 张薇 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"业务说要'有架构设计能力'的人，我在平台上根本不知道怎么搜这种能力，只能搜职位名。"</div>
+      <div class="quote-attr">P01 李敏 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"候选人写的是'负责系统优化'，到底是优化了什么？性能优化和流程优化完全不是一回事。"</div>
+      <div class="quote-attr">P07 孙伟 · 研发部负责人</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"有的人简历写得花里胡哨但没实质，有的人写得很朴素但技术很扎实，平台搜索分不出来。"</div>
+      <div class="quote-attr">P02 张薇 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"我要的是做过高并发系统的人，HR 搜'Java 开发'推了一堆 CRUD 的过来，技术深度完全不匹配。"</div>
+      <div class="quote-attr">P07 孙伟 · 研发部负责人</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"平台只能按工作年限、学历这些硬条件筛，但我们更看重项目经验的质量，这个没法筛。"</div>
+      <div class="quote-attr">P04 王晓琳 · HR 专员</div>
+    </div>
+
+    <h3>痛点二 — 效率瓶颈（5 条原声）</h3>
+
+    <div class="quote-block">
+      <div class="quote-text">"一个研发岗收到 180 份简历，我得花两天半才能看完，校招旺季 3 个岗位同时开就完全忙不过来。"</div>
+      <div class="quote-attr">P01 李敏 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"有些简历第一眼看就知道不行，但还是得点进去看完，心理上会觉得不仔细看怕漏了人。"</div>
+      <div class="quote-attr">P03 陈佳 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"给业务推 10 个人只有 1–2 个通过面试，等于我 80% 的筛选工作都白做了。"</div>
+      <div class="quote-attr">P02 张薇 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"校招旺季加班到晚上 9 点是常态，主要时间全花在看简历上，其实很多都是重复劳动。"</div>
+      <div class="quote-attr">P01 李敏 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"我知道团队效率不高，但我说不出来具体卡在哪个环节，没有数据支撑做优化。"</div>
+      <div class="quote-attr">P05 刘洋 · HR 主管</div>
+    </div>
+
+    <h3>痛点三 — HR 与业务部门认知错位（5 条原声）</h3>
+
+    <div class="quote-block">
+      <div class="quote-text">"HR 推过来 10 个人，我面完发现只有 1 个靠谱，效率太低了。不是 HR 不努力，是我们的需求没对齐。"</div>
+      <div class="quote-attr">P07 孙伟 · 研发部负责人</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"业务部门说我们推的人不行，但他们自己的用人标准也说不清楚，经常面完才说'不是我想要的'。"</div>
+      <div class="quote-attr">P05 刘洋 · HR 主管</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"我很难把用人标准精确传达给 HR，'做过复杂项目'到底多复杂算复杂？总觉得隔了一层。"</div>
+      <div class="quote-attr">P08 马强 · 项目管理部负责人</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"行政岗的要求本来就比较模糊，'综合素质好'、'沟通能力强'这种标准 HR 也没法精确筛。"</div>
+      <div class="quote-attr">P09 周琳 · 综合管理部负责人</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"每次招人都得重新跟 HR 对齐标准，上次定的规则这次又忘了，缺一个沉淀机制。"</div>
+      <div class="quote-attr">P09 周琳 · 综合管理部负责人</div>
+    </div>
+
+    <h3>痛点四 — 校招简历同质化（4 条原声）</h3>
+
+    <div class="quote-block">
+      <div class="quote-text">"校招的时候简历都长一个样，211 学生的简历模板都差不多，根本分不出谁更好。"</div>
+      <div class="quote-attr">P01 李敏 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"应届生都写课程项目，看起来都做过学生管理系统，但谁是真做的谁是水的，很难判断。"</div>
+      <div class="quote-attr">P06 赵颖 · HR 主管</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"校招简历里的实习经验很短，2–3 个月的实习说明不了什么问题，但又不能不看。"</div>
+      <div class="quote-attr">P03 陈佳 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"秋招两周收了 600 多份简历，差异化很小，筛选就像大海捞针，全靠直觉。"</div>
+      <div class="quote-attr">P06 赵颖 · HR 主管</div>
+    </div>
+
+    <h3>痛点五 — 数据断裂与历史无沉淀（4 条原声）</h3>
+
+    <div class="quote-block">
+      <div class="quote-text">"每个月要给领导汇报招聘进度，数据全靠手工从各平台拼 Excel，经常对不上，汇报前要核对半天。"</div>
+      <div class="quote-attr">P05 刘洋 · HR 主管</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"去年招过几乎一样的岗位，但当时的数据散落在各个平台和同事的电脑里，根本没法复用。"</div>
+      <div class="quote-attr">P06 赵颖 · HR 主管</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"有的候选人去年投过我们，今年又投了，但我根本查不到去年的评价记录。"</div>
+      <div class="quote-attr">P04 王晓琳 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"哪个渠道招来的人质量最好、留存率最高，我凭感觉觉得是内推，但没有数据支持。"</div>
+      <div class="quote-attr">P05 刘洋 · HR 主管</div>
+    </div>
+
+    <h3>痛点六 — 渠道碎片化（4 条原声）</h3>
+
+    <div class="quote-block">
+      <div class="quote-text">"每天早上第一件事就是登 6 个平台刷一遍，BOSS、猎聘、前程无忧、智联、学校就业网、内部系统，光这个就要 40 分钟。"</div>
+      <div class="quote-attr">P03 陈佳 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"同一个候选人在 3 个平台都投了简历，但简历内容不一样，我根本不知道以哪个为准。"</div>
+      <div class="quote-attr">P04 王晓琳 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"每个平台的简历格式都不一样，下载下来还得自己重新整理成统一格式发给业务。"</div>
+      <div class="quote-attr">P01 李敏 · HR 专员</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"有时候候选人从 BOSS 上沟通的，简历从猎聘下载的，面试记录在微信里，信息碎成一地。"</div>
+      <div class="quote-attr">P03 陈佳 · HR 专员</div>
+    </div>
+  </section>
+
+  <!-- 5. 工具使用现状 -->
+  <section class="sect" id="s5">
+    <span class="sect-num">05 — 工具使用现状</span>
+    <h2>工具使用现状</h2>
+
+    <h3>使用平台分布（n=16，多选）</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">BOSS 直聘</div>
+        <div class="bar-track"><div class="bar-fill" style="width:93.75%"></div></div>
+        <div class="bar-pct">93.75%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">猎聘</div>
+        <div class="bar-track"><div class="bar-fill" style="width:87.5%"></div></div>
+        <div class="bar-pct">87.5%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">前程无忧</div>
+        <div class="bar-track"><div class="bar-fill" style="width:81.25%"></div></div>
+        <div class="bar-pct">81.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">智联招聘</div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+        <div class="bar-pct">75%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">学校就业网</div>
+        <div class="bar-track"><div class="bar-fill" style="width:56.25%"></div></div>
+        <div class="bar-pct">56.25%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">内部推荐</div>
+        <div class="bar-track"><div class="bar-fill" style="width:43.75%"></div></div>
+        <div class="bar-pct">43.75%</div>
+      </div>
+    </div>
+
+    <h3>最不满意功能 Top 5</h3>
+    <table>
+      <thead><tr><th>排名</th><th>功能 / 问题</th><th>不满意人数</th><th>占比</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>关键词搜索精准度差</td><td>14 人</td><td>87.5%</td></tr>
+        <tr><td><strong>2</strong></td><td>多平台数据无法打通</td><td>12 人</td><td>75.0%</td></tr>
+        <tr><td><strong>3</strong></td><td>简历格式不统一，需手工整理</td><td>11 人</td><td>68.75%</td></tr>
+        <tr><td><strong>4</strong></td><td>候选人状态跟踪困难</td><td>10 人</td><td>62.5%</td></tr>
+        <tr><td><strong>5</strong></td><td>缺乏数据分析能力</td><td>9 人</td><td>56.25%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>AI 辅助筛选意愿（n=16）</h3>
+    <div class="ai-row">
+      <div class="ai-seg">
+        <div class="ai-pct">75%</div>
+        <div class="ai-lbl">愿意使用（12 人）</div>
+      </div>
+      <div class="ai-seg">
+        <div class="ai-pct" style="color:var(--mid)">18.75%</div>
+        <div class="ai-lbl">看情况（3 人）</div>
+      </div>
+      <div class="ai-seg">
+        <div class="ai-pct" style="color:var(--mid)">6.25%</div>
+        <div class="ai-lbl">有担忧（1 人）</div>
+      </div>
+    </div>
+    <p class="note">75% 的受访者明确表示愿意使用 AI 辅助简历筛选工具。"看情况"的 3 人主要关注数据安全和准确率问题。1 人表示担忧，主要顾虑是"怕系统替代 HR 的判断，导致好候选人被误筛掉"。</p>
+  </section>
+
+  <!-- 6. 开放题回答精选 -->
+  <section class="sect" id="s6">
+    <span class="sect-num">06 — 开放题回答精选</span>
+    <h2>开放题回答精选</h2>
+    <p>问卷开放题："如果有一个 AI 简历筛选工具，你最希望它具备什么能力？" 以下为代表性回答。</p>
+
+    <div class="open-answer">
+      "希望它能真正读懂简历内容，不是简单的关键词匹配，而是理解候选人实际做过什么项目、用过什么技术、解决过什么问题。"
+      <div class="oa-src">HR 专员，工龄 3 年</div>
+    </div>
+    <div class="open-answer">
+      "能自动把各个平台的简历汇总到一起，去重，统一格式，每天早上我打开系统就能看到所有新简历。"
+      <div class="oa-src">HR 专员，工龄 2 年</div>
+    </div>
+    <div class="open-answer">
+      "给每份简历打一个匹配度评分，让我知道哪些值得优先看，哪些可以先放一放，而不是全靠人工判断。"
+      <div class="oa-src">HR 专员，工龄 5 年</div>
+    </div>
+    <div class="open-answer">
+      "最好能记住我之前的筛选偏好，比如某个岗位我通过了哪些人、拒绝了哪些人，系统越用越聪明。"
+      <div class="oa-src">HR 专员，工龄 4 年</div>
+    </div>
+    <div class="open-answer">
+      "需要一个招聘数据看板，让我一眼看到每个岗位进展到什么阶段、各渠道效果对比、团队工作量分布。"
+      <div class="oa-src">HR 主管，工龄 8 年</div>
+    </div>
+    <div class="open-answer">
+      "校招场景特别需要 AI 辅助，因为校招简历差异化太小，人看久了容易疲劳，AI 可以帮忙做初步排序。"
+      <div class="oa-src">HR 主管，工龄 6 年</div>
+    </div>
+    <div class="open-answer">
+      "让业务部门能直接在系统里设定筛选标准，不用每次口头传达给 HR，避免信息丢失。"
+      <div class="oa-src">业务负责人（研发部），工龄 10 年</div>
+    </div>
+    <div class="open-answer">
+      "AI 评分要透明，我要知道为什么给这个人打 80 分、那个人打 60 分，不能是黑箱。"
+      <div class="oa-src">业务负责人（项目管理部），工龄 7 年</div>
+    </div>
+    <div class="open-answer">
+      "希望简历库能长期积累，以后类似岗位可以直接从历史候选人中搜索，不用每次从零开始。"
+      <div class="oa-src">HRBP，工龄 5 年</div>
+    </div>
+    <div class="open-answer">
+      "最核心的是准确率要高，如果 AI 推荐的人面试通过率能从 20% 提升到 50% 以上，我们就会全力支持。"
+      <div class="oa-src">HR 总监，工龄 12 年</div>
+    </div>
+  </section>
+
+  <!-- 7. 数据交叉分析 -->
+  <section class="sect" id="s7">
+    <span class="sect-num">07 — 数据交叉分析</span>
+    <h2>数据交叉分析</h2>
+
+    <h3>按角色交叉分析痛点评分</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>痛点维度</th>
+          <th>HR 专员（n=10）</th>
+          <th>HR 主管（n=3）</th>
+          <th>HRBP（n=2）</th>
+          <th>HR 总监（n=1）</th>
+          <th>全员均值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>简历关键词搜索不精准</td>
+          <td><span class="hi">4.5</span></td>
+          <td>3.7</td>
+          <td>4.0</td>
+          <td>3.0</td>
+          <td><strong>4.2</strong></td>
+        </tr>
+        <tr>
+          <td>与业务部门认知错位</td>
+          <td>3.8</td>
+          <td><span class="hi">4.7</span></td>
+          <td>4.0</td>
+          <td>4.0</td>
+          <td><strong>4.0</strong></td>
+        </tr>
+        <tr>
+          <td>校招简历同质化</td>
+          <td>4.0</td>
+          <td>4.0</td>
+          <td>3.0</td>
+          <td>2.0</td>
+          <td><strong>3.8</strong></td>
+        </tr>
+        <tr>
+          <td>多平台切换低效</td>
+          <td><span class="hi">4.3</span></td>
+          <td>2.3</td>
+          <td>3.5</td>
+          <td>2.0</td>
+          <td><strong>3.7</strong></td>
+        </tr>
+        <tr>
+          <td>历史数据无法复用</td>
+          <td>3.0</td>
+          <td><span class="hi">4.7</span></td>
+          <td>4.0</td>
+          <td>4.0</td>
+          <td><strong>3.5</strong></td>
+        </tr>
+        <tr>
+          <td>简历格式多样化</td>
+          <td><span class="hi">3.9</span></td>
+          <td>2.0</td>
+          <td>2.5</td>
+          <td>2.0</td>
+          <td><strong>3.3</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">HR 专员对"搜索不精准"和"多平台切换"感受最强烈（分别 4.5 和 4.3 分）。HR 主管对"认知错位"和"历史数据无法复用"更为敏感（均为 4.7 分），体现了管理视角对协作效率和数据沉淀的关注。</p>
+
+    <h3>按工龄交叉分析痛点评分</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>痛点维度</th>
+          <th>1–3 年（n=5）</th>
+          <th>3–5 年（n=5）</th>
+          <th>5–8 年（n=4）</th>
+          <th>8 年以上（n=2）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>简历关键词搜索不精准</td><td>4.0</td><td><span class="hi">4.6</span></td><td>4.0</td><td>3.5</td></tr>
+        <tr><td>与业务部门认知错位</td><td>3.4</td><td>4.0</td><td><span class="hi">4.5</span></td><td><span class="hi">4.5</span></td></tr>
+        <tr><td>校招简历同质化</td><td><span class="hi">4.2</span></td><td>3.8</td><td>3.5</td><td>3.0</td></tr>
+        <tr><td>多平台切换低效</td><td><span class="hi">4.4</span></td><td>3.8</td><td>3.0</td><td>2.5</td></tr>
+        <tr><td>历史数据无法复用</td><td>2.8</td><td>3.4</td><td>3.8</td><td><span class="hi">4.5</span></td></tr>
+        <tr><td>简历格式多样化</td><td><span class="hi">4.0</span></td><td>3.6</td><td>2.5</td><td>2.0</td></tr>
+      </tbody>
+    </table>
+    <p class="note">工龄越短的 HR 对"多平台切换"和"简历格式多样化"等操作层面痛点感受越强；工龄越长的 HR 对"认知错位"和"历史数据无法复用"等战略层面痛点更为敏感。3–5 年工龄段对"搜索不精准"评分最高（4.6 分），可能因为该阶段已熟悉流程但正面临效率天花板。</p>
+
+    <h3>按招聘类型交叉分析</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>痛点维度</th>
+          <th>以校招为主（n=6）</th>
+          <th>以社招为主（n=8）</th>
+          <th>混合型（n=2）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>简历关键词搜索不精准</td><td>3.8</td><td><span class="hi">4.5</span></td><td>4.0</td></tr>
+        <tr><td>与业务部门认知错位</td><td>3.5</td><td><span class="hi">4.4</span></td><td>3.5</td></tr>
+        <tr><td>校招简历同质化</td><td><span class="hi">4.5</span></td><td>3.1</td><td>4.0</td></tr>
+        <tr><td>多平台切换低效</td><td>3.3</td><td><span class="hi">4.0</span></td><td>3.5</td></tr>
+        <tr><td>历史数据无法复用</td><td>3.2</td><td>3.6</td><td><span class="hi">4.5</span></td></tr>
+        <tr><td>简历格式多样化</td><td>2.8</td><td><span class="hi">3.6</span></td><td>3.5</td></tr>
+      </tbody>
+    </table>
+    <p class="note">校招 HR 对"校招简历同质化"感受最强（4.5 分），社招 HR 在"搜索不精准"和"认知错位"上痛感更强（分别 4.5 和 4.4 分）。混合型 HR 对"历史数据无法复用"评分最高（4.5 分），因为需要在两种招聘模式间频繁切换，更依赖历史数据支持。</p>
+  </section>
+
+  <!-- 8. 核心发现 -->
+  <section class="sect" id="s8">
+    <span class="sect-num">08 — 核心发现</span>
+    <h2>核心发现</h2>
+
+    <div class="insight">
+      <div class="insight-num">洞察一</div>
+      <div class="insight-title">语义理解鸿沟是最大痛点</div>
+      <div class="insight-desc">三类用户均反映当前招聘平台的关键词搜索无法理解真实意图。HR 专员搜不到真正匹配的候选人，业务负责人收到大量不符合深层需求的推荐。问题根源在于现有系统只做字面匹配，无法理解"高并发系统经验"与"CRUD 开发"的本质差异。痛点量表中"简历关键词搜索不精准"以 4.2 分（满分 5 分）位居所有痛点之首。</div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">洞察二</div>
+      <div class="insight-title">数据断裂导致管理决策无依据</div>
+      <div class="insight-desc">HR 主管在团队效率优化、渠道策略调整、向高层汇报等核心管理场景中，完全依赖手工拼凑数据。招聘数据分散在 6 个平台和多个 Excel 中，无法形成完整的招聘漏斗视图。历史招聘数据无法沉淀复用，导致同类岗位每次招聘都要从零开始。这不仅降低了管理效率，也使得团队优化缺乏数据支撑。</div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">洞察三</div>
+      <div class="insight-title">HR 与业务部门之间存在系统性认知错位</div>
+      <div class="insight-desc">业务负责人面试通过率仅为 10%–20%（推荐 10 人通过 1–2 人），核心原因是 HR 对技术岗位深层要求的理解不足。业务部门自身也难以将隐性用人标准显式化，双方在"什么样的人才算合适"上存在根本性沟通障碍。这一问题靠增加沟通频次无法解决，需要通过结构化的需求模板和 AI 辅助匹配来弥合认知差距。痛点量表中该项得分 4.0 分，仅次于搜索精准度。</div>
+    </div>
+  </section>
+
+  <div class="doc-footer">
+    <span>简历筛选平台 · 调研数据汇总</span>
+    <span>v1.0.0 · 2026-03-08 · 五十二研究所</span>
+  </div>
+
+</div>
+</body>
+</html>

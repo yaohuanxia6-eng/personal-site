@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简历筛选平台 · 项目文档</title>
+    <style>
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E8E4D4;
+            --ink-black: #0f0f0f;
+            --accent-orange: #C05621;
+            --font-serif: 'EB Garamond', 'Noto Serif SC', Georgia, serif;
+            --font-mono: 'VT323', 'Courier New', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, var(--beige-light) 0%, #E6E2D1 100%);
+            font-family: var(--font-serif);
+            color: var(--ink-black);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .back-link {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--accent-orange);
+            text-decoration: none;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 1; }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 2.5rem;
+        }
+        .doc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .doc-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255,255,255,0.45);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-left: 3px solid var(--accent-orange);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .doc-item:hover {
+            background: rgba(255,255,255,0.7);
+            transform: translateX(6px);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.06);
+            border-left-color: var(--ink-black);
+        }
+        .doc-num {
+            font-family: var(--font-mono);
+            font-size: 1.4rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 2rem;
+            text-align: center;
+        }
+        .doc-info { flex: 1; }
+        .doc-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .doc-type {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #999;
+            letter-spacing: 0.5px;
+        }
+        .doc-arrow {
+            font-family: var(--font-mono);
+            color: var(--accent-orange);
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+        .doc-item:hover .doc-arrow { opacity: 1; }
+
+        @media (max-width: 768px) {
+            body { padding: 1.2rem; }
+            h1 { font-size: 1.6rem; }
+            .doc-item { padding: 1rem 1.2rem; gap: 0.8rem; }
+            .doc-title { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">&larr; back to home</a>
+        <h1>简历筛选平台 · 项目文档</h1>
+        <p class="subtitle">// PROJECT DOCUMENTATION</p>
+        <div class="doc-list">
+            <a href="01-项目立项报告.html" class="doc-item">
+                <span class="doc-num">01</span>
+                <div class="doc-info">
+                    <div class="doc-title">项目立项报告</div>
+                    <span class="doc-type">Project Proposal</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+            <a href="02-调研数据汇总.html" class="doc-item">
+                <span class="doc-num">02</span>
+                <div class="doc-info">
+                    <div class="doc-title">调研数据汇总</div>
+                    <span class="doc-type">Research Data Summary</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+            <a href="03-用户画像文档.html" class="doc-item">
+                <span class="doc-num">03</span>
+                <div class="doc-info">
+                    <div class="doc-title">用户画像文档</div>
+                    <span class="doc-type">User Persona</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+            <a href="04-竞品分析报告.html" class="doc-item">
+                <span class="doc-num">04</span>
+                <div class="doc-info">
+                    <div class="doc-title">竞品分析报告</div>
+                    <span class="doc-type">Competitive Analysis</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+            <a href="05-PRD产品需求文档.html" class="doc-item">
+                <span class="doc-num">05</span>
+                <div class="doc-info">
+                    <div class="doc-title">PRD - 产品需求文档</div>
+                    <span class="doc-type">Product Requirements</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+            <a href="06-用户操作手册.html" class="doc-item">
+                <span class="doc-num">06</span>
+                <div class="doc-info">
+                    <div class="doc-title">用户操作手册</div>
+                    <span class="doc-type">User Manual</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+            <a href="07-AI技术方案文档.html" class="doc-item">
+                <span class="doc-num">07</span>
+                <div class="doc-info">
+                    <div class="doc-title">AI 技术方案文档</div>
+                    <span class="doc-type">AI Technical Architecture</span>
+                </div>
+                <span class="doc-arrow">&rarr;</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
