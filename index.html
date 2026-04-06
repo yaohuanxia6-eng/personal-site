@@ -649,7 +649,7 @@
         #contact .section-title { color: var(--beige-light); }
         .contact-tagline { font-size: 1.2rem; color: #888; line-height: 1.6; margin-top: -1rem; }
         .contact-items { display: flex; flex-direction: column; gap: 1.2rem; }
-        .contact-item { display: flex; gap: 1.5rem; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); text-decoration: none; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 4px 4px 0 rgba(0,0,0,0.3); }
+        .contact-item { display: flex; gap: 1.5rem; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); text-decoration: none; color: inherit; cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 4px 4px 0 rgba(0,0,0,0.3); -webkit-tap-highlight-color: rgba(192,86,33,0.2); }
         .contact-item:hover { transform: translate(-6px, -6px); box-shadow: 10px 10px 0 rgba(0,0,0,0.5); background: rgba(255,255,255,0.1); border-color: var(--accent-orange); }
         .c-icon { font-family: var(--font-mono); font-size: 1.4rem; color: var(--accent-orange); width: 2rem; text-align: center; flex-shrink: 0; }
         .c-label { font-family: var(--font-mono); font-size: 0.85rem; color: #555; letter-spacing: 2px; margin-bottom: 0.2rem; }
@@ -726,7 +726,7 @@
             .product-highlights { gap: 0.8rem; }
             .product-highlight { font-size: 0.75rem; }
             .product-meta { font-size: 0.7rem; }
-            .product-btn { align-self: flex-end; }
+            .product-btn { align-self: flex-end; opacity: 1; }
             .product-actions { align-self: flex-end; gap: 1.2rem; }
             .agents-grid { gap: 1.5rem; }
             .agent-header { padding: 1rem 1.2rem 0.8rem; }
@@ -919,10 +919,10 @@
                 <div class="timeline-company">中国电子科技集团公司第五十二研究所</div>
                 <div class="timeline-role">AI 产品经理 / 设计负责人</div>
                 <ul class="timeline-bullets">
-                    <li>牵头多个 AI 项目从 0 到 1 产品化，独立完成需求定义、AI 架构决策、Prompt 工程规划、评测设计及全套产品文档交付</li>
-                    <li>将 AI 工具系统性引入个人工作流，独立完成实用工具调研与最小版本验证，信息架构梳理、原型设计、视觉规范输出</li>
+                    <li>牵头 AI 项目从 0 到 1 产品化，独立完成需求定义、AI 架构决策、Prompt 工程规划、评测集设计及产品文档交付</li>
+                    <li>将 AI 工具系统性引入工作流，独立完成实用工具调研与最小版本验证，完成信息架构梳理、原型设计、视觉规范输出</li>
                     <li>沉淀单位资产并获 3 项外观专利</li>
-                    <li>在单位内部发起 AI 技术分享与科普，推动团队成员引入 AI 提效工具，承担军工信息化系统的 AI 模块产品化</li>
+                    <li>在内部发起 AI 技术分享与科普，推动团队引入 AI 提效工具，承担 B 端信息化系统的 AI 模块产品化</li>
                 </ul>
             </div>
             <div class="timeline-item reveal reveal-delay-3">
@@ -951,17 +951,17 @@
                     <div class="project-hdate">2025.03 — 2026.02</div>
                 </div>
                 <div class="project-body">
-                    <div class="project-title">领域目标知识图谱平台</div>
+                    <div class="project-title">专业领域知识智能检索平台</div>
                     <div class="project-tags">
                         <span class="ptag">RAG</span><span class="ptag">知识工程</span><span class="ptag">NLP 流水线</span><span class="ptag">人机协作</span>
                     </div>
                     <div class="ps">
                         <div class="ps-label">// BACKGROUND</div>
-                        <div class="ps-text">情报数据以非结构化文档存储，检索效率低、实体关系难以自动关联，严重制约情报分析效率。目标：知识查询准确率 ≥93%，实现人机协作的高效审核机制。</div>
+                        <div class="ps-text">海量非结构化传统数据文档长期依赖人工检索，检索效率低、实体关系难以自动关联。目标：建立可持续运营的知识入库流程，知识查询准确率 ≥93%，实现人机协作的高效审核机制。</div>
                     </div>
                     <div class="ps">
                         <div class="ps-label">// WHAT I DID</div>
-                        <div class="ps-text">设计实体与关系体系 · NER+关系抽取两阶段流水线 · AI初筛+专家终审双层质检 · 三维权限矩阵产品化</div>
+                        <div class="ps-text">实体与关系类型体系设计 · NER+关系抽取两阶段流水线 · AI 模型初筛+领域专家终审双层质检 · 角色×数据×操作三维权限矩阵产品化</div>
                     </div>
                     <div class="project-results">
                         <div class="ri"><span class="ri-num">↑90%</span><span class="ri-label">查询效率提升</span></div>
@@ -977,23 +977,23 @@
                     <div class="project-hdate">2025.01 — 2025.11</div>
                 </div>
                 <div class="project-body">
-                    <div class="project-title">智联对抗仿真训练平台</div>
+                    <div class="project-title">智能决策方案推演平台</div>
                     <div class="project-tags">
                         <span class="ptag">Multi-Agent</span><span class="ptag">Prompt 工程</span><span class="ptag">RAG 知识库</span><span class="ptag">评测体系</span>
                     </div>
                     <div class="ps">
                         <div class="ps-label">// BACKGROUND</div>
-                        <div class="ps-text">警训场景的 AI 辅助推演平台。传统推演依赖专家现场研判，历史经验无法结构化复用，方案质量差异大。北极星指标：AI 辅助方案采纳率 ≥80%。</div>
+                        <div class="ps-text">专业决策推演场景长期依赖专家现场研判，历史经验无法结构化沉淀复用，方案制定周期长、质量参差不齐。以"AI 辅助快速生成高质量推演方案"为核心目标，北极星指标：AI 辅助方案采纳率 ≥80%。</div>
                     </div>
                     <div class="ps">
                         <div class="ps-label">// WHAT I DID</div>
-                        <div class="ps-text">识别决策前/后两大 AI 介入节点 · Multi-Agent 架构选型 · RAG 四类知识库设计 · Prompt 工程与 P0 评测集搭建</div>
+                        <div class="ps-text">识别"决策前准备"与"决策后复盘"两大 AI 介入节点 · Multi-Agent 架构设计与选型 · RAG 知识库数据结构与入库规范 · 核心 Prompt 多轮迭代与 P0 级评测集搭建</div>
                     </div>
                     <div class="project-results">
                         <div class="ri"><span class="ri-num">≥80%</span><span class="ri-label">方案采纳率目标</span></div>
                         <div class="ri"><span class="ri-num">30min</span><span class="ri-label">场景生成（原 4 小时）</span></div>
-                        <div class="ri"><span class="ri-num">↑90%</span><span class="ri-label">经验沉淀率</span></div>
-                        <div class="ri"><span class="ri-num">↓60%</span><span class="ri-label">重复请求成本</span></div>
+                        <div class="ri"><span class="ri-num">≥90%</span><span class="ri-label">经验沉淀率</span></div>
+                        <div class="ri"><span class="ri-num">≥95%</span><span class="ri-label">关键事件覆盖率</span></div>
                     </div>
                 </div>
             </div>
@@ -1007,7 +1007,7 @@
         <span class="section-label reveal">// 04 · PRODUCTS</span>
         <h2 class="section-title reveal reveal-delay-1">个人<em>产品</em></h2>
         <div class="products-list">
-            <a href="/projects/zhandoubao/" class="product-card reveal reveal-delay-2">
+            <div class="product-card reveal reveal-delay-2">
                 <div class="product-icon product-icon-desktop">🫘</div>
                 <div class="product-header">
                     <div class="product-icon">🫘</div>
@@ -1035,8 +1035,11 @@
                         <span>Next.js · Supabase · Kimi API</span>
                     </div>
                 </div>
-                <span class="product-btn">查看详情 &rarr;</span>
-            </a>
+                <div class="product-actions">
+                    <a href="/粘豆包/产品文档/" class="product-btn product-btn-doc">项目文档 &rarr;</a>
+                    <a href="/projects/zhandoubao/" class="product-btn">查看详情 &rarr;</a>
+                </div>
+            </div>
             <div class="product-card reveal reveal-delay-3">
                 <div class="product-icon product-icon-desktop">🎨</div>
                 <div class="product-header">
@@ -1280,9 +1283,13 @@
                 <span class="c-icon">☎</span>
                 <div><div class="c-label">PHONE / WECHAT</div><div class="c-val">18278396586</div></div>
             </a>
-            <a class="contact-item" href="mailto:yhx137453021@163.com">
+            <a class="contact-item" href="mailto:yhx137453021@163.com" target="_blank" rel="noopener noreferrer" onclick="handleContactClick(event,'yhx137453021@163.com','邮箱已复制，请在邮箱应用中粘贴')">
                 <span class="c-icon">✉</span>
                 <div><div class="c-label">EMAIL</div><div class="c-val">yhx137453021@163.com</div></div>
+            </a>
+            <a class="contact-item" href="https://github.com/yaohuanxia6-eng" target="_blank" rel="noopener noreferrer" onclick="handleContactClick(event,'https://github.com/yaohuanxia6-eng','GitHub 链接已复制，请在浏览器中粘贴打开')">
+                <span class="c-icon">⌘</span>
+                <div><div class="c-label">GITHUB</div><div class="c-val">github.com/yaohuanxia6-eng</div></div>
             </a>
         </div>
         <div class="contact-foot">
@@ -1292,6 +1299,37 @@
 </section>
 
 <script>
+    // 微信兼容：点击联系方式先尝试跳转，被拦截则复制到剪贴板
+    function handleContactClick(e, text, msg) {
+        // 检测微信环境
+        var isWechat = /MicroMessenger/i.test(navigator.userAgent);
+        if (isWechat) {
+            e.preventDefault();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showCopyToast(msg);
+                });
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.cssText = 'position:fixed;left:-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showCopyToast(msg);
+            }
+        }
+        // 非微信环境正常跳转（不阻止默认行为）
+    }
+    function showCopyToast(msg) {
+        var t = document.createElement('div');
+        t.textContent = msg;
+        t.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;text-align:center;max-width:280px;';
+        document.body.appendChild(t);
+        setTimeout(function(){ t.remove(); }, 2500);
+    }
+
     // Typewriter
     const texts = ["Hi, I'm Yao Huanxia.", "AI PM. Ex-designer.", "From 0 to 1, shipped."];
     let ti = 0, ci = 0, deleting = false;

@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Sensitive files
+files_to_push.json
+
+# Environment variables
+.env*.local
+.env
+api/zhandoubao/.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Node.js
+node_modules/
+.next/
+
+# 文档与截图（仅本地保留，不上传 GitHub）
+PROJECT_CONTEXT.md
+prototype.html
+产品文档/
+ui-screenshots/

@@ -4,4 +4,20 @@
 截屏*.png
 简历*.png
 项目档案.md
+个站说明.docx
 色彩炼金/*.docx
+简历筛选平台/.npm-global/
+简历筛选平台/.trae/
+
+# 粘豆包前端
+粘豆包/niandoubao/node_modules/
+粘豆包/niandoubao/.next/
+粘豆包/niandoubao/.env*
+
+# 粘豆包后端
+粘豆包/api/zhandoubao/__pycache__/
+粘豆包/api/zhandoubao/.env
+粘豆包/api/zhandoubao/.env.example
+
+# 粘豆包其他
+粘豆包/PROJECT_CONTEXT.md
