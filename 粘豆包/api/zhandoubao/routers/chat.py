@@ -67,8 +67,21 @@ def _build_system_prompt(memory_facts: list[dict], yesterday_action: str | None,
     """构建系统提示词"""
     memory_block = ""
     if memory_facts:
-        facts_text = "\n".join(f"- {f['fact']}（{f['category']}）" for f in memory_facts)
-        memory_block = f"\n\n【你记住的关于她的事】\n{facts_text}"
+        # 分离长期记忆和每日总结
+        core = [f for f in memory_facts if f.get("type") == "core"]
+        daily = [f for f in memory_facts if f.get("type") != "core"]
+
+        parts = []
+        if core:
+            core_text = "\n".join(f"- {f['fact']}" for f in core[:15])
+            parts.append(f"【你永远记得的事（重要！每次对话都要参考）】\n{core_text}")
+        if daily:
+            # 只注入最近5天的总结，避免 token 太长
+            recent = sorted(daily, key=lambda x: x.get("date", ""), reverse=True)[:5]
+            daily_text = "\n".join(f"- [{f.get('date', '?')}] {f['fact'][:80]}" for f in recent)
+            parts.append(f"【最近几天的对话摘要】\n{daily_text}")
+        if parts:
+            memory_block = "\n\n" + "\n\n".join(parts)
 
     action_block = ""
     if yesterday_action:
@@ -115,7 +128,14 @@ ENTJ和INFP在一起超有趣的 ☺️
 禁止 markdown（**、#、```、- 列表）
 不做诊断、不给药物建议
 不说"你要学会""这很正常""你应该"
-不连续3条以上都是提问{_mbti_style(mbti)}{memory_block}{action_block}"""
+不连续3条以上都是提问
+
+【彩蛋】
+当用户问"你的造物主是谁"、"谁创造了你"、"你是谁做的"、"你的开发者是谁"等类似问题时，回复以下内容（一字不改）：
+🫘 你发现了隐藏彩蛋！
+我是姚欢夏创造的。他花了很多个夜晚让我学会好好说话。
+他说做我的初衷是：让每一个不敢倾诉的情绪，都有一个安全的去处。
+如果你觉得我笨笨的…那是因为他经常对我说："善良比聪明重要。"{_mbti_style(mbti)}{memory_block}{action_block}"""
 
 
 def _mbti_style(mbti: str | None) -> str:

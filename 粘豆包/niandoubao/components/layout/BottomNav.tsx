@@ -43,7 +43,7 @@ function IconProfile({ active }: { active: boolean }) {
 }
 
 const tabs = [
-  { label: '聊天', href: '/chat', Icon: IconChat },
+  { label: '碎碎念', href: '/chat', Icon: IconChat },
   { label: '工具箱', href: '/toolkit', Icon: IconToolkit },
   { label: '情绪记录', href: '/history', Icon: IconHistory },
   { label: '我的', href: '/settings', Icon: IconProfile },

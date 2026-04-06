@@ -58,9 +58,18 @@ function formatAIContent(raw: string): React.ReactNode {
     blocks.pop()
   }
 
-  // 单行短文本直接返回
+  // 单段文本：如果超过30字且有句号/问号/感叹号，在标点处分行
   if (blocks.length === 1 && blocks[0].type === 'text') {
-    return <span>{blocks[0].content}</span>
+    const t = blocks[0].content
+    if (t.length <= 30) return <span>{t}</span>
+    // 在中文标点处分段
+    const sentences = t.split(/(?<=[。！？~])\s*/).filter(s => s.trim())
+    if (sentences.length <= 1) return <span>{t}</span>
+    return (
+      <div className="space-y-1">
+        {sentences.map((s, i) => <p key={i}>{s.trim()}</p>)}
+      </div>
+    )
   }
 
   return (
@@ -87,9 +96,36 @@ export function ChatBubble({ role, content, isStreaming, imageUrl, timestamp }: 
   const time = formatTime(timestamp)
 
   if (role === 'ai') {
+    // 彩蛋检测
+    const isEasterEgg = content.includes('隐藏彩蛋')
+
+    if (isEasterEgg) {
+      return (
+        <div className="flex flex-col animate-bubble-in">
+          <div className="rounded-[20px] px-5 py-4 text-[15px] leading-[1.9] text-text-primary shadow-card max-w-[88%] border border-primary/20"
+            style={{ background: 'linear-gradient(135deg, rgba(247,192,162,0.25), rgba(225,188,198,0.20), rgba(200,225,210,0.18))' }}>
+            <div className="text-center mb-2">
+              <span className="text-2xl">🫘</span>
+              <span className="ml-1 text-[13px] text-primary font-medium tracking-wider">EASTER EGG</span>
+            </div>
+            <div className="space-y-2">
+              {content.split('\n').filter(l => l.trim()).map((line, i) => {
+                const t = line.trim()
+                if (t.startsWith('🫘')) return <p key={i} className="font-medium text-primary">{t}</p>
+                if (t.includes('初衷是')) return <p key={i} className="text-text-secondary italic border-l-2 border-primary/30 pl-3">{t}</p>
+                if (t.includes('善良比聪明')) return <p key={i} className="text-text-secondary italic border-l-2 border-primary/30 pl-3">{t}</p>
+                return <p key={i}>{t}</p>
+              })}
+            </div>
+          </div>
+          {time && <span className="text-[11px] text-text-muted/50 mt-1 ml-1">{time}</span>}
+        </div>
+      )
+    }
+
     return (
       <div className="flex flex-col animate-bubble-in">
-        <div className="bg-white/80 backdrop-blur-sm border border-white/60 rounded-[20px] px-4 py-3 text-[15px] leading-[1.8] text-text-primary shadow-card max-w-[85%]">
+        <div className="bg-white/50 backdrop-blur-sm border border-white/40 rounded-[20px] px-4 py-3 text-[15px] leading-[1.8] text-text-primary shadow-card max-w-[85%]">
           {formatAIContent(content)}
           {isStreaming && (
             <span className="inline-block w-[2px] h-[15px] bg-primary ml-0.5 align-middle animate-pulse" />

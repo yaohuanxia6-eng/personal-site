@@ -6,23 +6,26 @@ import { ChevronLeft } from 'lucide-react'
 import { apiFetch } from '@/lib/api'
 
 interface MemoryEntry {
+  type?: 'core' | 'daily'
   fact: string
   category: string
   date?: string
   updated_at?: string
 }
 
-const CATEGORY_EMOJI: Record<string, string> = {
+const CORE_EMOJI: Record<string, string> = {
+  人物: '👤',
+  状态: '📋',
+  事件: '📅',
+  策略: '💡',
+}
+
+const DAILY_EMOJI: Record<string, string> = {
   日常: '📝',
   压力: '😤',
   人际: '🤝',
   成长: '🌱',
   情绪: '🌊',
-  压力源: '😤',
-  人际关系: '🤝',
-  近期困境: '🌧',
-  有效策略: '✨',
-  其他: '📌',
 }
 
 function formatDate(dateStr?: string): string {
@@ -37,7 +40,8 @@ function formatDate(dateStr?: string): string {
 
 export default function MemoryPage() {
   const router = useRouter()
-  const [entries, setEntries] = useState<MemoryEntry[]>([])
+  const [coreFacts, setCoreFacts] = useState<MemoryEntry[]>([])
+  const [dailyFacts, setDailyFacts] = useState<MemoryEntry[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -45,12 +49,16 @@ export default function MemoryPage() {
       const res = await apiFetch('/memory')
       if (res.ok) {
         const data = await res.json()
-        setEntries(data.data?.key_facts ?? data.key_facts ?? [])
+        const d = data.data ?? data
+        setCoreFacts(d.core_facts ?? [])
+        setDailyFacts(d.key_facts ?? [])
       }
       setLoading(false)
     }
     load()
   }, [])
+
+  const isEmpty = coreFacts.length === 0 && dailyFacts.length === 0
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -61,7 +69,6 @@ export default function MemoryPage() {
       </header>
 
       <div className="flex-1 overflow-y-auto scrollbar-hide px-page-x py-page-y max-w-md mx-auto w-full">
-        <p className="text-body-sm text-text-muted mb-4">粘豆包记住的关于你的每一天：</p>
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
@@ -72,33 +79,66 @@ export default function MemoryPage() {
               </div>
             ))}
           </div>
-        ) : entries.length === 0 ? (
+        ) : isEmpty ? (
           <div className="flex flex-col items-center py-16">
             <span className="text-4xl mb-3">🫘</span>
             <p className="text-body-md text-text-muted">聊得越多，我对你的了解就越深</p>
-            <p className="text-body-sm text-text-muted mt-1">每天聊天结束后，粘豆包会自动总结当天的重点</p>
+            <p className="text-body-sm text-text-muted mt-1">粘豆包会自动记住关于你的重要事情</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {entries.map((entry, i) => (
-              <div key={i} className="bg-surface rounded-card shadow-card p-4">
-                {/* 日期 + 分类标签 */}
-                <div className="flex items-center justify-between mb-2.5">
-                  {entry.date && (
-                    <span className="text-body-sm text-text-secondary font-medium">
-                      {formatDate(entry.date)}
-                    </span>
-                  )}
-                  <span className="inline-flex items-center gap-1 text-[11px] bg-primary/[0.08] text-primary rounded-full px-2.5 py-0.5">
-                    {CATEGORY_EMOJI[entry.category] ?? '📌'} {entry.category}
-                  </span>
+          <div className="space-y-6">
+            {/* ── 长期记忆 ── */}
+            {coreFacts.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">🧠</span>
+                  <h2 className="text-body-md font-medium text-text-primary">永久记忆</h2>
+                  <span className="text-[11px] text-text-muted bg-surface-2 rounded-full px-2 py-0.5">{coreFacts.length}条</span>
                 </div>
-                {/* 详细内容（支持换行） */}
-                <div className="text-body-sm text-text-primary leading-relaxed whitespace-pre-line">
-                  {entry.fact}
+                <p className="text-[12px] text-text-muted mb-3">这些是粘豆包永远记得的关于你的事</p>
+                <div className="space-y-2">
+                  {coreFacts.map((entry, i) => (
+                    <div key={`core-${i}`} className="bg-surface rounded-card shadow-card p-3.5 border-l-3 border-l-primary/40" style={{ borderLeftWidth: 3 }}>
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <span className="text-[13px]">{CORE_EMOJI[entry.category] ?? '📌'}</span>
+                        <span className="text-[11px] text-primary font-medium">{entry.category}</span>
+                      </div>
+                      <p className="text-body-sm text-text-primary leading-relaxed">{entry.fact}</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
+              </section>
+            )}
+
+            {/* ── 每日总结 ── */}
+            {dailyFacts.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">📖</span>
+                  <h2 className="text-body-md font-medium text-text-primary">每日记录</h2>
+                  <span className="text-[11px] text-text-muted bg-surface-2 rounded-full px-2 py-0.5">近30天</span>
+                </div>
+                <div className="space-y-3">
+                  {dailyFacts.map((entry, i) => (
+                    <div key={`daily-${i}`} className="bg-surface rounded-card shadow-card p-4">
+                      <div className="flex items-center justify-between mb-2.5">
+                        {entry.date && (
+                          <span className="text-body-sm text-text-secondary font-medium">
+                            {formatDate(entry.date)}
+                          </span>
+                        )}
+                        <span className="inline-flex items-center gap-1 text-[11px] bg-primary/[0.08] text-primary rounded-full px-2.5 py-0.5">
+                          {DAILY_EMOJI[entry.category] ?? '📌'} {entry.category}
+                        </span>
+                      </div>
+                      <div className="text-body-sm text-text-primary leading-relaxed whitespace-pre-line">
+                        {entry.fact}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </div>
