@@ -22,7 +22,7 @@ if [ ! -f "$TARGET/.env" ]; then
 # 数据库连接
 DB_HOST=localhost
 DB_USER=zdb_user
-DB_PASSWORD=Zdb@2024Secure9
+DB_PASSWORD=请替换为数据库密码
 DB_NAME=zhandoubao
 
 # Supabase JWT Secret（去 Supabase Dashboard → Settings → API → JWT Secret 复制）

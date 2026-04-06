@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET", "")
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://wkimchpovgjqdhdbbuyk.supabase.co")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 
 security = HTTPBearer()
 
