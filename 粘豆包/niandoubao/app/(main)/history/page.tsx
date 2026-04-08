@@ -58,24 +58,47 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true)
   const [showCheckin, setShowCheckin] = useState(false)
   const [checkinSaving, setCheckinSaving] = useState(false)
+  const [manualCheckinDone, setManualCheckinDone] = useState(false)
+  const [manualCheckinEmotion, setManualCheckinEmotion] = useState<string>('')
 
-  const fetchData = useCallback(() => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
-    apiFetch('/sessions/history')
-      .then(r => r.json())
-      .then(data => {
+    try {
+      const [historyRes, emotionRes] = await Promise.all([
+        apiFetch('/sessions/history'),
+        apiFetch(`/emotion/history?days=1`),
+      ])
+
+      if (historyRes.ok) {
+        const data = await historyRes.json()
         const items = data.data ?? data
         setSessions(Array.isArray(items) ? items : [])
-      })
-      .catch(() => setSessions([]))
-      .finally(() => setLoading(false))
+      }
+
+      // 检查今天是否有手动签到的 emotion_record
+      if (emotionRes.ok) {
+        const emotionData = await emotionRes.json()
+        const records = emotionData.data ?? emotionData
+        const today = new Date().toISOString().split('T')[0]
+        const todayRecord = (Array.isArray(records) ? records : []).find(
+          (r: { record_date?: string }) => r.record_date === today
+        )
+        if (todayRecord) {
+          setManualCheckinDone(true)
+          setManualCheckinEmotion(todayRecord.emotion || '')
+        }
+      }
+    } catch {
+      setSessions([])
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => { fetchData() }, [fetchData])
 
   const today = new Date().toISOString().split('T')[0]
   const sessionByDate = Object.fromEntries(sessions.map(s => [s.session_date, s]))
-  const todayHasRecord = !!sessionByDate[today]?.emotion_type
 
   // 今日的 session（用于显示当日微行动）
   const todaySession = sessionByDate[today]
@@ -137,8 +160,8 @@ export default function HistoryPage() {
           <p className="text-body-sm text-text-muted">你已经和粘豆包相伴了 {sessions.length} 天</p>
         </div>
 
-        {/* 今日签到按钮（已签到则不显示） */}
-        {!loading && !todayHasRecord && (
+        {/* 今日签到按钮（手动签到过才算已签到） */}
+        {!loading && !manualCheckinDone && (
           <button
             onClick={() => setShowCheckin(true)}
             className="w-full bg-primary text-white rounded-btn px-4 py-3 text-body-md font-medium shadow-btn hover:bg-primary-dark transition-all duration-200 active:scale-95 flex items-center justify-center gap-2"
@@ -149,11 +172,11 @@ export default function HistoryPage() {
         )}
 
         {/* 已签到提示 */}
-        {!loading && todayHasRecord && (
+        {!loading && manualCheckinDone && (
           <div className="bg-accent/10 border border-accent/20 rounded-btn px-4 py-2.5 flex items-center justify-center gap-2">
-            <span>{EMOTION_CONFIG[sessionByDate[today]?.emotion_type as EmotionType]?.emoji ?? '✅'}</span>
+            <span>{EMOTION_CONFIG[manualCheckinEmotion as EmotionType]?.emoji ?? '✅'}</span>
             <span className="text-body-sm text-accent-dark font-medium">
-              今日已签到 · {sessionByDate[today]?.emotion_type}
+              今日已签到 · {manualCheckinEmotion}
             </span>
           </div>
         )}

@@ -146,19 +146,31 @@ export default function ChatPage() {
           if (yd.data?.micro_action) yesterdayActionRef.current = yd.data.micro_action
         }
 
-        // 今日会话
+        // 今日会话 + 历史消息
         if (sessionRes.ok) {
           const sessionData = await sessionRes.json()
           const session = sessionData.data ?? sessionData
           sessionIdRef.current = session.id
 
-          const history: Message[] = session.messages ?? []
+          // 加载所有历史消息（含过去所有天）
+          let allMessages: Message[] = []
+          try {
+            const allRes = await apiFetch('/sessions/all-messages')
+            if (allRes.ok) {
+              const allData = await allRes.json()
+              const d = allData.data ?? allData
+              allMessages = d.messages ?? []
+            }
+          } catch { /* 加载历史失败则只用今天的 */ }
+
+          // 如果没有历史消息，使用今日会话
+          const history: Message[] = allMessages.length > 0 ? allMessages : (session.messages ?? [])
+
           if (history.length > 0) {
             setMessages(history)
             if (session.micro_action) {
               setMicroAction(session.micro_action)
               setActionDone(session.micro_action_done ?? false)
-              // 找到包含微行动的 AI 消息
               const source = history.find(
                 (m: Message) => m.role === 'ai' && m.content.includes(session.micro_action!)
               )

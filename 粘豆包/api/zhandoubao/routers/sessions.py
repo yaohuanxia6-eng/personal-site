@@ -108,6 +108,32 @@ async def get_history(user_id: str = Depends(get_current_user)):
     return ApiResponse(data=items)
 
 
+@router.get("/all-messages")
+async def get_all_messages(user_id: str = Depends(get_current_user)):
+    """获取所有会话的消息（用于聊天页显示完整历史）"""
+    async with get_conn() as (conn, cur):
+        await cur.execute(
+            "SELECT * FROM sessions WHERE user_id = %s ORDER BY session_date ASC",
+            (user_id,),
+        )
+        rows = await cur.fetchall()
+
+    all_messages = []
+    for row in rows:
+        messages_raw = row.get("messages")
+        if isinstance(messages_raw, str):
+            messages_raw = json.loads(messages_raw)
+        if messages_raw:
+            for m in messages_raw:
+                if isinstance(m, dict):
+                    all_messages.append(m)
+
+    return ApiResponse(data={
+        "messages": all_messages,
+        "session_count": len(rows),
+    })
+
+
 @router.put("/{session_id}/complete")
 async def complete_session(
     session_id: str,

@@ -41,6 +41,7 @@ class MessageItem(BaseModel):
     role: Literal["ai", "user"]
     content: str
     timestamp: Optional[str] = None
+    imageUrl: Optional[str] = None
 
 
 class SessionOut(BaseModel):
